@@ -16,7 +16,7 @@ COPY jest.setup.js .
 
 COPY webpack.config.js .
 
-RUN npm install
+RUN npm ci
 
 FROM base as builder
 
