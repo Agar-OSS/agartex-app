@@ -1,0 +1,33 @@
+name: Run tests & linter
+
+on: [pull_request]
+
+jobs:
+  run-linter:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.18.1
+
+      - name: Build & Install
+        run: npm ci
+
+      - name: Run Linter
+        run: npm run lint
+
+  run-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v3
+
+      - name: Build image
+        run: docker build -t agaross.azurecr.io/agar-oss/agartex-app --target test .
+
+      - name: Run tests
+        run: docker run --rm agaross.azurecr.io/agar-oss/agartex-app
