@@ -16,11 +16,7 @@ jobs:
         uses: docker/setup-buildx-action@v2
 
       - name: Build image
-        uses: docker/build-push-action@v4
-        with:
-          push: false
-          target: test
-          tags: agaross.azurecr.io/agar-oss/agartex-app:latest
+        run: docker build -t agaross.azurecr.io/agar-oss/agartex-app .
 
       - name: Run tests
         run: docker run --rm agaross.azurecr.io/agar-oss/agartex-app
