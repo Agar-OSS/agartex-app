@@ -1,0 +1,18 @@
+name: Run tests
+
+on: [pull_request]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.18.1
+
+      - name: Build & Install
+        run: npm ci
+
+      - name: Run Linter
+        run: npm run lint
