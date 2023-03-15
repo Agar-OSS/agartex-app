@@ -18,6 +18,11 @@ COPY webpack.config.js .
 
 RUN npm ci
 
+FROM base as test
+
+COPY . .
+ENTRYPOINT [ "npm", "run", "test" ]
+
 FROM base as builder
 
 COPY . .
@@ -33,4 +38,4 @@ COPY scripts scripts
 
 EXPOSE 5000
 
-ENTRYPOINT ["node", "scripts/run-server.js"]
+ENTRYPOINT [ "node", "scripts/run-server.js" ]
