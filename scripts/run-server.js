@@ -15,5 +15,5 @@ app.get('/favicon.ico', (req, res) => {
 });
 
 app.listen(5000, () => {
-  console.log('Production server stated on port 5000.');
+  console.log('Production server started on port 5000.');
 });
