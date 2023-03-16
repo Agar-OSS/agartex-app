@@ -1,0 +1,9 @@
+/build
+/Dockerfile
+/.dockerignore
+/.git
+/.github
+/.idea
+/LICENSE
+/node_modules
+/README.md

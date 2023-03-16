@@ -1,29 +1,33 @@
-name: Verify image
+name: Run tests & linter
 
 on: [pull_request]
 
 jobs:
-  verify:
+  run-linter:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main
         uses: actions/checkout@v3
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
         with:
-          registry: agaross.azurecr.io
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_TOKEN }}
+          node-version: 16.18.1
+
+      - name: Build & Install
+        run: npm ci
+
+      - name: Run Linter
+        run: npm run lint
+
+  run-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v3
 
       - name: Build image
-        uses: docker/build-push-action@v4
-        with:
-          push: false
-          tags: agaross.azurecr.io/agar-oss/agartex-app:latest
+        run: docker build --build-arg NODE_VERSION="$( cat .nvmrc )" -t agaross.azurecr.io/agar-oss/agartex-app --target test .
+
+      - name: Run tests
+        run: docker run --rm agaross.azurecr.io/agar-oss/agartex-app

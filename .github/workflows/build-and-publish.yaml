@@ -29,4 +29,5 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
+          build-args: NODE_VERSION="$( cat .nvmrc )"
           tags: agaross.azurecr.io/agar-oss/agartex-app:latest
