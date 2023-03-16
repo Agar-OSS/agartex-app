@@ -1,4 +1,4 @@
-name: Run tests & linter
+name: Run tests & linter & build
 
 on: [pull_request]
 
@@ -26,8 +26,40 @@ jobs:
       - name: Checkout main
         uses: actions/checkout@v3
 
+      - name: Evaluate Node.js version
+        run: |
+          export NODE_VERSION=$( cat .nvmrc )
+          echo $NODE_VERSION
+          echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_ENV
+
       - name: Build image
-        run: docker build --build-arg NODE_VERSION="$( cat .nvmrc )" -t agaross.azurecr.io/agar-oss/agartex-app --target test .
+        run: docker build --build-arg NODE_VERSION="${{ env.NODE_VERSION }}" -t agaross.azurecr.io/agar-oss/agartex-app --target test .
 
       - name: Run tests
         run: docker run --rm agaross.azurecr.io/agar-oss/agartex-app
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Evaluate Node.js version
+        run: |
+          export NODE_VERSION=$( cat .nvmrc )
+          echo $NODE_VERSION
+          echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_ENV
+
+      - name: Build
+        uses: docker/build-push-action@v4
+        with:
+          push: false
+          build-args: |
+            NODE_VERSION=${{ env.NODE_VERSION }}
+          tags: agaross.azurecr.io/agar-oss/agartex-app:latest
