@@ -21,7 +21,7 @@ COPY .eslintrc.json .
 COPY .eslintignore .
 
 COPY jest.config.js .
-COPY jest.setup.js .
+COPY jest.setup.ts .
 
 COPY webpack.config.js .
 
@@ -43,6 +43,14 @@ COPY . .
 ENTRYPOINT [ "npm", "run", "test" ]
 
 FROM base as builder
+
+ARG ENV_FILE
+COPY .envExample .
+RUN if [ "$ENV_FILE" != "" ]; then \
+        echo "$ENV_FILE" > .env; \
+    else \
+        cp .envExample .env; \
+    fi
 
 COPY . .
 RUN npm run build

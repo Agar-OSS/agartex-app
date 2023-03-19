@@ -1,6 +1,7 @@
 /build
 /Dockerfile
 /.dockerignore
+/.env
 /.git
 /.github
 /.idea

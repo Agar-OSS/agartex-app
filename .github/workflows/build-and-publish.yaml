@@ -37,4 +37,5 @@ jobs:
           push: true
           build-args: |
             NODE_VERSION=${{ env.NODE_VERSION }}
+            "ENV_FILE=${{ secrets.ENV_FILE }}"
           tags: agaross.azurecr.io/agar-oss/agartex-app:latest

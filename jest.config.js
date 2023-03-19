@@ -3,6 +3,7 @@ module.exports = {
   moduleNameMapper: {
     '^[^!].*\\.(css|less)$': 'identity-obj-proxy'
   },
+  preset: 'ts-jest',
   testEnvironment: 'jsdom',
-  setupFilesAfterEnv: ['./jest.setup.js'],
+  setupFilesAfterEnv: ['./jest.setup.ts'],
 };
