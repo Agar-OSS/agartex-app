@@ -10,6 +10,10 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(DIST_DIR, 'index.html'));
 });
 
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(DIST_DIR, 'index.html'));
+});
+
 app.get('/favicon.ico', (req, res) => {
   res.sendFile(path.join(DIST_DIR, 'favicon.ico'));
 });

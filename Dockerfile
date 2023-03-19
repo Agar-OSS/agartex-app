@@ -11,6 +11,7 @@ RUN [ "$NODE_VERSION" != "" ]
 
 WORKDIR /app/src
 
+COPY .env .
 COPY .nvmrc .
 COPY .babelrc .
 COPY package.json .
@@ -21,7 +22,7 @@ COPY .eslintrc.json .
 COPY .eslintignore .
 
 COPY jest.config.js .
-COPY jest.setup.js .
+COPY jest.setup.ts .
 
 COPY webpack.config.js .
 

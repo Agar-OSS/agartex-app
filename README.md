@@ -2,6 +2,10 @@
 
 This repository contains AgarTeX frontend application code.
 
+## Env variables
+
+Before you do anything, copy `.envExample` to a new `.env` file and fill all variables values.
+
 ## Development
 
 ```

@@ -32,6 +32,10 @@ jobs:
           echo $NODE_VERSION
           echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_ENV
 
+      - name: Create env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+
       - name: Build image
         run: docker build --build-arg NODE_VERSION="${{ env.NODE_VERSION }}" -t agaross.azurecr.io/agar-oss/agartex-app --target test .
 
@@ -55,6 +59,10 @@ jobs:
           export NODE_VERSION=$( cat .nvmrc )
           echo $NODE_VERSION
           echo "NODE_VERSION=$NODE_VERSION" >> $GITHUB_ENV
+
+      - name: Create env file
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
 
       - name: Build
         uses: docker/build-push-action@v4

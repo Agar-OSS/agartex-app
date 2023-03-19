@@ -1,4 +1,5 @@
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
@@ -46,8 +47,10 @@ module.exports = {
       favicon: path.join(__dirname, 'public', 'favicon.ico'),
       template: path.join(__dirname, 'public', 'index.html')
     }),
+    new Dotenv()
   ],
   devServer: {
+    historyApiFallback: true,
     static: {
       directory: path.join(__dirname, 'build'),
     },
