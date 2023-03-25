@@ -1,7 +1,7 @@
 module.exports = {
   collectCoverage: false,
   moduleNameMapper: {
-    '^[^!].*\\.(css|less)$': 'identity-obj-proxy'
+    '^[^!].*\\.(css|less|png)$': 'identity-obj-proxy',
   },
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
