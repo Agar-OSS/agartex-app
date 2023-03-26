@@ -58,7 +58,11 @@
       "ignoreMemberSort": false,
       "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
       "allowSeparatedGroups": false
+    }],
+    "no-restricted-imports": ["error", {
+      "patterns": ["**/components*"]
     }]
+  
   },
   "settings": {
     "version": "detect"
