@@ -1,4 +1,4 @@
-import { Button } from '../../components';
+import { Button } from '@components';
 import { Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 
