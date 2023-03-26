@@ -30,10 +30,15 @@
   ],
   "rules": {
     "@typescript-eslint/no-unused-vars": ["error"],
+    "eol-last": [
+      "error",
+      "always"
+    ],
     "indent": [
       "error",
       2
     ],
+    "jest/expect-expect": "off",
     "linebreak-style": [
       "error",
       "unix"

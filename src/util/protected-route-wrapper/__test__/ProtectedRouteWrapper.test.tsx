@@ -14,7 +14,7 @@ jest.mock('react-router-dom', () => ({
 
 import ProtectedRouteWrapper from '../ProtectedRouteWrapper';
 
-describe('ProtectedRouteWrapper', () => {
+describe('<ProtectedRouteWrapper/>', () => {
 
   const MockChild = () => (
     <div data-testid='protected-page' />

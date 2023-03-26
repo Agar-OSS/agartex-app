@@ -15,6 +15,8 @@ const MainPage = () => {
       You are logged in. Your token: {localStorage.getItem('user-token')}
       <br/>
       <Button
+        ariaLabel='logout button'
+        testId='logout-button'
         value='Logout'
         onClick={logout}
       />
