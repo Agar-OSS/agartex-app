@@ -1,4 +1,4 @@
-import { AgarLogo, Button, TextInput } from '../../components';
+import { AgarLogo, Button, TextInput } from '@components';
 import { Fragment, useState } from 'react';
 import { login } from './service/login-service';
 import styles from './Login.module.less';

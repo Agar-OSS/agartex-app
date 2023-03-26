@@ -54,6 +54,7 @@
     "style-loader": "^3.3.2",
     "ts-jest": "^29.0.5",
     "ts-loader": "^9.4.2",
+    "tsconfig-paths-webpack-plugin": "^4.0.1",
     "typescript": "^4.9.5",
     "url-loader": "^4.1.1",
     "webpack": "^5.76.1",
