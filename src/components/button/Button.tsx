@@ -13,7 +13,8 @@ const Button = (props: Props) => {
       aria-label={props.ariaLabel}
       data-testid={props.testId}
       className={styles.agarButton}
-      onClick={props.onClick}>{props.value}
+      onClick={props.onClick}>
+        {props.value}
     </button>
   );
 };
