@@ -2,9 +2,7 @@ import styles from './LatexTextArea.module.less';
 
 const LatexTextArea = () => {
   return (
-    <div className={styles.root}>
-      Editor
-    </div>
+    <textarea className={styles.root}/>
   );
 };
 
