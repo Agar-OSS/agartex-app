@@ -2,10 +2,6 @@
 
 This repository contains AgarTeX frontend application code.
 
-## Env variables
-
-Before you do anything, copy `.envExample` to a new `.env` file and fill all variables values.
-
 ## Development
 
 ```
@@ -34,5 +30,10 @@ node scripts/run-server.js  # runs production server on localhost:5000
 ## Build Docker image
 
 ```
-docker build --build-arg NODE_VERSION="$( cat .nvmrc )" -t agaross.azurecr.io/agar-oss/agartex-app --target test .
+docker build --build-arg NODE_VERSION="$( cat .nvmrc )" -t agaross.azurecr.io/agar-oss/agartex-app .
+```
+
+### Run
+```
+docker-compose up
 ```

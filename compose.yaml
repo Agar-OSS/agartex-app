@@ -1,0 +1,10 @@
+version: '3.9'
+
+services:
+  agartex-app:
+    image: agaross.azurecr.io/agar-oss/agartex-app:latest
+    restart: always
+    environment:
+      AGARTEX_SERVICE_BASE_URL: http://localhost:3000
+    ports:
+      - 5000:5000
