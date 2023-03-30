@@ -44,14 +44,6 @@ ENTRYPOINT [ "npm", "run", "test" ]
 
 FROM base as builder
 
-ARG ENV_FILE
-COPY .envExample .
-RUN if [ "$ENV_FILE" != "" ]; then \
-        echo "$ENV_FILE" > .env; \
-    else \
-        cp .envExample .env; \
-    fi
-
 COPY . .
 RUN npm run build
 

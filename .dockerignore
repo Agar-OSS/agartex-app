@@ -1,7 +1,7 @@
 /build
+/compose.yaml
 /Dockerfile
 /.dockerignore
-/.env
 /.git
 /.github
 /.idea
