@@ -1,4 +1,5 @@
 const path = require('path');
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 const Dotenv = require('dotenv-webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TsconfigPathsPlugin = require('tsconfig-paths-webpack-plugin');
@@ -28,6 +29,10 @@ module.exports = {
             loader: 'less-loader'
           }
         ]
+      },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
       },
       {
         test: /\.(js|jsx)$/,
@@ -61,6 +66,11 @@ module.exports = {
     new HtmlWebpackPlugin({
       favicon: path.join(__dirname, 'public', 'favicon.ico'),
       template: path.join(__dirname, 'public', 'index.html')
+    }),
+    new CopyWebpackPlugin({
+      patterns: [
+        "public/example.pdf",
+      ]
     }),
     new Dotenv()
   ],

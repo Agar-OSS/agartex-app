@@ -6,16 +6,20 @@ const app = express();
 var DIST_DIR = path.join(__dirname, '..', 'build');
 app.use(express.static(DIST_DIR));
 
-app.get('/', (req, res) => {
+app.get('/', (_req, res) => {
   res.sendFile(path.join(DIST_DIR, 'index.html'));
 });
 
-app.get('/login', (req, res) => {
+app.get('/login', (_req, res) => {
   res.sendFile(path.join(DIST_DIR, 'index.html'));
 });
 
-app.get('/favicon.ico', (req, res) => {
+app.get('/favicon.ico', (_req, res) => {
   res.sendFile(path.join(DIST_DIR, 'favicon.ico'));
+});
+
+app.get('/example.pdf', (_req, res) => {
+  res.sendFile(path.join(DIST_DIR, 'example.pdf'));
 });
 
 app.listen(5000, () => {

@@ -19,7 +19,6 @@ const Editor = () => {
   };
 
   const Delimiter = () => {
-    console.log(width, defaultDelimiterX);
     return (
       <Draggable 
         axis='x'
@@ -45,13 +44,13 @@ const Editor = () => {
   return (
     <div ref={rootRef} className={styles.root}>
       <div className={styles.editor}
-        style={{ flexBasis: width * defaultDelimiterX }}>
+        style={{ flexBasis: (width ?? 0) * defaultDelimiterX }}>
         <LatexTextArea/>
       </div>
       <Delimiter/>
       <div className={styles.viewer}
-        style={{ flexBasis: width * (1 - defaultDelimiterX) - DELIMITER_WIDTH }}>
-        <PdfViewer/>
+        style={{ flexBasis: (width ?? 0) * (1 - defaultDelimiterX) - DELIMITER_WIDTH }}>
+        <PdfViewer width={(width ?? 0) * (1 - defaultDelimiterX) - DELIMITER_WIDTH} height={height}/>
       </div>
     </div>
   );
