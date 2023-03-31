@@ -20,15 +20,19 @@ const MainPage = () => {
         <Button
           ariaLabel='logout-button'
           onClick={logout}
-          testId='logout-button-test-id'
+          testId='logout-button'
           value='Logout'/>
       </div>
       <div className={styles.body}>
-        <div className={styles.toolbar}>
+        <div
+          className={styles.toolbar}
+          data-testid='toolbar'>
           <AiFillFolder size={50}/>
           <AiFillTool size={50}/>
         </div>
-        <div className={styles.editor}>
+        <div
+          className={styles.editor}
+          data-testid='editor'>
           <Editor/>
         </div>
       </div>

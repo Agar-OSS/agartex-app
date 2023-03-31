@@ -29,6 +29,17 @@
     "@typescript-eslint"
   ],
   "rules": {
+    "@typescript-eslint/member-delimiter-style" :["error", {
+      "multiline": {
+        "delimiter": "comma",
+        "requireLast": false
+      },
+      "singleline": {
+        "delimiter": "comma",
+        "requireLast": false
+      },
+      "multilineDetection": "brackets"
+    }],
     "@typescript-eslint/no-unused-vars": ["error"],
     "eol-last": [
       "error",

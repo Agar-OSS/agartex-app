@@ -45,12 +45,16 @@ const Editor = () => {
     <div ref={rootRef} className={styles.root}>
       <div className={styles.editor}
         style={{ flexBasis: (width ?? 0) * defaultDelimiterX }}>
-        <LatexTextArea/>
+        <LatexTextArea
+          testId='latex-text-area'/>
       </div>
       <Delimiter/>
       <div className={styles.viewer}
         style={{ flexBasis: (width ?? 0) * (1 - defaultDelimiterX) - DELIMITER_WIDTH }}>
-        <PdfViewer width={(width ?? 0) * (1 - defaultDelimiterX) - DELIMITER_WIDTH} height={height}/>
+        <PdfViewer
+          testId='pdf-viewer'
+          width={(width ?? 0) * (1 - defaultDelimiterX) - DELIMITER_WIDTH}
+          height={height}/>
       </div>
     </div>
   );

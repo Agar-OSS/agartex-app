@@ -10,7 +10,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.js';
 
 interface Props {
   width: number,
-  height: number
+  height: number,
+  testId: string
 }
 
 const PdfViewer = (props: Props) => {
@@ -21,14 +22,13 @@ const PdfViewer = (props: Props) => {
   }
 
   return (
-    <div className={styles.root} style={{ height: props.height }}>
+    <div
+      className={styles.root}
+      style={{ height: props.height }}
+      data-testid={props.testId}>
       <Document className={styles.pdf}
         file='example.pdf'
-        onLoadSuccess={onDocumentLoadSuccess}
-        options={{
-          cMapUrl: 'cmaps/',
-          cMapPacked: true,
-        }}>
+        onLoadSuccess={onDocumentLoadSuccess}>
         {Array.from(
           new Array(numPages),
           (_, index) => (

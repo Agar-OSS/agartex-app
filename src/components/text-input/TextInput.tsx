@@ -6,11 +6,11 @@ interface Props {
     initialValue: string,
     placeholder: string,
     type: string,
-    onChange: (val: string) => void
-    isValid: boolean;
-    errorMessage: string;
-    ariaLabel: string;
-    testId: string;
+    onChange: (val: string) => void,
+    isValid: boolean,
+    errorMessage: string,
+    ariaLabel: string,
+    testId: string
 }
 
 const TextInput = (props: Props) => {

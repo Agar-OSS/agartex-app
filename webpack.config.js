@@ -70,7 +70,7 @@ module.exports = {
     new CopyWebpackPlugin({
       patterns: [
         "public/example.pdf",
-        require.resolve("pdfjs-dist/build/pdf.worker.min.js")
+        require.resolve("pdfjs-dist/build/pdf.worker.min.js"),
       ]
     }),
     new Dotenv()
