@@ -18,7 +18,11 @@ const Editor = () => {
     setDefaultDelimiterX(data.x / width);
   };
 
-  const Delimiter = () => {
+  interface DelimiterProps {
+    testId: string
+  }
+
+  const Delimiter = (props: DelimiterProps) => {
     return (
       <Draggable 
         axis='x'
@@ -28,11 +32,11 @@ const Editor = () => {
           left: MIN_PERCENTAGE_WIDTH * width,
           right: (1 - MIN_PERCENTAGE_WIDTH) * width - DELIMITER_WIDTH
         }}
-        onStop={onStop}
-        handle={'.'+styles.dragIcon}>
+        onStop={onStop}>
         <div
           className={styles.delimiter}
-          style={{ height: height, width: DELIMITER_WIDTH }}>
+          style={{ height: height, width: DELIMITER_WIDTH }}
+          data-testid={props.testId}>
           <RxDotsVertical
             size={16}
             className={styles.dragIcon}/>
@@ -48,13 +52,14 @@ const Editor = () => {
         <LatexTextArea
           testId='latex-text-area'/>
       </div>
-      <Delimiter/>
+      <Delimiter testId='delimiter'/>
       <div className={styles.viewer}
         style={{ flexBasis: (width ?? 0) * (1 - defaultDelimiterX) - DELIMITER_WIDTH }}>
         <PdfViewer
-          testId='pdf-viewer'
+          documentUrl='example.pdf'
           width={(width ?? 0) * (1 - defaultDelimiterX) - DELIMITER_WIDTH}
-          height={height}/>
+          height={height}
+          testId='pdf-viewer'/>
       </div>
     </div>
   );

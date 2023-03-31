@@ -9,6 +9,7 @@ import { useState } from 'react';
 pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.js';
 
 interface Props {
+  documentUrl: string,
   width: number,
   height: number,
   testId: string
@@ -27,7 +28,7 @@ const PdfViewer = (props: Props) => {
       style={{ height: props.height }}
       data-testid={props.testId}>
       <Document className={styles.pdf}
-        file='example.pdf'
+        file={props.documentUrl}
         onLoadSuccess={onDocumentLoadSuccess}>
         {Array.from(
           new Array(numPages),
