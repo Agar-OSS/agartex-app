@@ -1,7 +1,7 @@
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { LatexTextArea, PdfViewer } from '@components';
 
-import { MdOutlineDragIndicator } from 'react-icons/md';
+import { RxDotsVertical } from 'react-icons/rx';
 import styles from './Editor.module.less';
 import { useResizeDetector } from 'react-resize-detector';
 import { useState } from 'react';
@@ -33,8 +33,8 @@ const Editor = () => {
         <div
           className={styles.delimiter}
           style={{ height: height, width: DELIMITER_WIDTH }}>
-          <MdOutlineDragIndicator
-            size={24}
+          <RxDotsVertical
+            size={16}
             className={styles.dragIcon}/>
         </div>
       </Draggable>
