@@ -1,13 +1,11 @@
 import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 
-class ResizeObserver {
-  observe() {}
-  unobserve() {}
-  disconnect() {}
-}
-window.ResizeObserver = ResizeObserver;
-// jest.mock('@components');
+global.ResizeObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn()
+}));
 
 import Editor from '../Editor';
 
