@@ -4,6 +4,7 @@
     "baseUrl": "src",
     "paths": {
       "@components": ["components"],
+      "@constants": ["constants.ts"],
       "@variables": ["variables.module.less"]
     }
   }

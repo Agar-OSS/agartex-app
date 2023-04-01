@@ -71,7 +71,10 @@
       "allowSeparatedGroups": false
     }],
     "no-restricted-imports": ["error", {
-      "patterns": ["**/components*"]
+      "patterns": [
+        "**/components*",
+        "**/constants*"
+      ]
     }]
   
   },
