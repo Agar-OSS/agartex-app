@@ -2,7 +2,7 @@ import 'react-pdf/dist/esm/Page/TextLayer.css';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 
 import { Document, Page, pdfjs } from 'react-pdf';
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 import styles from './PdfViewer.module.less';
 
@@ -17,7 +17,7 @@ interface Props {
 
 const PdfViewer = (props: Props) => {
   const [numPages, setNumPages] = useState([]);
-  const [pages, setPages] = useState([]);
+  const [pages, setPages] = useState<ReactNode[]>([]);
 
   useEffect(() => {
     setPages(Array.from(
