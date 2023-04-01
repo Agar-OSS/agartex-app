@@ -7,7 +7,7 @@ interface Props {
 const LatexTextArea = (props: Props) => {
   return (
     <textarea
-      className={styles.root}
+      className={styles.latexTextArea}
       data-testid={props.testId}/>
   );
 };

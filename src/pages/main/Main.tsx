@@ -1,7 +1,7 @@
 import { AiFillFolder, AiFillTool } from 'react-icons/ai';
 
 import { Button } from '@components';
-import Editor from './tools/Editor/Editor';
+import Editor from './Editor';
 import styles from './Main.module.less';
 import { useNavigate } from 'react-router-dom';
 

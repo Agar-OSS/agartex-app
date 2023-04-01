@@ -2,9 +2,9 @@ import 'react-pdf/dist/esm/Page/TextLayer.css';
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 
 import { Document, Page, pdfjs } from 'react-pdf';
+import { useEffect, useState } from 'react';
 
 import styles from './PdfViewer.module.less';
-import { useState } from 'react';
 
 pdfjs.GlobalWorkerOptions.workerSrc = 'pdf.worker.min.js';
 
@@ -16,28 +16,35 @@ interface Props {
 }
 
 const PdfViewer = (props: Props) => {
-  const [numPages, setNumPages] = useState(1);
+  const [numPages, setNumPages] = useState([]);
+  const [pages, setPages] = useState([]);
 
-  function onDocumentLoadSuccess({ numPages }) {
+  useEffect(() => {
+    setPages(Array.from(
+      new Array(numPages),
+      (_, index) => (
+        <Page
+          className={styles.page}
+          key={`page_${index + 1}`}
+          pageNumber={index + 1}
+          width={props.width - 20}/>
+      )
+    ));
+  }, [numPages, props.width]);
+
+  const onDocumentLoadSuccess = ({ numPages }) => {
     setNumPages(numPages);
-  }
+  };
 
   return (
     <div
-      className={styles.root}
+      className={styles.pdfViewer}
       style={{ height: props.height }}
       data-testid={props.testId}>
       <Document className={styles.pdf}
         file={props.documentUrl}
         onLoadSuccess={onDocumentLoadSuccess}>
-        {Array.from(
-          new Array(numPages),
-          (_, index) => (
-            <Page
-              className={styles.page}
-              key={`page_${index + 1}`}
-              pageNumber={index + 1}
-              width={props.width - 20}/>))}
+        { pages }
       </Document>
     </div>
   );

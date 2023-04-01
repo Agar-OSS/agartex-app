@@ -6,7 +6,7 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockNavigate
 }));
-jest.mock('../tools/Editor/Editor');
+jest.mock('../Editor');
 
 describe('<MainPage/>', () => {
   beforeEach(() => {

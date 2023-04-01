@@ -1,18 +1,24 @@
 import Draggable, { DraggableData, DraggableEvent } from 'react-draggable';
 import { LatexTextArea, PdfViewer } from '@components';
+import { useEffect, useState } from 'react';
 
 import { RxDotsVertical } from 'react-icons/rx';
 import styles from './Editor.module.less';
 import { useResizeDetector } from 'react-resize-detector';
-import { useState } from 'react';
 
 const Editor = () => {
   const DELIMITER_WIDTH = 5;
   const MIN_PERCENTAGE_WIDTH = 0.3;
 
-  // Handle initial delimiter position
   const { width, height, ref: rootRef } = useResizeDetector();
-  const [defaultDelimiterX, setDefaultDelimiterX] = useState(0.5);
+  const [ defaultDelimiterX, setDefaultDelimiterX ] = useState(0.5);
+  const [ latexTextAreaWidth, setlatexTextAreaWidth ] = useState(0);
+  const [ pdfViewerWidth, setPdfViewerWidth ] = useState(0);
+
+  useEffect(() => {
+    setlatexTextAreaWidth((width ?? 0) * defaultDelimiterX);
+    setPdfViewerWidth((width ?? 0) * (1 - defaultDelimiterX) - DELIMITER_WIDTH);
+  }, [width, defaultDelimiterX]);
 
   const onStop = (_: DraggableEvent, data: DraggableData) => {
     setDefaultDelimiterX(data.x / width);
@@ -48,16 +54,16 @@ const Editor = () => {
   return (
     <div ref={rootRef} className={styles.root}>
       <div className={styles.editor}
-        style={{ flexBasis: (width ?? 0) * defaultDelimiterX }}>
+        style={{ flexBasis: latexTextAreaWidth }}>
         <LatexTextArea
           testId='latex-text-area'/>
       </div>
       <Delimiter testId='delimiter'/>
       <div className={styles.viewer}
-        style={{ flexBasis: (width ?? 0) * (1 - defaultDelimiterX) - DELIMITER_WIDTH }}>
+        style={{ flexBasis: pdfViewerWidth }}>
         <PdfViewer
           documentUrl='example.pdf'
-          width={(width ?? 0) * (1 - defaultDelimiterX) - DELIMITER_WIDTH}
+          width={pdfViewerWidth}
           height={height}
           testId='pdf-viewer'/>
       </div>
