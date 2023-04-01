@@ -27,15 +27,21 @@ const Editor = () => {
   }
 
   const Delimiter = (props: DelimiterProps) => {
+    const defaultPosition = {
+      x: defaultDelimiterX * width - EDITOR_DELIMITER_WIDTH/2,
+      y: 0
+    };
+    const bounds = {
+      left: EDITOR_MIN_PERCENTAGE_WORKSPACE_WIDTH * width,
+      right: (1 - EDITOR_MIN_PERCENTAGE_WORKSPACE_WIDTH) * width - EDITOR_DELIMITER_WIDTH
+    };
+
     return (
       <Draggable 
         axis='x'
         offsetParent={rootRef.current}
-        defaultPosition={{ x: defaultDelimiterX * width - EDITOR_DELIMITER_WIDTH/2, y: 0 }}
-        bounds={{
-          left: EDITOR_MIN_PERCENTAGE_WORKSPACE_WIDTH * width,
-          right: (1 - EDITOR_MIN_PERCENTAGE_WORKSPACE_WIDTH) * width - EDITOR_DELIMITER_WIDTH
-        }}
+        defaultPosition={defaultPosition}
+        bounds={bounds}
         onStop={onStop}>
         <div
           className={styles.delimiter}
