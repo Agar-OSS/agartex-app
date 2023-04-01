@@ -1,8 +1,8 @@
 import logo from './agarLogo.png';
 
 interface Props {
-  ariaLabel: string
-  className: string
+  ariaLabel: string,
+  className: string,
   testId: string
 }
 

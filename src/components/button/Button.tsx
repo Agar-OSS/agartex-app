@@ -2,9 +2,9 @@ import styles from './Button.module.less';
 
 interface Props {
   value: string,
-  onClick: () => void
-  ariaLabel: string;
-  testId: string;
+  onClick: () => void,
+  ariaLabel: string,
+  testId: string
 }
 
 const Button = (props: Props) => {

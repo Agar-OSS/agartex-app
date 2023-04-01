@@ -1,5 +1,8 @@
+import { AiFillFolder, AiFillTool } from 'react-icons/ai';
+
 import { Button } from '@components';
-import { Fragment } from 'react';
+import Editor from './Editor';
+import styles from './Main.module.less';
 import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
@@ -11,16 +14,29 @@ const MainPage = () => {
   };
   
   return (
-    <Fragment>
-      You are logged in. Your token: {localStorage.getItem('user-token')}
-      <br/>
-      <Button
-        ariaLabel='logout button'
-        testId='logout-button'
-        value='Logout'
-        onClick={logout}
-      />
-    </Fragment>
+    <div className={styles.root}>
+      <div className={styles.header}>
+        Username
+        <Button
+          ariaLabel='logout-button'
+          onClick={logout}
+          testId='logout-button'
+          value='Logout'/>
+      </div>
+      <div className={styles.body}>
+        <div
+          className={styles.toolbar}
+          data-testid='toolbar'>
+          <AiFillFolder size={50}/>
+          <AiFillTool size={50}/>
+        </div>
+        <div
+          className={styles.editor}
+          data-testid='editor'>
+          <Editor/>
+        </div>
+      </div>
+    </div>
   );  
 };
 

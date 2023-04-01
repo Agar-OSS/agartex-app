@@ -3,7 +3,9 @@
     "jsx": "react-jsx",
     "baseUrl": "src",
     "paths": {
-      "@components": ["components"]
+      "@components": ["components"],
+      "@constants": ["constants.ts"],
+      "@variables": ["variables.module.less"]
     }
   }
 }

@@ -1,7 +1,7 @@
 interface StringValidationRules {
-  nonEmpty?: boolean;
-  minLength?: number;
-  maxLength?: number;
+  nonEmpty?: boolean,
+  minLength?: number,
+  maxLength?: number
 }
 
 export const validateString = (string: string, rules: StringValidationRules) => {
