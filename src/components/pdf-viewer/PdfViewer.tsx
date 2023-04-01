@@ -16,7 +16,7 @@ interface Props {
 }
 
 const PdfViewer = (props: Props) => {
-  const [numPages, setNumPages] = useState([]);
+  const [numPages, setNumPages] = useState(0);
   const [pages, setPages] = useState<ReactNode[]>([]);
 
   useEffect(() => {
