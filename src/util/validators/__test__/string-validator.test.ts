@@ -13,7 +13,13 @@ describe('string-validator', () => {
     expect(validateString('abcd', { maxLength: 3 })).toBe(false);
   });
 
+  it('should return false if string does not match the regex', () => {
+    expect(validateString('steve', { regexp: /a.c/ })).toBe(false);
+  });
+
   it('should return true if all requirements are met', () => {
-    expect(validateString('abc', { nonEmpty: true, minLength: 2, maxLength: 3 })).toBe(true);
+    expect(validateString('abc', { 
+      nonEmpty: true, minLength: 2, maxLength: 3, regexp: /a.c/ 
+    })).toBe(true);
   });
 });

@@ -15,13 +15,11 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockNavigate
 }));
 
-import LoginPage from '../Login';
+import LoginPage from '../LoginPage';
 
 const mockValues = {
   validEmail: 'valid@email.com',
-  invalidEmail: 'invalid_email',
   validPassword: '1Str0ng#P4ssw0rd@!',
-  invalidPassword: 'invpass'
 };
 
 describe('<LoginPage/>', () => {
@@ -44,7 +42,8 @@ describe('<LoginPage/>', () => {
       .getAttribute('placeholder')).toEqual('Enter your email');
     expect(getByTestId('login-password-text-input')
       .getAttribute('placeholder')).toEqual('Enter your password');
-    getByText('Login');
+    getByText('Welcome back!');
+    getByText('Sign in');
     getByText('Create account');
   });
 
@@ -63,5 +62,29 @@ describe('<LoginPage/>', () => {
       email: mockValues.validEmail,
       password: mockValues.validPassword
     });
+  });
+
+  it('should show loading spinner and hide inputs until the promise resolves', async () => {
+    mockLogin.mockImplementationOnce(() => {
+      return new Promise(resolve => {
+        setTimeout(resolve, 10000);
+      });
+    });
+
+    const { getByTestId, queryByTestId } = render(<LoginPage />);
+
+    await act(async () => {
+      const emailTextInput = getByTestId('login-email-text-input');
+      await userEvent.type(emailTextInput, mockValues.validEmail);
+      const passwordTextInput = getByTestId('login-password-text-input');
+      await userEvent.type(passwordTextInput, mockValues.validPassword);
+      getByTestId('login-button').click();
+    });
+    
+    getByTestId('create-account-loading-spinner');
+    expect(queryByTestId('login-email-text-input')).toBeNull();
+    expect(queryByTestId('login-password-text-input')).toBeNull();
+    expect(queryByTestId('login-button')).toBeNull();
+    expect(queryByTestId('create-account-button')).toBeNull();
   });
 });
