@@ -4,8 +4,10 @@ export type InputType = string | number;
 
 export interface Field {
   initialValue: InputType,
-  validator: (val: InputType) => boolean
+  validator: (val: InputType, state?: FormState) => boolean
 }
+
+export type FormDefinition = Map<string, Field>;
 
 export interface FieldState {
   value: InputType,
@@ -13,12 +15,14 @@ export interface FieldState {
   isValid: boolean
 }
 
-export const useForm = (formDefinition: Map<string, Field>) => {
-  const [formState, setFormState] = useState<Map<string, FieldState>>(new Map( 
+export type FormState = Map<string, FieldState>;
+
+export const useForm = (formDefinition: FormDefinition) => {
+  const [formState, setFormState] = useState<FormState>(new Map( 
     Array.from(formDefinition).map(([name, field]) => [name, {
       value: field.initialValue,
       touched: false,
-      isValid: field.validator(field.initialValue)
+      isValid: field.validator(field.initialValue, undefined)
     }])
   ));
 
@@ -38,7 +42,7 @@ export const useForm = (formDefinition: Map<string, Field>) => {
     setFormState(new Map(formState.set(fieldName, {
       value: value,
       touched: true,
-      isValid: formDefinition.get(fieldName).validator(value)
+      isValid: formDefinition.get(fieldName).validator(value, formState)
     })));
   };
 
@@ -46,7 +50,7 @@ export const useForm = (formDefinition: Map<string, Field>) => {
     setFormState(new Map(formState.set(fieldName, {
       value: newValue,
       touched: true,
-      isValid: formDefinition.get(fieldName).validator(newValue)
+      isValid: formDefinition.get(fieldName).validator(newValue, formState)
     })));
   };
 

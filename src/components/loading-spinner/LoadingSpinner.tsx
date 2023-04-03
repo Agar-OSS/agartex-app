@@ -11,8 +11,7 @@ const LoadingSpinner = (props: Props) => (
     data-testid={props.testId}
   >
     <ThreeCircles
-      color="#7F98B8"
-      visible={true}
+      color='#7F98B8'
       ariaLabel={props.ariaLabel}
       wrapperClass={props.className}
     />

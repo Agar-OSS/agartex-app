@@ -64,7 +64,7 @@ describe('<LoginPage/>', () => {
     });
   });
 
-  it('should show loading spinner and hide inputs until the promise resolves', async () => {
+  it('should show loading spinner and hide or disable inputs until the promise resolves', async () => {
     mockLogin.mockImplementationOnce(() => {
       return new Promise(resolve => {
         setTimeout(resolve, 10000);
@@ -84,7 +84,7 @@ describe('<LoginPage/>', () => {
     getByTestId('create-account-loading-spinner');
     expect(queryByTestId('login-email-text-input')).toBeNull();
     expect(queryByTestId('login-password-text-input')).toBeNull();
-    expect(queryByTestId('login-button')).toBeNull();
-    expect(queryByTestId('create-account-button')).toBeNull();
+    expect(getByTestId('login-button').getAttribute('disabled')).not.toBeNull();
+    expect(getByTestId('create-account-button').getAttribute('disabled')).not.toBeNull();
   });
 });

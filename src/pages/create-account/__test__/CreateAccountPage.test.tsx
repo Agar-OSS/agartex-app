@@ -32,6 +32,7 @@ describe('<CreateAccountPage/>', () => {
     getByTestId('create-account-agartex-logo');
     getByTestId('create-account-email-text-input');
     getByTestId('create-account-password-text-input');
+    getByTestId('create-account-confirm-password-text-input');
     getByTestId('create-account-submit-button');
     getByTestId('back-to-login-button');
   });
@@ -42,6 +43,8 @@ describe('<CreateAccountPage/>', () => {
       .getAttribute('placeholder')).toEqual('Enter your email');
     expect(getByTestId('create-account-password-text-input')
       .getAttribute('placeholder')).toEqual('Enter your password');
+    expect(getByTestId('create-account-confirm-password-text-input')
+      .getAttribute('placeholder')).toEqual('Confirm your password');
     getByText('Create new account');
     getByText('Submit');
     getByText('Go back to login');
@@ -55,6 +58,8 @@ describe('<CreateAccountPage/>', () => {
       await userEvent.type(emailTextInput, mockValues.validEmail);
       const passwordTextInput = getByTestId('create-account-password-text-input');
       await userEvent.type(passwordTextInput, mockValues.validPassword);
+      const confirmPasswordTextInput = getByTestId('create-account-confirm-password-text-input');
+      await userEvent.type(confirmPasswordTextInput, mockValues.validPassword);
       getByTestId('create-account-submit-button').click();
     });
     
@@ -64,7 +69,7 @@ describe('<CreateAccountPage/>', () => {
     });
   });
 
-  it('should show loading spinner and hide inputs until the promise resolves', async () => {
+  it('should show loading spinner and hide or disable inputs until the promise resolves', async () => {
     mockCreateAccount.mockImplementationOnce(() => {
       return new Promise(resolve => {
         setTimeout(resolve, 10000);
@@ -78,14 +83,16 @@ describe('<CreateAccountPage/>', () => {
       await userEvent.type(emailTextInput, mockValues.validEmail);
       const passwordTextInput = getByTestId('create-account-password-text-input');
       await userEvent.type(passwordTextInput, mockValues.validPassword);
+      const confirmPasswordTextInput = getByTestId('create-account-confirm-password-text-input');
+      await userEvent.type(confirmPasswordTextInput, mockValues.validPassword);
       getByTestId('create-account-submit-button').click();
     });
     
     getByTestId('create-account-loading-spinner');
     expect(queryByTestId('create-account-email-text-input')).toBeNull();
     expect(queryByTestId('create-account-password-text-input')).toBeNull();
-    expect(queryByTestId('create-account-submit-button')).toBeNull();
-    expect(queryByTestId('back-to-login-button')).toBeNull();
+    expect(getByTestId('create-account-submit-button').getAttribute('disabled')).not.toBeNull();
+    expect(getByTestId('back-to-login-button').getAttribute('disabled')).not.toBeNull();
   });
 
   it('should display the create account success box after successfull call', async () => {
@@ -96,6 +103,8 @@ describe('<CreateAccountPage/>', () => {
       await userEvent.type(emailTextInput, mockValues.validEmail);
       const passwordTextInput = getByTestId('create-account-password-text-input');
       await userEvent.type(passwordTextInput, mockValues.validPassword);
+      const confirmPasswordTextInput = getByTestId('create-account-confirm-password-text-input');
+      await userEvent.type(confirmPasswordTextInput, mockValues.validPassword);
       getByTestId('create-account-submit-button').click();
     });
     

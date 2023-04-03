@@ -1,6 +1,6 @@
 import { AgarLogo, Button, LoadingSpinner, TextInput } from '@components';
 import { EMAIL_VALIDATION_RULES, PASSWORD_VALIDATION_RULES } from '../../util/validators/common-rules';
-import { Field, useForm } from '../../util/forms/forms';
+import { Field, FormState, useForm } from '../../util/forms/forms';
 import { CreateAccountSuccessBox } from './success-box/CreateAccountSuccessBox';
 import { OperationState } from '@constants';
 import { createAccount } from './service/create-account-service';
@@ -18,6 +18,10 @@ const CreateAccountPage = () => {
     [ 'password', {
       initialValue: '',
       validator: (val: string) => validateString(val, PASSWORD_VALIDATION_RULES)
+    }],
+    [ 'confirmPassword', {
+      initialValue: '',
+      validator: (val: string, formState?: FormState) => val === formState?.get('password')?.value
     }]
   ]);
 
@@ -38,7 +42,7 @@ const CreateAccountPage = () => {
   });
 
   const submitCreateAccountForm = () => {
-    if (!isFormValid) return;
+    if (!isFormValid()) return;
 
     setState(OperationState.LOADING);
     setErrorMessage('');
@@ -66,12 +70,12 @@ const CreateAccountPage = () => {
         ariaLabel='agartex logo'
         testId='create-account-agartex-logo'/>
 
-      { state === OperationState.INPUT && (
-        <>
-          <div className={styles.createAccountFormHeader}>
-            Create new account
-          </div>
+      <div className={styles.createAccountFormHeader}>
+        Create new account
+      </div>
 
+      { state === OperationState.INPUT && (
+        <>      
           <TextInput
             ariaLabel='email text field'
             testId='create-account-email-text-input'
@@ -96,11 +100,16 @@ const CreateAccountPage = () => {
             errorMessage='Password does not meet requirements'
           />
 
-          <Button
-            ariaLabel='create account submit button'
-            testId='create-account-submit-button'
-            value='Submit'
-            onClick={submitCreateAccountForm}
+          <TextInput
+            ariaLabel='confirm password text field'
+            testId='create-account-confirm-password-text-input'
+            initialValue={formState.get('confirmPassword').value as string}
+            placeholder='Confirm your password'
+            type='password'
+            onChange={(val) => onFieldValueChange('confirmPassword', val)}
+            onFocus={() => onFieldTouch('confirmPassword')}
+            isValid={!isInErrorState('confirmPassword')}
+            errorMessage='Password does not match'
           />
         </>)
       }
@@ -112,20 +121,26 @@ const CreateAccountPage = () => {
           className={styles.loadingSpinner}
         />
       }
-      { state !== OperationState.LOADING && 
-        <Button 
-          ariaLabel='back to login button'
-          testId='back-to-login-button'
-          value='Go back to login'
-          onClick={navigateToLoginPage}
-        />
-      }
-      {
-        state === OperationState.INPUT &&
-          <div className={styles.errorMessageContainer}>
-            { errorMessage }
-          </div>
-      }
+
+      <Button
+        ariaLabel='create account submit button'
+        disabled={state !== OperationState.INPUT}
+        testId='create-account-submit-button'
+        value='Submit'
+        onClick={submitCreateAccountForm}
+      />
+      
+      <Button 
+        ariaLabel='back to login button'
+        disabled={state !== OperationState.INPUT}
+        testId='back-to-login-button'
+        value='Go back to login'
+        onClick={navigateToLoginPage}
+      />
+    
+      <div className={styles.errorMessageContainer}>
+        { errorMessage }
+      </div>
     </div>
   );
 };

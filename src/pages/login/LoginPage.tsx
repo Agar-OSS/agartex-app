@@ -37,7 +37,7 @@ const LoginPage = () => {
   });
 
   const submitLoginForm = () => {
-    if (!isFormValid) return;
+    if (!isFormValid()) return;
 
     setState(OperationState.LOADING);
     setErrorMessage('');
@@ -65,12 +65,12 @@ const LoginPage = () => {
         ariaLabel='agartex logo'
         testId='login-agartex-logo'/>
 
+      <div className={styles.loginFormHeader}>
+        Welcome back!
+      </div>
+
       { state === OperationState.INPUT && (
         <>
-          <div className={styles.loginFormHeader}>
-            Welcome back!
-          </div>
-          
           <TextInput
             ariaLabel='email text field'
             testId='login-email-text-input'
@@ -94,24 +94,6 @@ const LoginPage = () => {
             isValid={!isInErrorState('password')}
             errorMessage='Password does not meet requirements'
           />
-
-          <Button
-            ariaLabel='login button'
-            testId='login-button'
-            value='Sign in'
-            onClick={submitLoginForm}
-          />
-
-          <Button 
-            ariaLabel='create account button'
-            testId='create-account-button'
-            value='Create account'
-            onClick={navigateToCreateAccountPage}
-          />
-
-          <div className={styles.errorMessageContainer}>
-            { errorMessage }
-          </div>
         </>)
       }
       { state === OperationState.LOADING && 
@@ -121,6 +103,26 @@ const LoginPage = () => {
           className={styles.loadingSpinner}
         />
       }
+
+      <Button
+        ariaLabel='login button'
+        disabled={state !== OperationState.INPUT}
+        testId='login-button'
+        value='Sign in'
+        onClick={submitLoginForm}
+      />
+
+      <Button 
+        ariaLabel='create account button'
+        disabled={state !== OperationState.INPUT}
+        testId='create-account-button'
+        value='Create account'
+        onClick={navigateToCreateAccountPage}
+      />
+
+      <div className={styles.errorMessageContainer}>
+        { errorMessage }
+      </div>
     </div>
   );
 };
