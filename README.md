@@ -2,6 +2,11 @@
 
 This repository contains AgarTeX frontend application code.
 
+## Environmental variables
+As we decided to dynamic enviromental variables setup, during `docker-compose up` a special config file is generated, so all variables can be injected. For development, you can add your variables in `public/scripts.js` (not recommended) or simply put them in `.env` file (it's a fallback).
+
+All variables have to start with `REACT_APP_`, otherwise they will be skipped during injection step.
+
 ## Development
 
 ```

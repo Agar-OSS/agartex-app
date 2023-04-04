@@ -49,12 +49,15 @@ RUN npm run build
 
 FROM base as environment
 
+COPY --from=builder /app/src/build build
+COPY entrypoint.sh .
+COPY scripts scripts
+
+RUN chmod -R 777 build scripts
+
 RUN useradd user
 USER user
 
-COPY --from=builder /app/src/build build
-COPY scripts scripts
-
 EXPOSE 5000
 
-ENTRYPOINT [ "node", "scripts/run-server.js" ]
+ENTRYPOINT [ "bash", "entrypoint.sh" ]
