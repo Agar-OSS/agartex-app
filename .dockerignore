@@ -2,6 +2,8 @@
 /compose.yaml
 /Dockerfile
 /.dockerignore
+/.env
+/.envExample
 /.git
 /.github
 /.idea
