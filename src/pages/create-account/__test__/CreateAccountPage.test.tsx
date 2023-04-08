@@ -111,4 +111,10 @@ describe('<CreateAccountPage/>', () => {
     getByText('Account successfully created!');
     getByText('You can go back and sign in');
   });
+
+  it('should redirect to login page on go back to login button click', () => {
+    const { getByTestId } = render(<CreateAccountPage />);
+    getByTestId('back-to-login-button').click();
+    expect(mockNavigate).toHaveBeenCalledWith('/login');
+  });
 });

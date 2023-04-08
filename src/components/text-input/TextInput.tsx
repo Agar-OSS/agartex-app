@@ -3,15 +3,16 @@ import { ChangeEvent, useState } from 'react';
 import styles from './TextInput.module.less';
 
 interface Props {
-    initialValue: string,
-    placeholder: string,
-    type: string,
-    onChange: (val: string) => void,
-    onFocus?: () => void,
-    isValid: boolean,
-    errorMessage: string,
-    ariaLabel: string,
-    testId: string
+  initialValue: string,
+  placeholder: string,
+  type: string,
+  onChange: (val: string) => void,
+  onFocus?: () => void,
+  onBlur?: () => void,
+  isValid: boolean,
+  errorMessage: string,
+  ariaLabel: string,
+  testId: string
 }
 
 const TextInput = (props: Props) => {
@@ -27,7 +28,8 @@ const TextInput = (props: Props) => {
   const handleFocusChange = (newFocus: boolean) => {
     setIsFocused(newFocus);
     if (newFocus && props.onFocus) props.onFocus();
-  }; 
+    if (!newFocus && props.onBlur) props.onBlur();
+  };
 
   return (
     <div className={styles.agarTextInputContainer}>

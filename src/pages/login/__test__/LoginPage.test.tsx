@@ -64,6 +64,26 @@ describe('<LoginPage/>', () => {
     });
   });
 
+  it('should redirect to main page after successful login', async () => {
+    const { getByTestId } = render(<LoginPage />);
+
+    await act(async () => {
+      const emailTextInput = getByTestId('login-email-text-input');
+      await userEvent.type(emailTextInput, mockValues.validEmail);
+      const passwordTextInput = getByTestId('login-password-text-input');
+      await userEvent.type(passwordTextInput, mockValues.validPassword);
+      getByTestId('login-button').click();
+    });
+    
+    expect(mockNavigate).toHaveBeenCalledWith('/');
+  });
+
+  it('should redirect to create account page on create account button click', () => {
+    const { getByTestId } = render(<LoginPage />);
+    getByTestId('create-account-button').click();
+    expect(mockNavigate).toHaveBeenCalledWith('/create-account');
+  });
+
   it('should show loading spinner and hide or disable inputs until the promise resolves', async () => {
     mockLogin.mockImplementationOnce(() => {
       return new Promise(resolve => {

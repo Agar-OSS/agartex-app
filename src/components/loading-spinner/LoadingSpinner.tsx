@@ -1,3 +1,4 @@
+import { BLUE_2 } from '@constants';
 import { ThreeCircles } from 'react-loader-spinner';
 
 interface Props {
@@ -11,7 +12,7 @@ const LoadingSpinner = (props: Props) => (
     data-testid={props.testId}
   >
     <ThreeCircles
-      color='#7F98B8'
+      color={BLUE_2}
       ariaLabel={props.ariaLabel}
       wrapperClass={props.className}
     />
