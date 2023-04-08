@@ -18,6 +18,10 @@
   &:focus { 
     outline: 2px solid @blue2;
   }
+
+  &:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px @blue1 inset !important;
+  }
 }
 
 .agarTextInputError {
@@ -26,7 +30,8 @@
   border: 1px solid @red1;
   
   &:focus {
-    outline: 2px solid @red1;
+    border-color: @blue2;
+    outline: 2px solid @blue2;
   }
 }
 

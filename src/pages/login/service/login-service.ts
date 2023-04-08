@@ -1,22 +1,12 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
+import { AGARTEX_SERVICE_SESSIONS_URL } from '@constants';
 
 interface LoginRequestBody {
   email: string,
   password: string
 }
 
-const loginPath = process.env.AGARTEX_SERVICE_BASE_URL + '/sessions';
-
-/** Performs call to agartex-service login endpoint. 
-  * Returns token on success and throws error on failure */
-export const login = async (requestBody: LoginRequestBody): Promise<string> => {
-  return await axios.post(loginPath, requestBody, {
-    headers: {
-      'content-type': 'text/json',
-    }
-  })
-    .then((response) => {
-      // This will likely not look lite this, it will be changed once login endpoint is implemented
-      return response.data.token;
-    });
+/** Performs call to agartex-service login endpoint and returns the response promise. */
+export const login = async (requestBody: LoginRequestBody): Promise<AxiosResponse> => {
+  return await axios.post(AGARTEX_SERVICE_SESSIONS_URL, requestBody);
 };

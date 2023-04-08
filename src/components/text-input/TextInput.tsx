@@ -3,23 +3,32 @@ import { ChangeEvent, useState } from 'react';
 import styles from './TextInput.module.less';
 
 interface Props {
-    initialValue: string,
-    placeholder: string,
-    type: string,
-    onChange: (val: string) => void,
-    isValid: boolean,
-    errorMessage: string,
-    ariaLabel: string,
-    testId: string
+  initialValue: string,
+  placeholder: string,
+  type: string,
+  onChange: (val: string) => void,
+  onFocus?: () => void,
+  onBlur?: () => void,
+  isValid: boolean,
+  errorMessage: string,
+  ariaLabel: string,
+  testId: string
 }
 
 const TextInput = (props: Props) => {
-  const [value, setValue] = useState(props.initialValue);
+  const [value, setValue] = useState<string>(props.initialValue);
+  const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newValue = e.target.value;
     setValue(newValue);
     props.onChange(newValue);
+  };
+
+  const handleFocusChange = (newFocus: boolean) => {
+    setIsFocused(newFocus);
+    if (newFocus && props.onFocus) props.onFocus();
+    if (!newFocus && props.onBlur) props.onBlur();
   };
 
   return (
@@ -32,8 +41,10 @@ const TextInput = (props: Props) => {
         placeholder={props.placeholder}
         value={value}
         onChange={handleInputChange}
+        onFocus={() => handleFocusChange(true)}
+        onBlur={() => handleFocusChange(false)}
       />
-      { !props.isValid && <div className={styles.errorMessage}>{props.errorMessage}</div> }
+      { !props.isValid && !isFocused && <div className={styles.errorMessage}>{props.errorMessage}</div> }
     </div>
   );
 };
