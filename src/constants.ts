@@ -20,3 +20,16 @@ export const BLUE_2 = '#7F98B8';
 export enum OperationState {
   INPUT, LOADING, SUCCESS
 }
+
+export enum ModalState { 
+  CLOSED, INPUT, LOADING
+}
+
+export interface Project {
+  projectId: string,
+  name: string,
+  createdDate: string,
+  lastModifiedDate: string,
+  contributorsCount: number,
+  owner: string
+}

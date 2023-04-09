@@ -1,0 +1,63 @@
+@import '@variables';
+
+.modalContainer {
+  transition: all ease 0.2s;
+  transform-origin: 0 0;
+
+  box-shadow: 0 10px 20px rgba(black, 0.2);
+  background-color: @blue1;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1000;
+
+  border: 1px solid @blue2;
+  border-radius: 6px;
+
+  min-width: 600px;
+};
+
+.visible {
+  opacity: 1;
+  scale: 1;
+}
+
+.hidden { 
+  opacity: 0;
+  scale: 0.8;
+}
+
+.headerContainer {
+  display: flex;
+  align-items: center;
+  gap: 70px; 
+
+  font-size: 24px;
+  border-bottom: 1px solid @blue2;
+  padding: 15px;
+};
+
+.closeButtonContainer {
+  margin-left: auto;
+};
+
+.closeButton {
+  width: 35px !important;
+  height: 35px !important;
+  transition: all ease 0.2s;
+  background-color: @blue1;
+
+  &:hover {
+    background-color: @blue2;
+  }
+}
+
+.bodyContainer {
+  border-bottom: 1px solid @blue2;
+  padding: 15px;
+};
+
+.footerContainer {
+  padding: 15px;
+};

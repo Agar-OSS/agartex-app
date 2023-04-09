@@ -3,20 +3,21 @@ import { ChangeEvent, useState } from 'react';
 import styles from './TextInput.module.less';
 
 interface Props {
-  initialValue: string,
+  className?: string,
+  initialValue?: string,
   placeholder: string,
-  type: string,
+  type?: string,
   onChange: (val: string) => void,
   onFocus?: () => void,
   onBlur?: () => void,
-  isValid: boolean,
-  errorMessage: string,
+  isValid?: boolean,
+  errorMessage?: string,
   ariaLabel: string,
   testId: string
 }
 
 const TextInput = (props: Props) => {
-  const [value, setValue] = useState<string>(props.initialValue);
+  const [value, setValue] = useState<string>(props.initialValue ?? '');
   const [isFocused, setIsFocused] = useState<boolean>(false);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -34,10 +35,10 @@ const TextInput = (props: Props) => {
   return (
     <div className={styles.agarTextInputContainer}>
       <input
-        className={props.isValid ? styles.agarTextInput : styles.agarTextInputError}
+        className={`${props.isValid ? styles.agarTextInput : styles.agarTextInputError} ${props.className}`}
         aria-label={props.ariaLabel}
         data-testid={props.testId}
-        type={props.type}
+        type={props.type ?? 'text'}
         placeholder={props.placeholder}
         value={value}
         onChange={handleInputChange}
