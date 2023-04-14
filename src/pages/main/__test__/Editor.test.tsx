@@ -9,13 +9,24 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 
 import Editor from '../Editor';
 
+const renderEditor = () => {
+  return render(
+    <Editor
+      compilationLogs=''
+      compilationError={null}
+      documentUrl='example.pdf'
+      onDocumentSourceChange={jest.fn()}
+    />
+  );
+};
+
 describe('<Editor/>', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
   it('should render with all children', async () => {
-    const { getByTestId } = await act(() => { return render(<Editor/>); });
+    const { getByTestId } = await act(() => renderEditor());
     getByTestId('latex-text-area');
     getByTestId('delimiter');
     getByTestId('pdf-viewer');
