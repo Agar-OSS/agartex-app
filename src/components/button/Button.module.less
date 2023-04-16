@@ -1,7 +1,12 @@
 @import '@variables';
 
 .agarButton {
+  transition: box-shadow ease 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   border: 0;
+  border-radius: 4px;
   background-color: @blue2;
   color: @blue3;
   font-size: 16px;
@@ -14,5 +19,13 @@
 
   &:disabled {
     color: @blue1;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  & > *:hover {
+    cursor: pointer;
   }
 }

@@ -2,7 +2,7 @@ import { Button, LoadingSpinner, TextInput } from '@components';
 import { EMAIL_VALIDATION_RULES, PASSWORD_VALIDATION_RULES } from '../../../util/validators/common-rules';
 import { Field, FormState, useForm } from '../../../util/forms/forms';
 import { Fragment } from 'react';
-import { OperationState } from '@constants';
+import { OperationState } from '@model';
 import { createAccount } from './../service/create-account-service';
 import styles from './CreateAccountForm.module.less';
 import { validateString } from '../../../util/validators/string-validator';

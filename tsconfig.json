@@ -5,6 +5,7 @@
     "paths": {
       "@components": ["components"],
       "@constants": ["constants.ts"],
+      "@model": ["model.ts"],
       "@variables": ["variables.module.less"]
     }
   }

@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { CreateAccountPage, LoginPage, MainPage } from './pages';
+import { CreateAccountPage, LoginPage, MainPage, ProjectsPage } from './pages';
 import App from './App';
 import { createRoot } from 'react-dom/client';
 
@@ -11,7 +11,8 @@ root.render(
       <Route path='/login' element={<LoginPage />} />
       <Route path='/create-account' element={<CreateAccountPage />} />
       <Route path='/' element={<App />}>
-        <Route path='' element={<MainPage />} />
+        <Route path='' element={<ProjectsPage />} />
+        <Route path='/:projectId' element={<MainPage />} />
       </Route>
     </Routes>
   </BrowserRouter>

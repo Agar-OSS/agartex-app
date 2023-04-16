@@ -1,0 +1,82 @@
+@import '@variables';
+
+@transitionLength: 0.2s;
+
+.modalBackground {
+  transition: all ease @transitionLength;
+  background: rgba(0,0,0,0.7);;
+  z-index: 999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100vw;
+  min-height: 100vh;
+};
+
+.backgroundVisible {
+  opacity: 1;
+}
+
+.backgroundHidden { 
+  opacity: 0;
+}
+
+.modalContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+
+  transition: all ease @transitionLength;
+  transform-origin: 0 0;
+
+  box-shadow: 0 10px 20px rgba(black, 0.2);
+  background-color: @blue4;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 600px;
+  z-index: 1000;
+
+  border-radius: 6px;
+};
+
+.modalVisible {
+  opacity: 1;
+  scale: 1;
+}
+
+.modalHidden { 
+  opacity: 0;
+  scale: 0.8;
+}
+
+.headerContainer {
+  display: flex;
+  align-items: center;
+  gap: 70px;
+  padding: 25px;
+};
+
+.closeButtonContainer {
+  margin-left: auto;
+};
+
+.closeButton {
+  width: 35px !important;
+  height: 35px !important;
+  transition: all ease 0.2s;
+  background-color: @blue4;
+
+  &:hover {
+    background-color: @blue1;
+  }
+}
+
+.bodyContainer {
+  padding: 25px;
+};
+
+.footerContainer {
+  padding: 25px;
+};

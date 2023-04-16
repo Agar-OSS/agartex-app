@@ -1,7 +1,7 @@
 import { AgarLogo, Button } from '@components';
 import { CreateAccountForm } from './form/CreateAccountForm';
 import { CreateAccountSuccessBox } from './success-box/CreateAccountSuccessBox';
-import { OperationState } from '@constants';
+import { OperationState } from '@model';
 import styles from './CreateAccountPage.module.less';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
