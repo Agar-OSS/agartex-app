@@ -6,8 +6,9 @@ export const useDelayedMount = (desiredState: boolean, delayTime: number) => {
 
   useEffect(() => {
     if (desiredState && !mounted) {
+      setVisible(false);
       setMounted(true);
-    } else if (desiredState && !visible) {
+    } else if (desiredState && mounted) {
       setVisible(true);
     } else if (!desiredState && visible) {
       setVisible(false);

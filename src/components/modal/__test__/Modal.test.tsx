@@ -1,6 +1,8 @@
 import { ModalState } from '@model';
-import { render } from '@testing-library/react';
 import Modal from '../Modal';
+import { act } from 'react-dom/test-utils';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 const mockSetState = jest.fn();
 const mockModalHeader = <div data-testid='modal-header' />;
@@ -31,6 +33,14 @@ describe('<Modal />', () => {
   it('should close itself on close button click, the one in the header', () => {
     const { getByTestId } = renderModal();
     getByTestId('modal-close-button').click();
+    expect(mockSetState).toHaveBeenCalledWith(ModalState.CLOSED);
+  });
+
+  it('should close itself on escape button press', async () => {
+    renderModal();
+    await act(async () => {
+      await userEvent.keyboard('Escape');
+    });
     expect(mockSetState).toHaveBeenCalledWith(ModalState.CLOSED);
   });
 

@@ -1,7 +1,7 @@
 import { Button, LoadingSpinner } from '@components';
+import { ReactNode, useCallback, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { ModalState } from '@model';
-import { ReactNode } from 'react';
 import styles from './Modal.module.less';
 import { useDelayedMount } from 'util/delayed-mount/delayed-mount';
 
@@ -20,6 +20,20 @@ const Modal = (props: Props) => {
   const closeModal = () => {
     props.setState(ModalState.CLOSED);
   };
+
+  const escFunction = useCallback((event: KeyboardEvent) => {
+    if (event.key === 'Escape') {
+      closeModal();
+    }
+  }, []);
+
+  useEffect(() => {
+    document.addEventListener('keydown', escFunction, false);
+
+    return () => {
+      document.removeEventListener('keydown', escFunction, false);
+    };
+  }, [escFunction]);
 
   const closeButton = 
     <Button
