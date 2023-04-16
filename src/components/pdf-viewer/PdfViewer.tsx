@@ -16,8 +16,14 @@ interface Props {
 }
 
 const PdfViewer = (props: Props) => {
-  const [numPages, setNumPages] = useState(0);
+  const [numPages, setNumPages] = useState(null);
   const [pages, setPages] = useState<ReactNode[]>([]);
+
+  /* This prevents pdf viewer from throwing errors when changing document url. */
+  /* Github issue solution: https://github.com/wojtekmaj/react-pdf/issues/959#issuecomment-1163239179 */
+  useEffect(() => {
+    setNumPages(null);
+  }, [props.documentUrl]);
 
   useEffect(() => {
     setPages(Array.from(
