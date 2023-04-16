@@ -1,7 +1,9 @@
 @import '@variables';
 
+@transitionLength: 0.2s;
+
 .modalBackground {
-  transition: all ease 0.2s;
+  transition: all ease @transitionLength;
   background: rgba(0,0,0,0.7);;
   z-index: 999;
   position: absolute;
@@ -24,7 +26,7 @@
   flex-direction: column;
   justify-content: stretch;
 
-  transition: all ease 0.2s;
+  transition: all ease @transitionLength;
   transform-origin: 0 0;
 
   box-shadow: 0 10px 20px rgba(black, 0.2);

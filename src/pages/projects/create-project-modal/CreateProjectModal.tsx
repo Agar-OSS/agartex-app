@@ -60,4 +60,4 @@ const CreateProjectModal = (props: Props) => {
   );
 };
 
-export { CreateProjectModal };
+export default CreateProjectModal;

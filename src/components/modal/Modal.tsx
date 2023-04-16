@@ -14,8 +14,11 @@ interface Props {
   footer?: ReactNode
 }
 
+/* This matches the @transitionLength variable in Modal.module.less. */
+const MODAL_TRANSITION_LENGTH = 200;
+
 const Modal = (props: Props) => {
-  const { mounted, visible } = useDelayedMount(props.state !== ModalState.CLOSED, 200);
+  const { mounted, visible } = useDelayedMount(props.state !== ModalState.CLOSED, MODAL_TRANSITION_LENGTH);
 
   const closeModal = () => {
     props.setState(ModalState.CLOSED);

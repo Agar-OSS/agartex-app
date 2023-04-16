@@ -1,7 +1,7 @@
 import { ModalState } from '@model';
 import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
-import { CreateProjectModal } from '../CreateProjectModal';
+import CreateProjectModal from '../CreateProjectModal';
 import userEvent from '@testing-library/user-event';
 
 const mockSetState = jest.fn();

@@ -1,6 +1,6 @@
 import { ModalState, Project } from '@model';
 import { Button } from '@components';
-import { CreateProjectModal } from './create-project-modal/CreateProjectModal';
+import CreateProjectModal from './create-project-modal/CreateProjectModal';
 import { ProjectsList } from './projects-list/ProjectsList';
 import { UserBox } from './user-box/UserBox';
 import styles from './ProjectsPage.module.less';
