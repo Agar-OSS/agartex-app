@@ -1,8 +1,9 @@
-import { ModalState } from '@constants';
+import { ModalState } from '@model';
 import { render } from '@testing-library/react';
 import Modal from '../Modal';
 
 const mockSetState = jest.fn();
+const mockModalHeader = <div data-testid='modal-header' />;
 const mockModalBody = <div data-testid='modal-body' />;
 const mockModalFooter = <div data-testid='modal-footer' />;
 
@@ -12,7 +13,7 @@ const renderModal = (state: ModalState = ModalState.INPUT) => {
       ariaLabel='modal'
       state={state}
       setState={mockSetState}
-      headerString='header123'
+      header={mockModalHeader}
       body={mockModalBody}
       footer={mockModalFooter}
     />
@@ -21,8 +22,8 @@ const renderModal = (state: ModalState = ModalState.INPUT) => {
 
 describe('<Modal />', () => {
   it('should render with proper children and header', () => {
-    const { getByTestId, getByText } = renderModal();
-    getByText('header123');
+    const { getByTestId } = renderModal();
+    getByTestId('modal-header');
     getByTestId('modal-body');
     getByTestId('modal-footer');
   });

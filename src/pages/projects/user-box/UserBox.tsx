@@ -1,19 +1,31 @@
-import messi from './messi.png';
+import { Button } from '@components';
+import pfp from './pfp.png';
 import styles from './UserBox.module.less';
 
-const UserBox = () => {
+interface Props {
+  onLogoutButtonClick: () => void
+}
+
+const UserBox = (props: Props) => {
   return (
     <div 
       data-testid='projects-page-user-box'
       className={styles.userBoxContainer} >
       
       <img
-        style={{ width: '350px', height: '350px' }}
-        src={messi}
+        className={styles.profilePicture}
+        src={pfp}
       />
 
-      Messi...
+      <div className={styles.userDetailsContainer}>
+        <label>user_email@gmail.com</label>
+      </div>
 
+      <Button
+        ariaLabel='logout button'
+        testId='user-box-logout-button'
+        onClick={props.onLogoutButtonClick}
+        value='Logout' />
     </div>
   );
 };

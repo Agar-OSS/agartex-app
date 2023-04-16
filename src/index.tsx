@@ -12,7 +12,7 @@ root.render(
       <Route path='/create-account' element={<CreateAccountPage />} />
       <Route path='/' element={<App />}>
         <Route path='' element={<ProjectsPage />} />
-        <Route path='/{:projectId}' element={<MainPage />} />
+        <Route path='/:projectId' element={<MainPage />} />
       </Route>
     </Routes>
   </BrowserRouter>

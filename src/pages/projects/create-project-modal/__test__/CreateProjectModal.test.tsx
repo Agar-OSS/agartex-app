@@ -1,4 +1,4 @@
-import { ModalState } from '@constants';
+import { ModalState } from '@model';
 import { render } from '@testing-library/react';
 import { act } from 'react-dom/test-utils';
 import { CreateProjectModal } from '../CreateProjectModal';

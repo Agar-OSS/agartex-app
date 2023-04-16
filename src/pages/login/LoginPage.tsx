@@ -1,7 +1,7 @@
 import { AgarLogo, Button } from '@components';
 import { useEffect, useState } from 'react';
 import { LoginForm } from './form/LoginForm';
-import { OperationState } from '@constants';
+import { OperationState } from '@model';
 import styles from './LoginPage.module.less';
 import { useNavigate } from 'react-router-dom';
 

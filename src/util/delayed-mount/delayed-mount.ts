@@ -5,18 +5,14 @@ export const useDelayedMount = (desiredState: boolean, delayTime: number) => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    let timeoutId;
-
     if (desiredState && !mounted) {
       setMounted(true);
     } else if (desiredState && !visible) {
       setVisible(true);
     } else if (!desiredState && visible) {
       setVisible(false);
-      timeoutId = setTimeout(() => setMounted(false), delayTime);
+      setTimeout(() => setMounted(false), delayTime);
     }
-
-    return () => clearTimeout(timeoutId);
   }, [mounted, visible, desiredState, delayTime]);
 
   return { mounted, visible };

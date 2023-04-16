@@ -1,5 +1,5 @@
 import { Button, Modal, TextInput } from '@components';
-import { ModalState } from '@constants';
+import { ModalState } from '@model';
 import styles from './CreateProjectModal.module.less';
 import { useState } from 'react';
 
@@ -12,7 +12,10 @@ interface Props {
 const CreateProjectModal = (props: Props) => {
   const [newProjectName, setNewProjectName] = useState<string>('');
   
-  const modalHeaderText = 'Create new project';
+  const modalHeader = 
+    <div className={styles.createProjectModalHeader}>
+      Create new project
+    </div>;
 
   const modalBody = 
     <div className={styles.createProjectModalBody}>
@@ -51,7 +54,7 @@ const CreateProjectModal = (props: Props) => {
       ariaLabel='create project modal'
       state={props.state}
       setState={props.setState}
-      headerString={modalHeaderText}
+      header={modalHeader}
       body={modalBody}
       footer={modalFooter} />
   );

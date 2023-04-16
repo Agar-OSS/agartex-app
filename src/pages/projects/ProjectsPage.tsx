@@ -1,10 +1,10 @@
+import { ModalState, Project } from '@model';
 import { Button } from '@components';
 import { CreateProjectModal } from './create-project-modal/CreateProjectModal';
-import { ModalState } from '@constants';
-import { Project } from '@constants';
 import { ProjectsList } from './projects-list/ProjectsList';
 import { UserBox } from './user-box/UserBox';
 import styles from './ProjectsPage.module.less';
+import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 
 const initProjects = [
@@ -14,7 +14,7 @@ const initProjects = [
     createdDate: '2013-23-54T06:23:12Z',
     lastModifiedDate: '2064-32-13T23:23:31Z',
     contributorsCount: 5,
-    owner: 'maciekspinney'
+    owner: 'agarcoder'
   },
   {
     projectId: 'project2',
@@ -29,7 +29,7 @@ const initProjects = [
     name: 'Project 3',
     createdDate: '3213-44-23T65:12:54Z',
     lastModifiedDate: '999-32-54T21:32:32Z',
-    contributorsCount: 69,
+    contributorsCount: 10,
     owner: 'rybahubert'
   }
 ];
@@ -37,6 +37,7 @@ const initProjects = [
 const ProjectsPage = () => {
   const [projects, setProjects] = useState<Project[]>(initProjects);
   const [createProjectModalState, setCreateProjectModalState] = useState<ModalState>(ModalState.CLOSED);
+  const navigate = useNavigate();
 
   const submitProjectCreation = (newProjectName: string) => {
     setProjects([...projects, {
@@ -47,6 +48,10 @@ const ProjectsPage = () => {
       contributorsCount: 1,
       owner: 'you:)'
     }]);
+  };
+
+  const logout = () => {
+    navigate('/login');
   };
 
   return (
@@ -61,7 +66,9 @@ const ProjectsPage = () => {
 
       <ProjectsList projects={projects} />
 
-      <UserBox />
+      <UserBox 
+        onLogoutButtonClick={logout}
+      />
 
       <CreateProjectModal
         state={createProjectModalState}

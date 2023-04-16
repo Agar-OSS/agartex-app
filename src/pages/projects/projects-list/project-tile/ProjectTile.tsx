@@ -1,6 +1,6 @@
 
 import { Link } from 'react-router-dom';
-import { Project } from '@constants';
+import { Project } from '@model';
 import styles from './ProjectTile.module.less';
 
 interface Props {

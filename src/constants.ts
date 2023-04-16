@@ -16,20 +16,3 @@ export const AGARTEX_SERVICE_USERS_URL = AGARTEX_SERVICE_BASE_URL + '/users';
 
 /* This matches the @blue2 in variables.module.less. */
 export const BLUE_2 = '#7F98B8';
-
-export enum OperationState {
-  INPUT, LOADING, SUCCESS
-}
-
-export enum ModalState { 
-  CLOSED, INPUT, LOADING
-}
-
-export interface Project {
-  projectId: string,
-  name: string,
-  createdDate: string,
-  lastModifiedDate: string,
-  contributorsCount: number,
-  owner: string
-}

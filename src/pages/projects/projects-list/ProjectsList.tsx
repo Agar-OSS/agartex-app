@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Project } from '@constants';
+import { Project } from '@model';
 import { ProjectTile } from './project-tile/ProjectTile';
 import { TextInput } from '@components';
 import styles from './ProjectsList.module.less';
@@ -27,7 +27,7 @@ const ProjectsList = (props: Props) => {
         testId='search-project-query-input'
       />
 
-      <div>
+      <div className={styles.tilesContainer}>
         {
           queryResult.map((proj) => (
             <ProjectTile key={proj.name} project={proj} />
