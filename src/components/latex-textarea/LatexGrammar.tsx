@@ -9,14 +9,104 @@ const LatexGrammar: monaco.languages.IMonarchLanguage = {
 
   tokenizer: {
     root: [
-      { include: '@begin' },
+      { include: '@comment' },
+      { include: '@documentClass' }
     ],
 
-    'mathmode': [
+    // Comment
+
+    comment: [
+      [
+        /%.*$/, 'comment'
+      ]
+    ],
+
+    // Document structure
+
+    documentClass: [
+      { include: '@comment' },
+      [
+        /(\\documentclass)(\{)(.*)(\})/, [
+          'keyword',
+          'delimiter.curly',
+          { token: 'identifier', next: '@preamble' },
+          'delimiter.curly'
+        ]
+      ],
+      [
+        /(\\documentclass)(\[)(.*)(\])(\{)(.*)(\})/, [
+          'keyword',
+          'delimiter.square',
+          'tag.options',
+          'delimiter.square',
+          'delimiter.curly',
+          { token: 'identifier', next: '@preamble' },
+          'delimiter.curly'
+        ]
+      ]
+    ],
+
+    preamble: [
+      { include: '@comment' },
+      [
+        /(\\usepackage)(\{)(.*)(\})/, [
+          'keyword',
+          'delimiter.curly',
+          'identifier',
+          'delimiter.curly'
+        ]
+      ],
+      [
+        /(\\usepackage)(\[)(.*)(\])(\{)(.*)(\})/, [
+          'keyword',
+          'delimiter.square',
+          'tag.options',
+          'delimiter.square',
+          'delimiter.curly',
+          'identifier',
+          'delimiter.curly'
+        ]
+      ],
+      [
+        /(\\begin)(\{)(document)(\})/, [
+          'keyword',
+          'delimiter.curly',
+          { token: 'identifier', next: '@document' },
+          'delimiter.curly'
+        ], '@document'
+      ]
+    ],
+
+    document: [
+      { include: '@comment' },
+      { include: '@begin.mathmode.keyword' },
+      [
+        /(\\end)(\{)(document)(\})/, [
+          'keyword',
+          'delimiter.curly',
+          { token: 'identifier', next: '@eof' },
+          'delimiter.curly'
+        ]
+      ]
+    ],
+
+    eof: [
+      { include: '@comment' },
+      [ /.+/, 'invalid' ]
+    ],
+
+    // Mathmode
+    
+    mathmode: [
+      [ /.+/, 'string.mathmode' ]
+    ],
+
+    'mathmode.keyword': [
+      { include: '@comment' },
       [
         /(\\end)({)(\w+\*?)(})/, {
           cases: {
-            '$S2==$3': [
+            '$S3==$3': [
               'keyword',
               'delimiter.curly',
               { token: 'identifier.$3', bracket: '@close', next: '@pop'},
@@ -26,15 +116,15 @@ const LatexGrammar: monaco.languages.IMonarchLanguage = {
           }
         }
       ],
-      [ /.+/, 'string.mathmode' ]
+      { include: '@mathmode' }
     ],
-    
-    begin: [
+
+    'begin.mathmode.keyword': [
       [
         /(\\begin)({)((?:align|equation|eqnarray|multline|aligned|alignat|split|gather|gathered)\*?)(})/, [
           'keyword',
           'delimiter.curly',
-          { token: 'identifier.$3', bracket: '@open', next: '@mathmode.$3'},
+          { token: 'identifier.$3', bracket: '@open', next: '@mathmode.keyword.$3'},
           'delimiter.curly',
         ]
       ]
