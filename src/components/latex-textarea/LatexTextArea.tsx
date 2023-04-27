@@ -1,6 +1,6 @@
 import Editor, { loader } from '@monaco-editor/react';
 
-import LatexGrammar from './LatexGrammar';
+import { LatexExampleDoc, LatexGrammar } from './LatexGrammar';
 import styles from './LatexTextArea.module.less';
 import { useEffect } from 'react';
 
@@ -28,6 +28,7 @@ const LatexTextArea = (props: Props) => {
           enabled: false
         }
       }}
+      value={LatexExampleDoc}
     />
   );
 };

@@ -132,4 +132,41 @@ const LatexGrammar: monaco.languages.IMonarchLanguage = {
   }
 };
 
-export default LatexGrammar;
+const LatexExampleDoc = `
+\\documentclass[a4paper, 12pt]{article}
+
+\\usepackage[utf8]{inputenc}
+\\usepackage[T1]{fontenc}
+\\usepackage{amsthm,amsmath,amssymb,amsfonts}
+\\usepackage[polish]{babel}
+\\usepackage{polski}
+
+% Random comment
+\\begin{align*}
+  Illegal math mode (should not be highlighted)
+\\end{align*}
+
+\\newgeometry{tmargin=2.5cm, bmargin=2cm, rmargin=1cm, lmargin=1cm}
+
+\\pagestyle{fancy}
+\\fancyhf{}
+
+\\begin{document}
+
+\\maketitle
+
+Some text
+
+\\begin{align*}
+  Some random math text = \\lambda
+\\end{align*}
+
+% Random comment
+
+\\end{document}
+
+% Random comment
+Illegal text
+`;
+
+export { LatexGrammar, LatexExampleDoc };
