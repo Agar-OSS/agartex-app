@@ -79,7 +79,20 @@ const LatexGrammar: monaco.languages.IMonarchLanguage = {
 
     document: [
       { include: '@comment' },
-      { include: '@begin.mathmode.keyword' },
+      
+      [
+        /(\\begin)({)((?:align|equation|eqnarray|multline|aligned|alignat|split|gather|gathered)\*?)(})/, [
+          'keyword',
+          'delimiter.curly',
+          { token: 'identifier.$3', bracket: '@open', next: '@mathmode.keyword.$3'},
+          'delimiter.curly',
+        ]
+      ],
+      [ /\$\$/, { token: 'string.mathmode.block', bracket: '@open', next: '@mathmode.block.dollar' } ],
+      [ /\\\[/, { token: 'string.mathmode.block', bracket: '@open', next: '@mathmode.block.bracket' } ],
+      [ /\$/, { token: 'string.mathmode.inline', bracket: '@open', next: '@mathmode.inline.dollar' } ],
+      [ /\\\(/, { token: 'string.mathmode.inline', bracket: '@open', next: '@mathmode.inline.bracket' } ],
+
       [
         /(\\end)(\{)(document)(\})/, [
           'keyword',
@@ -98,7 +111,9 @@ const LatexGrammar: monaco.languages.IMonarchLanguage = {
     // Mathmode
     
     mathmode: [
-      [ /.+/, 'string.mathmode' ]
+      [ /[^\$\\]+/, 'string.mathmode' ],
+      [ /\\\\/, 'string.mathmode.special' ],
+      [ /\$|\\/, 'string.mathmode.special' ]
     ],
 
     'mathmode.keyword': [
@@ -119,15 +134,30 @@ const LatexGrammar: monaco.languages.IMonarchLanguage = {
       { include: '@mathmode' }
     ],
 
-    'begin.mathmode.keyword': [
-      [
-        /(\\begin)({)((?:align|equation|eqnarray|multline|aligned|alignat|split|gather|gathered)\*?)(})/, [
-          'keyword',
-          'delimiter.curly',
-          { token: 'identifier.$3', bracket: '@open', next: '@mathmode.keyword.$3'},
-          'delimiter.curly',
-        ]
-      ]
+    'mathmode.inline.dollar': [
+      { include: '@comment' },
+      [ /\\\$/, 'string.mathmode.special' ],
+      [ /\$/, { token: 'string.mathmode.inline', bracket: '@close', next: '@pop' }],
+      { include: '@mathmode' }
+    ],
+
+    'mathmode.inline.bracket': [
+      { include: '@comment' },
+      [ /\\\)/, { token: 'string.mathmode.inline', bracket: '@close', next: '@pop' }],
+      { include: '@mathmode' }
+    ],
+
+    'mathmode.block.dollar': [
+      { include: '@comment' },
+      [ /\\\$/, 'string.mathmode.special' ],
+      [ /\$\$/, { token: 'string.mathmode.block', bracket: '@close', next: '@pop' }],
+      { include: '@mathmode' }
+    ],
+
+    'mathmode.block.bracket': [
+      { include: '@comment' },
+      [ /\\\]/, { token: 'string.mathmode.block', bracket: '@close', next: '@pop' }],
+      { include: '@mathmode' }
     ]
   }
 };
@@ -156,6 +186,19 @@ const LatexExampleDoc = `
 \\maketitle
 
 Some text
+
+Inline mathmode $\\alpha + \\beta = \\$ and more math$ test and \\( more test \\) and testing.
+
+Mathmode block
+$$
+\\gamma = $
+$$
+
+Midtext
+
+\\[
+\\gamma = $
+\\]
 
 \\begin{align*}
   Some random math text = \\lambda
