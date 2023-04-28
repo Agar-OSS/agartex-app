@@ -93,6 +93,8 @@ const LatexGrammar: monaco.languages.IMonarchLanguage = {
       [ /\$/, { token: 'string.mathmode.inline', bracket: '@open', next: '@mathmode.inline.dollar' } ],
       [ /\\\(/, { token: 'string.mathmode.inline', bracket: '@open', next: '@mathmode.inline.bracket' } ],
 
+      { include: '@block' },
+
       [
         /(\\end)(\{)(document)(\})/, [
           'keyword',
@@ -158,6 +160,27 @@ const LatexGrammar: monaco.languages.IMonarchLanguage = {
       { include: '@comment' },
       [ /\\\]/, { token: 'string.mathmode.block', bracket: '@close', next: '@pop' }],
       { include: '@mathmode' }
+    ],
+
+    // Blocks
+
+    block: [
+      [
+        /(\\begin)({)(\w+\*?)(})/, [
+          'keyword',
+          'delimiter.curly',
+          { token: 'identifier.$3', bracket: '@close' },
+          'delimiter.curly',
+        ]
+      ],
+      [
+        /(\\end)({)(\w+\*?)(})/, [
+          'keyword',
+          'delimiter.curly',
+          { token: 'identifier.$3', bracket: '@close' },
+          'delimiter.curly',
+        ]
+      ]
     ]
   }
 };
@@ -186,6 +209,10 @@ const LatexExampleDoc = `
 \\maketitle
 
 Some text
+
+\\begin{itemize}
+  \\item $\\frac{1}{2}$
+\\end{itemize}
 
 Inline mathmode $\\alpha + \\beta = \\$ and more math$ test and \\( more test \\) and testing.
 
