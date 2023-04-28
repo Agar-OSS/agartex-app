@@ -4,6 +4,7 @@ import * as monaco from 'monaco-editor';
 // * https://microsoft.github.io/monaco-editor/monarch.html
 // * https://github.com/textmate/latex.tmbundle
 
+// TODO: lazy import
 const LatexGrammar: monaco.languages.IMonarchLanguage = {
   // defaultToken: 'invalid', // Uncomment for easier development
 
@@ -185,6 +186,7 @@ const LatexGrammar: monaco.languages.IMonarchLanguage = {
   }
 };
 
+// TODO: move to separate file or remove
 const LatexExampleDoc = `
 \\documentclass[a4paper, 12pt]{article}
 

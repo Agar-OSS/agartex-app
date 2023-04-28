@@ -9,6 +9,7 @@ interface Props {
   onTextChange: (newText: string) => void
 }
 
+// TODO: test, onTextChange, delimiter not working
 const LatexTextArea = (props: Props) => {
   useEffect(() => {
     loader.init().then(monaco => {
