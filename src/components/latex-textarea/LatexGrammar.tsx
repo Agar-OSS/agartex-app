@@ -114,7 +114,7 @@ const LatexGrammar: monaco.languages.IMonarchLanguage = {
     // Mathmode
     
     mathmode: [
-      [ /[^\$\\]+/, 'string.mathmode' ],
+      [ /[^$\\]+/, 'string.mathmode' ],
       [ /\\\\/, 'string.mathmode.special' ],
       [ /\$|\\/, 'string.mathmode.special' ]
     ],

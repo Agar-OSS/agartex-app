@@ -24,6 +24,8 @@ const Editor = (props: Props) => {
     setPdfViewerWidth((width ?? 0) * (1 - delimiterX) - EDITOR_DELIMITER_WIDTH);
   }, [width, delimiterX]);
 
+  useEffect(() => console.log(latexTextAreaWidth), [latexTextAreaWidth]);
+
   const onDrag = (x: number) => {
     setDelimiterX(x);
   };
@@ -31,7 +33,7 @@ const Editor = (props: Props) => {
   return (
     <div ref={rootRef} className={styles.root}>
       <div className={styles.editor}
-        style={{ flexBasis: latexTextAreaWidth }}>
+        style={{ width: latexTextAreaWidth }}>
         <LatexTextArea
           testId='latex-text-area'
           onTextChange={props.onDocumentSourceChange}
@@ -49,7 +51,7 @@ const Editor = (props: Props) => {
         testId='delimiter'/>
       <div 
         className={styles.viewer}
-        style={{ flexBasis: pdfViewerWidth }}
+        style={{ width: pdfViewerWidth }}
       >
         {
           !props.compilationError ? 

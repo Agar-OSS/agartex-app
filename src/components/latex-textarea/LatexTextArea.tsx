@@ -9,7 +9,6 @@ interface Props {
   onTextChange: (newText: string) => void
 }
 
-// TODO: test, onTextChange, delimiter not working
 const LatexTextArea = (props: Props) => {
   useEffect(() => {
     loader.init().then(monaco => {
@@ -19,18 +18,21 @@ const LatexTextArea = (props: Props) => {
   }, []);
 
   return (
-    <Editor
-      className={styles.LatexTextArea}
-      language='latex'
-      defaultLanguage='latex'
-      theme='vs-dark'
-      options={{
-        minimap: {
-          enabled: false
-        }
-      }}
-      value={LatexExampleDoc}
-    />
+    <div className={styles.latexTextArea}
+      data-testid={props.testId}>
+      <Editor
+        language='latex'
+        defaultLanguage='latex'
+        theme='vs-dark'
+        onChange={props.onTextChange}
+        options={{
+          minimap: {
+            enabled: false
+          }
+        }}
+        value={LatexExampleDoc}
+      />
+    </div>
   );
 };
 
