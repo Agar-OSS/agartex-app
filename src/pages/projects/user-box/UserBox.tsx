@@ -1,12 +1,24 @@
+import { useContext, useEffect } from 'react';
 import { Button } from '@components';
+import { UserContext } from 'context/UserContextProvider';
 import pfp from './pfp.png';
 import styles from './UserBox.module.less';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   onLogoutButtonClick: () => void
 }
 
 const UserBox = (props: Props) => {
+  const { user } = useContext(UserContext);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');
+    }
+  }, [user]);
+
   return (
     <div 
       data-testid='projects-page-user-box'
@@ -18,7 +30,7 @@ const UserBox = (props: Props) => {
       />
 
       <div className={styles.userDetailsContainer}>
-        <label>user_email@gmail.com</label>
+        <label>{ user && user.email }</label>
       </div>
 
       <Button
