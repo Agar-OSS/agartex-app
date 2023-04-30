@@ -1,9 +1,9 @@
 import { Button, LoadingSpinner } from '@components';
 import { ReactNode, useCallback, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
+import { CSSTransition } from 'react-transition-group';
 import { ModalState } from '@model';
 import styles from './Modal.module.less';
-import { useDelayedMount } from 'util/delayed-mount/delayed-mount';
 
 interface Props {
   ariaLabel: string,
@@ -18,8 +18,6 @@ interface Props {
 const MODAL_TRANSITION_LENGTH = 200;
 
 const Modal = (props: Props) => {
-  const { mounted, visible } = useDelayedMount(props.state !== ModalState.CLOSED, MODAL_TRANSITION_LENGTH);
-
   const closeModal = () => {
     props.setState(ModalState.CLOSED);
   };
@@ -47,41 +45,61 @@ const Modal = (props: Props) => {
       <AiOutlineClose size={24} />
     </Button>;
 
-  const backgroundVisibilityClass = visible ? styles.backgroundVisible : styles.backgroundHidden;
-  const modalVisibilityClass = visible ? styles.modalVisible : styles.modalHidden;
+  const backgroundClassNames = {
+    enter: styles.backgroundEnter,
+    enterActive: styles.backgroundEnterActive,
+    exitActive: styles.backgroundExitActive
+  };
 
-  if (!mounted) {
-    return null;
-  }
+  const modalClassNames = {
+    enter: styles.modalEnter,
+    enterActive: styles.modalEnterActive,
+    exitActive: styles.modalExitActive
+  };
 
   return (
     <>
-      <div 
-        aria-hidden='true'
-        className={`${styles.modalBackground} ${backgroundVisibilityClass}`}
-        onClick={closeModal}
-      />
-      <div
-        aria-label={props.ariaLabel}
-        className={`${styles.modalContainer} ${modalVisibilityClass}`}
+      <CSSTransition
+        in={props.state !== ModalState.CLOSED}
+        timeout={MODAL_TRANSITION_LENGTH}
+        classNames={backgroundClassNames}
+        unmountOnExit
       >
-        <div className={styles.headerContainer}>
-          { props.header }
-          <div className={styles.closeButtonContainer}>
-            { closeButton }
+        <div 
+          aria-hidden='true'
+          className={styles.background}
+          onClick={closeModal}
+        />
+      </CSSTransition>
+      
+      <CSSTransition
+        in={props.state !== ModalState.CLOSED}
+        timeout={MODAL_TRANSITION_LENGTH}
+        classNames={modalClassNames}
+        unmountOnExit
+      >
+        <div 
+          aria-label={props.ariaLabel}
+          className={styles.modal}  
+        >
+          <div className={styles.headerContainer}>
+            { props.header }
+            <div className={styles.closeButtonContainer}>
+              { closeButton }
+            </div>
+          </div>
+          <div className={styles.bodyContainer}>
+            { props.state === ModalState.LOADING ? 
+              <LoadingSpinner 
+                ariaLabel='modal loading spinner'
+                testId='modal-loading-spinner'
+              /> : props.body }
+          </div>
+          <div className={styles.footerContainer}>
+            { props.footer }
           </div>
         </div>
-        <div className={styles.bodyContainer}>
-          { props.state === ModalState.LOADING ? 
-            <LoadingSpinner 
-              ariaLabel='modal loading spinner'
-              testId='modal-loading-spinner'
-            /> : props.body }
-        </div>
-        <div className={styles.footerContainer}>
-          { props.footer }
-        </div>
-      </div>
+      </CSSTransition>
     </>
   );
 };

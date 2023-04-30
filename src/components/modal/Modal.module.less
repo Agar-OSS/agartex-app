@@ -2,8 +2,7 @@
 
 @transitionLength: 0.2s;
 
-.modalBackground {
-  transition: all ease @transitionLength;
+.background {
   background: rgba(0,0,0,0.7);;
   z-index: 999;
   position: absolute;
@@ -13,22 +12,25 @@
   min-height: 100vh;
 };
 
-.backgroundVisible {
-  opacity: 1;
-}
-
-.backgroundHidden { 
+.backgroundEnter {
   opacity: 0;
 }
 
-.modalContainer {
+.backgroundEnterActive {
+  opacity: 1;
+  transition: all ease @transitionLength;
+}
+
+.backgroundExitActive {
+  opacity: 0;
+  transition: all ease @transitionLength;
+}
+
+.modal {
   display: flex;
   flex-direction: column;
   justify-content: stretch;
-
-  transition: all ease @transitionLength;
   transform-origin: 0 0;
-
   box-shadow: 0 10px 20px rgba(black, 0.2);
   background-color: @blue4;
   position: absolute;
@@ -37,18 +39,24 @@
   transform: translate(-50%, -50%);
   min-width: 600px;
   z-index: 1000;
-
   border-radius: 6px;
 };
 
-.modalVisible {
-  opacity: 1;
-  scale: 1;
-}
-
-.modalHidden { 
+.modalEnter {
   opacity: 0;
   scale: 0.8;
+}
+
+.modalEnterActive {
+  opacity: 1;
+  scale: 1;
+  transition: all ease @transitionLength;
+}
+
+.modalExitActive {
+  opacity: 0;
+  scale: 0.8;
+  transition: all ease @transitionLength;
 }
 
 .headerContainer {
