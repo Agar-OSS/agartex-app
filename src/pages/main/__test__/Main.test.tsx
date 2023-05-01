@@ -2,10 +2,9 @@ import { UserContext } from 'context/UserContextProvider';
 import MainPage from '../Main';
 import { render } from '@testing-library/react';
 
-const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate
+  useNavigate: () => jest.fn()
 }));
 jest.mock('../Editor');
 
@@ -39,15 +38,9 @@ describe('<MainPage/>', () => {
     getByTestId('editor');
   });
 
-  it('should clear user context on logout button click', () => {
+  it('should call logout callback from user context on logout button click', () => {
     const { getByTestId } = renderInMockContext();
     getByTestId('logout-button').click();
     expect(mockLogout).toHaveBeenCalled();
-  });
-
-  it('should navigate to login page on logout button click', () => {
-    const { getByTestId } = renderInMockContext();
-    getByTestId('logout-button').click();
-    expect(mockNavigate).toHaveBeenCalledWith('/login');
   });
 });

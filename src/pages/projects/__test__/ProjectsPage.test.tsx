@@ -3,10 +3,9 @@ import { MemoryRouter } from 'react-router-dom';
 import ProjectsPage from '../ProjectsPage';
 import { UserContext } from 'context/UserContextProvider';
 
-const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => mockNavigate
+  useNavigate: () => jest.fn()
 }));
 
 const mockUser = {
@@ -51,15 +50,9 @@ describe('<ProjectsPage />', () => {
     getByText('mockEmail');
   });
   
-  it('should clear user context on logout button click', () => {
+  it('should call logout callback from user context on logout button click', () => {
     const { getByTestId } = renderInMockContext();
     getByTestId('user-box-logout-button').click();
     expect(mockLogout).toHaveBeenCalled();
-  });
-
-  it('should navigate to login page on logout button click', () => {
-    const { getByTestId } = renderInMockContext();
-    getByTestId('user-box-logout-button').click();
-    expect(mockNavigate).toHaveBeenCalledWith('/login');
   });
 });

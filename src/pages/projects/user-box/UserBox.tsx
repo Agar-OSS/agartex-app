@@ -1,9 +1,8 @@
-import { useContext, useEffect } from 'react';
 import { Button } from '@components';
 import { UserContext } from 'context/UserContextProvider';
 import pfp from './pfp.png';
 import styles from './UserBox.module.less';
-import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
 
 interface Props {
   onLogoutButtonClick: () => void
@@ -11,13 +10,6 @@ interface Props {
 
 const UserBox = (props: Props) => {
   const { user } = useContext(UserContext);
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
-  }, [user]);
 
   return (
     <div 

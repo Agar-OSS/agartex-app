@@ -2,10 +2,7 @@ import { render, waitFor } from '@testing-library/react';
 import { UserContext } from 'context/UserContextProvider';
 import { useContext } from 'react';
 
-const mockStoredValue = {
-  userId: 'mock_userId',
-  email: 'mock_email'
-};
+let mockStoredValue;
 const mockSetValue = jest.fn();
 const mockClearValue = jest.fn();
 
@@ -18,6 +15,12 @@ jest.mock('util/local-storage/useLocalStorage', () => ({
   }))
 }));
 
+const mockNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+  ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockNavigate
+}));
+
 import UserProvider from 'context/UserContextProvider';
 
 const UserConsumer = () => {
@@ -25,8 +28,8 @@ const UserConsumer = () => {
 
   return (
     <>
-      <p>{user?.userId}</p>
-      <p>{user?.email}</p>
+      <p data-testid='userid-field'>{user?.userId ?? 'empty'}</p>
+      <p data-testid='email-field'>{user?.email ?? 'empty'}</p>
       <button 
         data-testid='change-user-button'
         onClick={() => setUser({
@@ -51,6 +54,11 @@ const renderConsumerWithUserContext = () => {
 describe('<UserContextProvider/>', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    mockStoredValue = {
+      userId: 'mock_userId',
+      email: 'mock_email'
+    };
   });
 
   it('should load initial user context from browser local storage', () => {
@@ -67,9 +75,15 @@ describe('<UserContextProvider/>', () => {
   });
 
   it('should clear local storage on logout', () => {
-    const { getByTestId, queryByText } = renderConsumerWithUserContext();
+    const { getByTestId } = renderConsumerWithUserContext();
     getByTestId('logout-button').click();
-    waitFor(() => expect(queryByText('mock_userId')).toBeNull());
-    waitFor(() => expect(queryByText('mock_email')).toBeNull());
+    waitFor(() => expect(getByTestId('userid-field')).toHaveTextContent('empty'));
+    waitFor(() => expect(getByTestId('email-field')).toHaveTextContent('empty'));
+  });
+
+  it('should navigate to login page when user is null', () => {
+    mockStoredValue = null;
+    renderConsumerWithUserContext();
+    expect(mockNavigate).toHaveBeenCalledWith('/login');
   });
 });

@@ -6,7 +6,6 @@ import { ProjectsList } from './projects-list/ProjectsList';
 import { UserBox } from './user-box/UserBox';
 import { UserContext } from 'context/UserContextProvider';
 import styles from './ProjectsPage.module.less';
-import { useNavigate } from 'react-router-dom';
 
 const initProjects = [
   {
@@ -40,7 +39,6 @@ const ProjectsPage = () => {
 
   const [projects, setProjects] = useState<Project[]>(initProjects);
   const [createProjectModalState, setCreateProjectModalState] = useState<ModalState>(ModalState.CLOSED);
-  const navigate = useNavigate();
 
   const submitProjectCreation = (newProjectName: string) => {
     setProjects([...projects, {
@@ -55,7 +53,6 @@ const ProjectsPage = () => {
 
   const onLogoutClick = () => {
     logout();
-    navigate('/login');
   };
 
   return (

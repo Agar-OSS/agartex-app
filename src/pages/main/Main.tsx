@@ -1,11 +1,10 @@
 import { AiFillFolder, AiFillTool } from 'react-icons/ai';
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import { Button } from '@components';
 import Editor from './Editor';
 import { UserContext } from 'context/UserContextProvider';
 import { compileDocument } from './service/compilation-service';
 import styles from './Main.module.less';
-import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
   const { user, logout } = useContext(UserContext);
@@ -15,18 +14,9 @@ const MainPage = () => {
   const [compilationError, setCompilationError] = useState<string | null>(null);
   const [compilationLogs, setCompilationLogs] = useState<string>('');
 
-  const navigate = useNavigate();
-
   const onLogoutClick = () => {
     logout();
-    navigate('/login');
   };
-
-  useEffect(() => {
-    if (!user) {
-      navigate('/login');
-    }
-  }, [user]);
 
   const onCompilationButtonClick = () => {
     setCompilationError(null);
@@ -49,7 +39,7 @@ const MainPage = () => {
   return (
     <div className={styles.root}>
       <div className={styles.header}>
-        { user && (user.userId + ' ' + user.email) }
+        { user?.email }
         <Button
           ariaLabel='logout button'
           onClick={onLogoutClick}
