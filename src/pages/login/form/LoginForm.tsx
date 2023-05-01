@@ -1,8 +1,9 @@
 import { Button, LoadingSpinner, TextInput } from '@components';
 import { EMAIL_VALIDATION_RULES, PASSWORD_VALIDATION_RULES } from '../../../util/validators/common-rules';
 import { Field, useForm } from '../../../util/forms/forms';
-import { Fragment } from 'react';
+import { Fragment, useContext } from 'react';
 import { OperationState } from '@model';
+import { UserContext } from 'context/UserContextProvider';
 import { login } from './../service/login-service';
 import styles from './LoginForm.module.less';
 import { validateString } from '../../../util/validators/string-validator';
@@ -25,6 +26,8 @@ const formDefinition: Map<string, Field> = new Map([
 ]);
 
 const LoginForm = (props: Props) => {
+  const { setUser } = useContext(UserContext);
+
   const { 
     formState, 
     isInErrorState, 
@@ -49,6 +52,10 @@ const LoginForm = (props: Props) => {
 
     login(buildRequestBody())
       .then(() => {
+        setUser({
+          userId: 'mockUserId', // TODO: well...
+          email: formState.get('email').value as string
+        });
         props.setFormState(OperationState.SUCCESS);
       })
       .catch((error) => {

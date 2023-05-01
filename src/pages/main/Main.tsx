@@ -1,23 +1,21 @@
 import { AiFillFolder, AiFillTool } from 'react-icons/ai';
+import { useContext, useState } from 'react';
 import { Button } from '@components';
 import Editor from './Editor';
+import { UserContext } from 'context/UserContextProvider';
 import { compileDocument } from './service/compilation-service';
 import styles from './Main.module.less';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-
 
 const MainPage = () => {
+  const { user, logout } = useContext(UserContext);
+
   const [documentSource, setDocumentSource] = useState<string>('');
   const [documentUrl, setDocumentUrl] = useState<string>('example.pdf');
   const [compilationError, setCompilationError] = useState<string | null>(null);
   const [compilationLogs, setCompilationLogs] = useState<string>('');
 
-  const navigate = useNavigate();
-
-  const logout = () => {
-    localStorage.removeItem('user-token');
-    navigate('/login');
+  const onLogoutClick = () => {
+    logout();
   };
 
   const onCompilationButtonClick = () => {
@@ -41,10 +39,10 @@ const MainPage = () => {
   return (
     <div className={styles.root}>
       <div className={styles.header}>
-        Username
+        { user?.email }
         <Button
           ariaLabel='logout button'
-          onClick={logout}
+          onClick={onLogoutClick}
           testId='logout-button'
           value='Logout'/>
         <Button 

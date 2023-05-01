@@ -16,10 +16,26 @@ jest.mock('react-router-dom', () => ({
 }));
 
 import LoginPage from '../LoginPage';
+import { UserContext } from 'context/UserContextProvider';
 
 const mockValues = {
   validEmail: 'valid@email.com',
   validPassword: '1Str0ng#P4ssw0rd@!',
+};
+
+
+const mockSetUser = jest.fn();
+
+const renderInMockContext = () => {
+  return render(
+    <UserContext.Provider value={{
+      user: null,
+      setUser: mockSetUser,
+      logout: jest.fn()
+    }}>
+      <LoginPage />
+    </UserContext.Provider>
+  );
 };
 
 describe('<LoginPage/>', () => {
@@ -28,7 +44,7 @@ describe('<LoginPage/>', () => {
   });
 
   it('should render with all children', () => {
-    const { getByTestId } = render(<LoginPage />);
+    const { getByTestId } = renderInMockContext();
     getByTestId('login-agartex-logo');
     getByTestId('login-email-text-input');
     getByTestId('login-password-text-input');
@@ -37,7 +53,7 @@ describe('<LoginPage/>', () => {
   });
 
   it('should render children with proper texts', () => {
-    const { getByText, getByTestId } = render(<LoginPage />);
+    const { getByText, getByTestId } = renderInMockContext();
     expect(getByTestId('login-email-text-input')
       .getAttribute('placeholder')).toEqual('Enter your email');
     expect(getByTestId('login-password-text-input')
@@ -48,7 +64,7 @@ describe('<LoginPage/>', () => {
   });
 
   it('should call login service on login button click', async () => {
-    const { getByTestId } = render(<LoginPage />);
+    const { getByTestId } = renderInMockContext();
 
     await act(async () => {
       const emailTextInput = getByTestId('login-email-text-input');
@@ -64,8 +80,25 @@ describe('<LoginPage/>', () => {
     });
   });
 
+  it('should save user context after successful login', async () => {
+    const { getByTestId } = renderInMockContext();
+
+    await act(async () => {
+      const emailTextInput = getByTestId('login-email-text-input');
+      await userEvent.type(emailTextInput, mockValues.validEmail);
+      const passwordTextInput = getByTestId('login-password-text-input');
+      await userEvent.type(passwordTextInput, mockValues.validPassword);
+      getByTestId('login-button').click();
+    });
+    
+    expect(mockSetUser).toHaveBeenCalledWith({
+      userId: 'mockUserId',
+      email: mockValues.validEmail
+    });
+  });
+
   it('should redirect to main page after successful login', async () => {
-    const { getByTestId } = render(<LoginPage />);
+    const { getByTestId } = renderInMockContext();
 
     await act(async () => {
       const emailTextInput = getByTestId('login-email-text-input');
@@ -79,7 +112,7 @@ describe('<LoginPage/>', () => {
   });
 
   it('should redirect to create account page on create account button click', () => {
-    const { getByTestId } = render(<LoginPage />);
+    const { getByTestId } = renderInMockContext();
     getByTestId('create-account-button').click();
     expect(mockNavigate).toHaveBeenCalledWith('/create-account');
   });
@@ -91,7 +124,7 @@ describe('<LoginPage/>', () => {
       });
     });
 
-    const { getByTestId, queryByTestId } = render(<LoginPage />);
+    const { getByTestId, queryByTestId } = renderInMockContext();
 
     await act(async () => {
       const emailTextInput = getByTestId('login-email-text-input');

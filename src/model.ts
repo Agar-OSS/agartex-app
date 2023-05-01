@@ -14,3 +14,14 @@ export interface Project {
   contributorsCount: number,
   owner: string
 }
+
+export interface User {
+  userId: string,
+  email: string
+}
+
+export interface UserContextType {
+  user: User,
+  setUser: (user: User) => void,
+  logout: () => void
+}

@@ -17,3 +17,5 @@ export const AGARTEX_SERVICE_USERS_URL = AGARTEX_SERVICE_BASE_URL + '/users';
 
 /* This matches the @blue2 in variables.module.less. */
 export const BLUE_2 = '#7F98B8';
+
+export const USER_STORAGE_KEY = 'agartex-user';

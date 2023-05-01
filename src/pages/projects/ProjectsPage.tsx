@@ -1,11 +1,11 @@
 import { ModalState, Project } from '@model';
+import { useContext, useState } from 'react';
 import { Button } from '@components';
 import CreateProjectModal from './create-project-modal/CreateProjectModal';
 import { ProjectsList } from './projects-list/ProjectsList';
 import { UserBox } from './user-box/UserBox';
+import { UserContext } from 'context/UserContextProvider';
 import styles from './ProjectsPage.module.less';
-import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 
 const initProjects = [
   {
@@ -35,9 +35,10 @@ const initProjects = [
 ];
 
 const ProjectsPage = () => {
+  const { logout } = useContext(UserContext);
+
   const [projects, setProjects] = useState<Project[]>(initProjects);
   const [createProjectModalState, setCreateProjectModalState] = useState<ModalState>(ModalState.CLOSED);
-  const navigate = useNavigate();
 
   const submitProjectCreation = (newProjectName: string) => {
     setProjects([...projects, {
@@ -50,8 +51,8 @@ const ProjectsPage = () => {
     }]);
   };
 
-  const logout = () => {
-    navigate('/login');
+  const onLogoutClick = () => {
+    logout();
   };
 
   return (
@@ -67,7 +68,7 @@ const ProjectsPage = () => {
       <ProjectsList projects={projects} />
 
       <UserBox 
-        onLogoutButtonClick={logout}
+        onLogoutButtonClick={onLogoutClick}
       />
 
       <CreateProjectModal
