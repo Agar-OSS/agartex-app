@@ -70,7 +70,10 @@ const Editor = (props: Props) => {
   return (
     <div ref={rootRef} className={styles.root}>
       <div className={styles.editor}
-        style={{ width: latexTextAreaWidth }}>
+        style={{ 
+          height: height,
+          width: latexTextAreaWidth 
+        }}>
         <LatexTextArea
           testId='latex-text-area'
           text={props.documentSource}
