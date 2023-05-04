@@ -1,5 +1,7 @@
+import { ReadyState } from 'react-use-websocket';
+
 export enum OperationState {
-  INPUT, LOADING, SUCCESS
+  ERROR, INPUT, LOADING, SUCCESS
 }
 
 export enum ModalState { 
@@ -14,6 +16,14 @@ export interface Project {
   contributorsCount: number,
   owner: string
 }
+
+export const READY_STATE_DESCRIPTION = {
+  [ReadyState.CONNECTING]: 'Connecting',
+  [ReadyState.OPEN]: 'Open',
+  [ReadyState.CLOSING]: 'Closing',
+  [ReadyState.CLOSED]: 'Closed',
+  [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
+};
 
 export interface User {
   userId: string,

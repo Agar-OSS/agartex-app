@@ -10,7 +10,15 @@ app.get('/', (_req, res) => {
   res.sendFile(path.join(DIST_DIR, 'index.html'));
 });
 
+app.get('/:projectId', (_req, res) => {
+  res.sendFile(path.join(DIST_DIR, 'index.html'));
+});
+
 app.get('/login', (_req, res) => {
+  res.sendFile(path.join(DIST_DIR, 'index.html'));
+});
+
+app.get('/create-account', (_req, res) => {
   res.sendFile(path.join(DIST_DIR, 'index.html'));
 });
 

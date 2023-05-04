@@ -1,15 +1,17 @@
 import { EDITOR_DELIMITER_WIDTH, EDITOR_MIN_PERCENTAGE_WORKSPACE_WIDTH } from '@constants';
-import { LatexTextArea, PdfViewer } from '@components';
-import { useEffect, useState } from 'react';
-
+import { LatexTextArea, LoadingOverlay, LoadingSpinner, PdfViewer } from '@components';
+import { ReactNode, useEffect, useState } from 'react';
 import Delimiter from './delimiter/Delimiter';
+import { OperationState } from '@model';
 import styles from './Editor.module.less';
 import { useResizeDetector } from 'react-resize-detector';
 
 interface Props {
-  compilationError: string | null,
+  compilationError: string,
   compilationLogs: string,
+  compilationState: OperationState,
   documentUrl: string,
+  documentSource: string,
   onDocumentSourceChange: (newSource: string) => void
 }
 
@@ -26,8 +28,43 @@ const Editor = (props: Props) => {
 
   useEffect(() => console.log(latexTextAreaWidth), [latexTextAreaWidth]);
 
+  useEffect(() => {
+    console.log(width, height);
+  }, [width, height]);
+
   const onDrag = (x: number) => {
     setDelimiterX(x);
+  };
+
+  const getPreviewComponent = (): ReactNode => {
+    if (props.compilationState !== OperationState.ERROR) {
+      return (
+        <LoadingOverlay
+          show={props.compilationState === OperationState.LOADING}
+          loadingIndicator={
+            <LoadingSpinner 
+              ariaLabel='preview loading spinner' 
+              testId='preview-loading-spinner'/>
+          }>
+          <PdfViewer
+            documentUrl={props.documentUrl}
+            width={pdfViewerWidth}
+            height={height}
+            testId='pdf-viewer'/>
+        </LoadingOverlay>
+      );
+    } else {
+      return (
+        <div className={styles.errorBox}>
+          <div>
+            { props.compilationError }
+          </div>
+          <div>
+            { props.compilationLogs }
+          </div>
+        </div>
+      );
+    }
   };
 
   return (
@@ -36,6 +73,7 @@ const Editor = (props: Props) => {
         style={{ width: latexTextAreaWidth }}>
         <LatexTextArea
           testId='latex-text-area'
+          text={props.documentSource}
           onTextChange={props.onDocumentSourceChange}
         />
       </div>
@@ -53,15 +91,7 @@ const Editor = (props: Props) => {
         className={styles.viewer}
         style={{ width: pdfViewerWidth }}
       >
-        {
-          !props.compilationError ? 
-            <PdfViewer
-              documentUrl={props.documentUrl}
-              width={pdfViewerWidth}
-              height={height}
-              testId='pdf-viewer'/> 
-            : <label>{props.compilationLogs}</label>
-        }
+        { getPreviewComponent() }
       </div>
     </div>
   );

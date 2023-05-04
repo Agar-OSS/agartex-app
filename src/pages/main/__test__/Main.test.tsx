@@ -1,18 +1,24 @@
 import { UserContext } from 'context/UserContextProvider';
-import MainPage from '../Main';
 import { render } from '@testing-library/react';
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn()
-}));
 jest.mock('../Editor');
+
+jest.mock('react-use-websocket', () => ({
+  default: () => ({
+    sendMessage: jest.fn(),
+    lastMessage: null,
+    readyState: null
+  }),
+  ReadyState: {}
+}));
 
 const mockUser = {
   userId: 'mockUserId',
   email: 'mockEmail'
 };
 const mockLogout = jest.fn();
+
+import MainPage from '../Main';
 
 const renderInMockContext = () => {
   return render(

@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 
 interface Props {
   testId: string,
+  text: string,
   onTextChange: (newText: string) => void
 }
 
