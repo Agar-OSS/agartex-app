@@ -1,9 +1,12 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { CreateAccountPage, LoginPage, MainPage, ProjectsPage } from './pages';
+
 import App from './App';
 import UserProvider from 'context/UserContextProvider';
+import axios from 'axios';
 import { createRoot } from 'react-dom/client';
 
+axios.defaults.withCredentials = true;
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
