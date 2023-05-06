@@ -21,13 +21,18 @@ const UserProvider = (props: Props) => {
     clearValue: softLogout
   } = useLocalStorage<User>(USER_STORAGE_KEY);
 
+  const uninterceptedAxios = axios.create();
   const logout = () => {
-    axios.delete(AGARTEX_SERVICE_SESSIONS_URL)
+    uninterceptedAxios.delete(AGARTEX_SERVICE_SESSIONS_URL)
       .then(() => {
         softLogout();
       }).catch((error) => {
-        // TODO: actuall error handling
-        console.log(error);
+        if (error?.response.status === 401) {
+          softLogout();
+        } else {
+          // TODO: actuall error handling
+          console.log(error);
+        }
       });
   };
 
@@ -35,8 +40,9 @@ const UserProvider = (props: Props) => {
     const automaticLogout = axios.interceptors.response.use(
       (response) => response,
       (error) => {
-        if(error.response.status === 401)
+        if (error?.response.status === 401) {
           logout();
+        }
         return Promise.reject(error);
       }
     );
