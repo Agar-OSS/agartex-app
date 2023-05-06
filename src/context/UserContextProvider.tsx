@@ -1,6 +1,8 @@
+import { AGARTEX_SERVICE_SESSIONS_URL, USER_STORAGE_KEY } from '@constants';
 import { ReactNode, createContext, useEffect } from 'react';
 import { User, UserContextType } from '@model';
-import { USER_STORAGE_KEY } from '@constants';
+
+import axios from 'axios';
 import { useLocalStorage } from 'util/local-storage/useLocalStorage';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,8 +18,39 @@ const UserProvider = (props: Props) => {
   const { 
     storedValue: user, 
     setValue: setUser, 
-    clearValue: logout
+    clearValue: softLogout
   } = useLocalStorage<User>(USER_STORAGE_KEY);
+
+  const uninterceptedAxios = axios.create();
+  const logout = () => {
+    uninterceptedAxios.delete(AGARTEX_SERVICE_SESSIONS_URL)
+      .then(() => {
+        softLogout();
+      }).catch((error) => {
+        if (error?.response.status === 401) {
+          softLogout();
+        } else {
+          // TODO: actuall error handling
+          console.log(error);
+        }
+      });
+  };
+
+  useEffect(() => {
+    const automaticLogout = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error?.response.status === 401) {
+          logout();
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.response.eject(automaticLogout);
+    };
+  }, []);
 
   useEffect(() => {
     if (!user) {
