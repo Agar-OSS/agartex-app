@@ -28,7 +28,8 @@ const LatexTextArea = (props: Props) => {
         options={{
           minimap: {
             enabled: false
-          }
+          },
+          quickSuggestions: false
         }}
         value={LatexExampleDoc}
       />
