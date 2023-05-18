@@ -6,11 +6,7 @@ const app = express();
 var DIST_DIR = path.join(__dirname, '..', 'build');
 app.use(express.static(DIST_DIR));
 
-app.get('/', (_req, res) => {
-  res.sendFile(path.join(DIST_DIR, 'index.html'));
-});
-
-app.get('/login', (_req, res) => {
+app.get('/*', (_req, res) => {
   res.sendFile(path.join(DIST_DIR, 'index.html'));
 });
 
