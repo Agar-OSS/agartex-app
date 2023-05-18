@@ -43,11 +43,10 @@ const PdfViewer = (props: Props) => {
   };
 
   return (
-    <div
-      className={styles.pdfViewer}
+    <div className={styles.pdfViewer}
       style={{ height: props.height }}
       data-testid={props.testId}>
-      <Document className={styles.pdf}
+      <Document
         file={props.documentUrl}
         onLoadSuccess={onDocumentLoadSuccess}>
         { pages }
