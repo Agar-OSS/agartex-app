@@ -16,12 +16,15 @@ const renderEditor = (
 ) => {
   return render(
     <Editor
+      clientId=''
       compilationLogs={compilationLogs}
       compilationError={compilationError}
       compilationState={state}
       documentSource='mock source'
       documentUrl='example.pdf'
+      cursorsPositions={new Map()}
       onDocumentSourceChange={jest.fn()}
+      onCursorPositionChange={jest.fn()}
     />
   );
 };

@@ -7,12 +7,15 @@ import styles from './Editor.module.less';
 import { useResizeDetector } from 'react-resize-detector';
 
 interface Props {
+  clientId: string,
   compilationError: string,
   compilationLogs: string,
   compilationState: OperationState,
   documentUrl: string,
   documentSource: string,
-  onDocumentSourceChange: (newSource: string) => void
+  cursorsPositions: Map<string, number>,
+  onDocumentSourceChange: (newSource: string) => void,
+  onCursorPositionChange: (offset: number) => void
 }
 
 const Editor = (props: Props) => {
@@ -25,13 +28,7 @@ const Editor = (props: Props) => {
     setlatexTextAreaWidth((width ?? 0) * delimiterX);
     setPdfViewerWidth((width ?? 0) * (1 - delimiterX) - EDITOR_DELIMITER_WIDTH);
   }, [width, delimiterX]);
-
-  useEffect(() => console.log(latexTextAreaWidth), [latexTextAreaWidth]);
-
-  useEffect(() => {
-    console.log(width, height);
-  }, [width, height]);
-
+  
   const onDrag = (x: number) => {
     setDelimiterX(x);
   };
@@ -75,9 +72,12 @@ const Editor = (props: Props) => {
           width: latexTextAreaWidth 
         }}>
         <LatexTextArea
+          clientId={props.clientId}
           testId='latex-text-area'
           text={props.documentSource}
+          cursorsPositions={props.cursorsPositions}
           onTextChange={props.onDocumentSourceChange}
+          onCursorPositionChange={props.onCursorPositionChange}
         />
       </div>
       <Delimiter
