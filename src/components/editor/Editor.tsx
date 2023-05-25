@@ -1,21 +1,20 @@
 import { EDITOR_DELIMITER_WIDTH, EDITOR_MIN_PERCENTAGE_WORKSPACE_WIDTH } from '@constants';
-import { LatexTextArea, LoadingOverlay, LoadingSpinner, PdfViewer } from '@components';
+import { LoadingOverlay, LoadingSpinner, PdfViewer } from '@components';
+import { OperationState } from '@model';
 import { ReactNode, useEffect, useState } from 'react';
 import Delimiter from './delimiter/Delimiter';
-import { OperationState } from '@model';
 import styles from './Editor.module.less';
 import { useResizeDetector } from 'react-resize-detector';
+import { Collaboration } from 'pages/main/collaboration/model';
+import LatexTextArea from './latex-textarea/LatexTextArea';
 
 interface Props {
-  clientId: string,
+  collaboration: Collaboration,
   compilationError: string,
   compilationLogs: string,
   compilationState: OperationState,
   documentUrl: string,
-  documentSource: string,
-  cursorsPositions: Map<string, number>,
-  onDocumentSourceChange: (newSource: string) => void,
-  onCursorPositionChange: (offset: number) => void
+  documentSource: string
 }
 
 const Editor = (props: Props) => {
@@ -72,12 +71,8 @@ const Editor = (props: Props) => {
           width: latexTextAreaWidth 
         }}>
         <LatexTextArea
-          clientId={props.clientId}
           testId='latex-text-area'
-          text={props.documentSource}
-          cursorsPositions={props.cursorsPositions}
-          onTextChange={props.onDocumentSourceChange}
-          onCursorPositionChange={props.onCursorPositionChange}
+          collaboration={props.collaboration}
         />
       </div>
       <Delimiter

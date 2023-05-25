@@ -35,3 +35,4 @@ export interface UserContextType {
   setUser: (user: User) => void,
   logout: () => void
 }
+

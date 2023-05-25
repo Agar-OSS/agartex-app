@@ -8,6 +8,25 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 
 import Editor from '../Editor';
 import { OperationState } from '@model';
+import { Collaboration, DeltaQueue } from 'pages/main/collaboration/model';
+import { ReadyState } from 'react-use-websocket';
+
+const mockDeltaQueue: DeltaQueue = {
+  version: 0,
+  push: jest.fn(),
+  pop: jest.fn()
+};
+
+const mockCollaboration: Collaboration = {
+  initDocument: [],
+  clientId: '',
+  clientsConnectedIds: [],
+  cursorsPositions: new Map(),
+  onCursorPositionChange: jest.fn(),
+  deltaQueue: mockDeltaQueue,
+  connectionState: ReadyState.OPEN,
+  generateCharacter: jest.fn()
+};
 
 const renderEditor = (
   state: OperationState = OperationState.SUCCESS,
@@ -16,15 +35,12 @@ const renderEditor = (
 ) => {
   return render(
     <Editor
-      clientId=''
+      collaboration={mockCollaboration}
       compilationLogs={compilationLogs}
       compilationError={compilationError}
       compilationState={state}
       documentSource='mock source'
       documentUrl='example.pdf'
-      cursorsPositions={new Map()}
-      onDocumentSourceChange={jest.fn()}
-      onCursorPositionChange={jest.fn()}
     />
   );
 };

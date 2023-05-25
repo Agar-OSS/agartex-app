@@ -1,12 +1,11 @@
 import { AiFillFolder, AiFillTool } from 'react-icons/ai';
+import { Button, Editor } from '@components';
 import { OperationState, READY_STATE_DESCRIPTION } from '@model';
 import { useContext, useState } from 'react';
-import { Button } from '@components';
-import Editor from './Editor';
 import { UserContext } from 'context/UserContextProvider';
 import { compileDocument } from './service/compilation-service';
 import styles from './Main.module.less';
-import { useCollaboration } from './service/collaboration-service/collaboration-service';
+import { useCollaboration } from './collaboration/collaboration';
 import { useKeyDown } from 'util/keyboard/keyboard';
 
 const MainPage = () => {
@@ -16,20 +15,15 @@ const MainPage = () => {
   const [compilationError, setCompilationError] = useState<string>('');
   const [compilationLogs, setCompilationLogs] = useState<string>('');
   const [compilationState, setCompilationState] = useState<OperationState>(OperationState.SUCCESS);
+  
+  /* TEMPORARY */ 
+  const [documentSource, setDocumentSource] = useState<string>('');
 
   const onLogoutClick = () => {
     logout();
   };
 
-  const {
-    connectionState,
-    clientId,
-    clientsConnected,
-    documentSource,
-    cursorsPositions,
-    onDocumentSourceChange,
-    onCursorPositionChange
-  } = useCollaboration();
+  const collaboration = useCollaboration();
 
   const compile = () => {
     setCompilationError('');
@@ -61,9 +55,9 @@ const MainPage = () => {
     <div className={styles.root}>
       <div className={styles.header}>
         
-        <span>Clients connected: {clientsConnected.join(' ')}</span>
+        <span>Clients connected: {collaboration.clientsConnectedIds.join(' ')}</span>
 
-        <span>WebSocket status: {connectionState && READY_STATE_DESCRIPTION[connectionState]}</span>
+        <span>WebSocket status: {collaboration.connectionState && READY_STATE_DESCRIPTION[collaboration.connectionState]}</span>
 
         <span>{ user?.email }</span>
 
@@ -90,15 +84,12 @@ const MainPage = () => {
           className={styles.editor}
           data-testid='editor'>
           <Editor
-            clientId={clientId}
+            collaboration={collaboration}
             compilationState={compilationState}
             compilationError={compilationError}
             compilationLogs={compilationLogs}
             documentUrl={documentUrl}
             documentSource={documentSource}
-            cursorsPositions={cursorsPositions}
-            onDocumentSourceChange={onDocumentSourceChange}
-            onCursorPositionChange={onCursorPositionChange}
           />
         </div>
       </div>

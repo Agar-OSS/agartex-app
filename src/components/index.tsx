@@ -1,6 +1,6 @@
 import AgarLogo from './agar-logo/AgarLogo';
 import Button from './button/Button';
-import LatexTextArea from './latex-textarea/LatexTextArea';
+import Editor from './editor/Editor';
 import LoadingOverlay from './loading-overlay/LoadingOverlay';
 import LoadingSpinner from './loading-spinner/LoadingSpinner';
 import Modal from './modal/Modal';
@@ -10,7 +10,7 @@ import TextInput from './text-input/TextInput';
 export {
   AgarLogo,
   Button,
-  LatexTextArea,
+  Editor,
   LoadingOverlay,
   LoadingSpinner,
   Modal,
