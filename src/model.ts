@@ -1,5 +1,5 @@
 export enum OperationState {
-  INPUT, LOADING, SUCCESS
+  ERROR, INPUT, LOADING, SUCCESS
 }
 
 export enum ModalState { 
@@ -25,3 +25,4 @@ export interface UserContextType {
   setUser: (user: User) => void,
   logout: () => void
 }
+
