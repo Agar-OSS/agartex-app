@@ -21,10 +21,6 @@ export const useCollaboration = (): Collaboration => {
   clientIdRef.current = state.clientId;
 
   const generateCharacter = (value: string): Character | undefined => {
-    if (!clientIdRef.current) { 
-      return undefined;
-    }
-
     nextCharacterIdRef.current = nextCharacterIdRef.current + 1;
 
     return {

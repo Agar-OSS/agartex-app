@@ -1,45 +1,66 @@
 import { AiFillFolder, AiFillTool } from 'react-icons/ai';
+import { Button, Editor } from '@components';
 import { useContext, useState } from 'react';
-import { Button } from '@components';
-import Editor from './Editor';
+import { OperationState } from '@model';
+import { ReadyState } from 'react-use-websocket';
 import { UserContext } from 'context/UserContextProvider';
 import { compileDocument } from './service/compilation-service';
 import styles from './Main.module.less';
+import { useCollaboration } from './collaboration/collaboration';
+import { useKeyDown } from 'util/keyboard/keyboard';
 
 const MainPage = () => {
   const { user, logout } = useContext(UserContext);
 
-  const [documentSource, setDocumentSource] = useState<string>('');
   const [documentUrl, setDocumentUrl] = useState<string>('example.pdf');
-  const [compilationError, setCompilationError] = useState<string | null>(null);
+  const [compilationError, setCompilationError] = useState<string>('');
   const [compilationLogs, setCompilationLogs] = useState<string>('');
+  const [compilationState, setCompilationState] = useState<OperationState>(OperationState.SUCCESS);
+
+  const [text, setText] = useState<string>('');
+
+  const collaboration = useCollaboration();
 
   const onLogoutClick = () => {
     logout();
   };
 
-  const onCompilationButtonClick = () => {
+  const compile = () => {
     setCompilationError(null);
     setCompilationLogs('');
+    setCompilationState(OperationState.LOADING);
 
-    compileDocument(documentSource)
+    compileDocument(text)
       .then((response) => {
         setDocumentUrl(window.URL.createObjectURL(new Blob([response.data])));
+        setCompilationState(OperationState.SUCCESS);
       })
       .catch((error) => {
         setCompilationError(error.message);
+        setCompilationState(OperationState.ERROR);
+
         console.log(error.message);
+
         if (error.response.status === 422) {
           error.response.data.text()
             .then((logs) => setCompilationLogs(logs));
         }
       });
   };
+
+  /* Register CTRL-S event to compile document. */
+  useKeyDown('s', compile, true);
   
   return (
     <div className={styles.root}>
       <div className={styles.header}>
-        { user?.email }
+
+        <span>Clients connected: {collaboration.clientsConnectedIds.join(' ')}</span>
+
+        <span>WebSocket status: {collaboration.connectionState && ReadyState[collaboration.connectionState]}</span>
+
+        <span>{ user?.email }</span>
+
         <Button
           ariaLabel='logout button'
           onClick={onLogoutClick}
@@ -47,7 +68,7 @@ const MainPage = () => {
           value='Logout'/>
         <Button 
           ariaLabel='compile button'
-          onClick={onCompilationButtonClick}
+          onClick={compile}
           testId='compile-button'
           value='Compile'/>
       </div>
@@ -62,10 +83,12 @@ const MainPage = () => {
           className={styles.editor}
           data-testid='editor'>
           <Editor
+            collaboration={collaboration}
+            compilationState={compilationState}
             compilationError={compilationError}
             compilationLogs={compilationLogs}
             documentUrl={documentUrl}
-            onDocumentSourceChange={setDocumentSource}
+            onTextChangeCompilationCallback={setText}
           />
         </div>
       </div>
@@ -74,3 +97,4 @@ const MainPage = () => {
 };
 
 export default MainPage;
+
