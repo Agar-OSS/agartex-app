@@ -1,6 +1,19 @@
-import { CollabReducerAction, CollabState, Delta, DeltaQueue, Message, MessageType, SourceChange_Message } from '../model';
+import { Character, CollabReducerActionType } from '../reducer/model';
+import { CollabReducerAction, CollabState, Message, MessageType, SourceChange_Message } from '../reducer/model';
 import { useEffect, useRef, useState } from 'react';
 import { cloneDeep } from 'lodash';
+
+export interface Delta {
+  position: string | null,
+  isBackspace: boolean,
+  char?: Character
+}
+
+export interface DeltaQueue {
+  version: number,
+  push: (delta: Delta) => void,
+  pop: () => Delta
+}
 
 export const useDeltaQueue = (
   state: CollabState, 
@@ -34,7 +47,11 @@ export const useDeltaQueue = (
       ...delta
     };
     
-    dispatch({ message });
+    dispatch({ 
+      type: CollabReducerActionType.SOURCE_CHANGE,
+      message
+    });
+    
     sendMessage(message);
   };
 
@@ -55,7 +72,9 @@ export const useDeltaQueue = (
       insertedIds.current.add(delta.char.id);
     }
 
-    dispatch({ name: 'popDeltaQueue', popCount: 1 });
+    dispatch({ 
+      type: CollabReducerActionType.POP_DELTA_QUEUE,
+    });
 
     return delta;
   };

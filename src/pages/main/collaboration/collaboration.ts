@@ -1,14 +1,20 @@
-import { 
-  Character,
-  Collaboration,
-  CursorMove_Message,
-  INIT_COLLAB_STATE,
-  MessageType,
-} from './model';
+import { Character, CollabReducerActionType, CursorMove_Message, INIT_COLLAB_STATE, MessageType } from './reducer/model';
+import { DeltaQueue, useDeltaQueue } from './delta-queue/delta-queue';
 import { useReducer, useRef } from 'react';
+import { ReadyState } from 'react-use-websocket';
 import { collabReducer } from './reducer/reducer';
 import { useCollabStream } from './stream/stream';
-import { useDeltaQueue } from './delta-queue/delta-queue';
+
+export interface Collaboration {
+  initDocument: Character[],
+  clientId: string | null,
+  clientsConnectedIds: string[],
+  cursorsPositions: Map<string, string | null>,
+  onCursorPositionChange: (charId: string) => void,
+  deltaQueue: DeltaQueue,
+  connectionState: ReadyState,
+  generateCharacter: (val: string) => Character
+}
 
 export const useCollaboration = (): Collaboration => {
   const [state, dispatch] = useReducer(collabReducer, INIT_COLLAB_STATE);
@@ -41,7 +47,11 @@ export const useCollaboration = (): Collaboration => {
       cursorPosition: charId
     };
 
-    dispatch({ message: moveMessage });
+    dispatch({
+      type: CollabReducerActionType.CURSOR_MOVE,
+      message: moveMessage
+    });
+
     sendMessage(moveMessage);
   };
   

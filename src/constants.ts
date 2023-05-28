@@ -15,7 +15,7 @@ const COLLABORATION_URL = global.window?.env?.REACT_APP_COLLABORATION_SERVICE_UR
 export const AGARTEX_SERVICE_COMPILATION_URL = SERVICE_URL + '/compile';
 export const AGARTEX_SERVICE_SESSIONS_URL = SERVICE_URL + '/sessions';
 export const AGARTEX_SERVICE_USERS_URL = SERVICE_URL + '/users';
-export const AGARTEX_COLLABORATION_URL = COLLABORATION_URL;
+export const AGARTEX_COLLABORATION_URL = COLLABORATION_URL + '/collaboration';
 
 /* This matches the @blue2 in variables.module.less. */
 export const BLUE_2 = '#7F98B8';
