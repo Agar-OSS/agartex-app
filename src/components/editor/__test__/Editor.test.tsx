@@ -8,8 +8,9 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
 
 import Editor from '../Editor';
 import { OperationState } from '@model';
-import { Collaboration, DeltaQueue } from 'pages/main/collaboration/model';
 import { ReadyState } from 'react-use-websocket';
+import { DeltaQueue } from 'pages/main/collaboration/delta-queue/delta-queue';
+import { Collaboration } from 'pages/main/collaboration/collaboration';
 
 const mockDeltaQueue: DeltaQueue = {
   version: 0,
@@ -69,3 +70,4 @@ describe('<Editor/>', () => {
     expect(queryByTestId('pdf-viewer')).toBeNull();
   });
 });
+

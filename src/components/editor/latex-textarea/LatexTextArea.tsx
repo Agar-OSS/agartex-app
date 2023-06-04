@@ -1,9 +1,10 @@
-import { Collaboration, Delta } from 'pages/main/collaboration/model';
 import { CursorPosition, MonacoContentManager } from './MonacoContentManager';
 import Editor, { Monaco, loader } from '@monaco-editor/react';
 import { IKeyboardEvent, editor } from 'monaco-editor';
 import { isCharacterKey, isKeyboardEventToIgnore } from './monaco-content-rules';
 import { useEffect, useRef, useState } from 'react';
+import { Collaboration } from 'pages/main/collaboration/collaboration';
+import { Delta } from 'pages/main/collaboration/delta-queue/delta-queue';
 import { LatexGrammar } from './LatexGrammar';
 import styles from './LatexTextArea.module.less';
 import { useCursorsDecorations } from './cursors-decorations';

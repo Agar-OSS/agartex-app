@@ -1,4 +1,5 @@
-import { Character, Delta } from 'pages/main/collaboration/model';
+import { Character } from 'pages/main/collaboration/reducer/model';
+import { Delta } from 'pages/main/collaboration/delta-queue/delta-queue';
 import { Monaco } from '@monaco-editor/react';
 import { MutableRefObject } from 'react';
 import { cloneDeep } from 'lodash';

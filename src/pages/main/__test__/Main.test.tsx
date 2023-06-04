@@ -1,4 +1,5 @@
-import { Collaboration, DeltaQueue } from '../collaboration/model';
+import { Collaboration } from '../collaboration/collaboration';
+import { DeltaQueue } from '../collaboration/delta-queue/delta-queue';
 import MainPage from '../Main';
 import { ReadyState } from 'react-use-websocket';
 import { UserContext } from 'context/UserContextProvider';

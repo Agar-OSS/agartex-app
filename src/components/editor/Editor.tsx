@@ -1,6 +1,6 @@
 import { EDITOR_DELIMITER_WIDTH, EDITOR_MIN_PERCENTAGE_WORKSPACE_WIDTH } from '@constants';
 import { LoadingOverlay, LoadingSpinner, PdfViewer } from '@components';
-import { Collaboration } from 'pages/main/collaboration/model';
+import { Collaboration } from 'pages/main/collaboration/collaboration';
 import Delimiter from './delimiter/Delimiter';
 import LatexTextArea from './latex-textarea/LatexTextArea';
 import { OperationState } from '@model';
