@@ -1,12 +1,12 @@
 import { EDITOR_DELIMITER_WIDTH, EDITOR_MIN_PERCENTAGE_WORKSPACE_WIDTH } from '@constants';
 import { LoadingOverlay, LoadingSpinner, PdfViewer } from '@components';
-import { ReactNode, useState } from 'react';
 import { Collaboration } from 'pages/main/collaboration/model';
 import Delimiter from './delimiter/Delimiter';
 import LatexTextArea from './latex-textarea/LatexTextArea';
 import { OperationState } from '@model';
 import styles from './Editor.module.less';
 import { useResizeDetector } from 'react-resize-detector';
+import { useState } from 'react';
 
 interface Props {
   collaboration: Collaboration,
@@ -28,7 +28,7 @@ const Editor = (props: Props) => {
     setDelimiterX(x);
   };
 
-  const getPreviewComponent = (): ReactNode => {
+  const PreviewComponent = () => {
     if (props.compilationState !== OperationState.ERROR) {
       return (
         <LoadingOverlay
@@ -86,7 +86,7 @@ const Editor = (props: Props) => {
         className={styles.viewer}
         style={{ width: pdfViewerWidth }}
       >
-        { getPreviewComponent() }
+        <PreviewComponent />
       </div>
     </div>
   );
