@@ -58,7 +58,6 @@ export const useCollabStream = (dispatch: (action: CollabReducerAction) => void)
   );
 
   const connectionStateRef = useRef<ReadyState>(connectionState);
-  connectionStateRef.current = connectionState;
 
   const sendMessage = (message: Message) => {
     if (connectionStateRef.current === ReadyState.OPEN) {
