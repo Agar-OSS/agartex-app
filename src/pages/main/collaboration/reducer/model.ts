@@ -1,10 +1,4 @@
-import { ReadyState } from 'react-use-websocket';
-
-export interface Character {
-  deleted: boolean,
-  value: string,
-  id: string
-}
+import { Delta } from '../delta-queue/delta-queue';
 
 export enum MessageType {
   CONNECTED = 0,
@@ -14,21 +8,10 @@ export enum MessageType {
   CURSOR_MOVE = 4
 }
 
-export interface MessageDto {
-  type?: MessageType,
-  clientId?: string,
-  clientsConnectedIds?: string[],
-  document?: Character[],
-  char?: Character,
-  position?: string,
-  isBackspace?: boolean,
-  cursorsPositions?: Record<string, string | null>
-}
-
-export interface Delta {
-  position: string | null,
-  isBackspace: boolean,
-  char: Character | null
+export interface Character {
+  deleted: boolean,
+  value: string,
+  id: string
 }
 
 interface Base_Message {
@@ -68,7 +51,7 @@ export interface CollabState {
   deltaQueue: Delta[]
 }
 
-export const INIT_COLLAB_STATE = {
+export const INIT_COLLAB_STATE: CollabState = {
   document: [],
   clientId: '',
   clientsConnectedIds: [],
@@ -76,26 +59,17 @@ export const INIT_COLLAB_STATE = {
   deltaQueue: []
 };
 
+export enum CollabReducerActionType {
+  CONNECTED,
+  NEW_CLIENT_CONNECTED,
+  CLIENT_DISCONNECTED,
+  SOURCE_CHANGE,
+  CURSOR_MOVE,
+  POP_DELTA_QUEUE
+}
+
 export interface CollabReducerAction {
-  name?: string,
-  message?: Message,
-  popCount?: number
-}
-
-export interface DeltaQueue {
-  version: number,
-  push: (delta: Delta) => void,
-  pop: () => Delta
-}
-
-export interface Collaboration {
-  initDocument: Character[],
-  clientId: string | null,
-  clientsConnectedIds: string[],
-  cursorsPositions: Map<string, string | null>,
-  onCursorPositionChange: (charId: string) => void,
-  deltaQueue: DeltaQueue,
-  connectionState: ReadyState,
-  generateCharacter: (val: string) => Character
+  type: CollabReducerActionType,
+  message?: Message
 }
 

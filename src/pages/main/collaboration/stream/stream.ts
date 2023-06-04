@@ -1,8 +1,20 @@
-import { CollabReducerAction, Message, MessageDto } from '../model';
-import { useCallback, useEffect, useRef } from 'react';
+import { Character, CollabReducerActionType, MessageType } from '../reducer/model';
+import { CollabReducerAction, Message } from '../reducer/model';
+import { useEffect, useRef } from 'react';
 import { AGARTEX_COLLABORATION_URL } from '@constants';
 import { ReadyState } from 'react-use-websocket';
 import { useWebSocket } from 'react-use-websocket/dist/lib/use-websocket';
+
+export interface MessageDto {
+  type: MessageType,
+  clientId?: string,
+  clientsConnectedIds?: string[],
+  document?: Character[],
+  char?: Character,
+  position?: string,
+  isBackspace?: boolean,
+  cursorsPositions?: Record<string, string | null>
+}
 
 const convertRecordToMap = (record: Record<string, string | null>): Map<string, string | null> => {
   const map = new Map();
@@ -23,27 +35,35 @@ const convertMessageDtoToMessage = (data: MessageDto): Message => {
 };
 
 export const useCollabStream = (dispatch: (action: CollabReducerAction) => void) => {
-  const { 
-    sendMessage: send, 
-    lastMessage, 
-    readyState: connectionState 
-  } = useWebSocket(AGARTEX_COLLABORATION_URL);
-
-  const connectionStateRef = useRef<ReadyState>(null);
-  connectionStateRef.current = connectionState;
 
   const handleIncomingMessage = (data: string) => {
     const messageDto: MessageDto = JSON.parse(data);
     const message = convertMessageDtoToMessage(messageDto);
-    dispatch({ message });
+    const actionType: CollabReducerActionType = CollabReducerActionType[MessageType[message.type]];
+
+    dispatch({ 
+      type: actionType,
+      message 
+    });
   };
 
-  const sendMessage = useCallback((message: Message) => {
-    // TODO: Otherwise we should not even be here in the code.
+  const { 
+    sendMessage: send, 
+    lastMessage, 
+    readyState: connectionState 
+  } = useWebSocket(AGARTEX_COLLABORATION_URL, 
+    {
+      onMessage: (event: MessageEvent) => handleIncomingMessage(event.data)
+    }
+  );
+
+  const connectionStateRef = useRef<ReadyState>(connectionState);
+
+  const sendMessage = (message: Message) => {
     if (connectionStateRef.current === ReadyState.OPEN) {
       send(JSON.stringify(message));
     }
-  }, [connectionState]);
+  };
 
   useEffect(() => {
     lastMessage && handleIncomingMessage(lastMessage.data);
