@@ -28,36 +28,29 @@ const Editor = (props: Props) => {
     setDelimiterX(x);
   };
 
-  const PreviewComponent = () => {
-    if (props.compilationState !== OperationState.ERROR) {
-      return (
-        <LoadingOverlay
-          show={props.compilationState === OperationState.LOADING}
-          loadingIndicator={
-            <LoadingSpinner 
-              ariaLabel='preview loading spinner' 
-              testId='preview-loading-spinner'/>
-          }>
-          <PdfViewer
-            documentUrl={props.documentUrl}
-            width={pdfViewerWidthValue}
-            height={height}
-            testId='pdf-viewer'/>
-        </LoadingOverlay>
-      );
-    } else {
-      return (
-        <div className={styles.errorBox}>
-          <div>
-            { props.compilationError }
-          </div>
-          <div>
-            { props.compilationLogs }
-          </div>
+  const previewComponent = 
+    (props.compilationState !== OperationState.ERROR) ?
+      <LoadingOverlay
+        show={props.compilationState === OperationState.LOADING}
+        loadingIndicator={
+          <LoadingSpinner 
+            ariaLabel='preview loading spinner' 
+            testId='preview-loading-spinner'/>
+        }>
+        <PdfViewer
+          documentUrl={props.documentUrl}
+          width={pdfViewerWidthValue}
+          height={height}
+          testId='pdf-viewer'/>
+      </LoadingOverlay> : 
+      <div className={styles.errorBox}>
+        <div>
+          { props.compilationError }
         </div>
-      );
-    }
-  };
+        <div>
+          { props.compilationLogs }
+        </div>
+      </div>;
 
   return (
     <div ref={rootRef} className={styles.root}>
@@ -86,7 +79,7 @@ const Editor = (props: Props) => {
         className={styles.viewer}
         style={{ width: pdfViewerWidth }}
       >
-        <PreviewComponent />
+        { previewComponent }
       </div>
     </div>
   );
