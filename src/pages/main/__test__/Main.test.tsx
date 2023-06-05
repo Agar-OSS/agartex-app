@@ -1,12 +1,37 @@
-import { UserContext } from 'context/UserContextProvider';
+import { Collaboration } from '../collaboration/collaboration';
+import { DeltaQueue } from '../collaboration/delta-queue/delta-queue';
 import MainPage from '../Main';
+import { ReadyState } from 'react-use-websocket';
+import { UserContext } from 'context/UserContextProvider';
 import { render } from '@testing-library/react';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => jest.fn()
 }));
-jest.mock('../Editor');
+
+jest.mock('../../../components/editor/Editor');
+
+const mockDeltaQueue: DeltaQueue = {
+  version: 0,
+  push: jest.fn(),
+  pop: jest.fn()
+};
+
+const mockCollaboration: Collaboration = {
+  initDocument: [],
+  clientId: '',
+  clientsConnectedIds: [],
+  cursorsPositions: new Map(),
+  onCursorPositionChange: jest.fn(),
+  deltaQueue: mockDeltaQueue,
+  connectionState: ReadyState.OPEN,
+  generateCharacter: jest.fn()
+};
+
+jest.mock('../collaboration/collaboration', () => ({
+  useCollaboration: () => mockCollaboration
+}));
 
 const mockUser = {
   userId: 'mockUserId',

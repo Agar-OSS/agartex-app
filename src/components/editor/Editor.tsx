@@ -1,16 +1,20 @@
 import { EDITOR_DELIMITER_WIDTH, EDITOR_MIN_PERCENTAGE_WORKSPACE_WIDTH } from '@constants';
-import { LatexTextArea, PdfViewer } from '@components';
-
+import { LoadingOverlay, LoadingSpinner, PdfViewer } from '@components';
+import { Collaboration } from 'pages/main/collaboration/collaboration';
 import Delimiter from './delimiter/Delimiter';
+import LatexTextArea from './latex-textarea/LatexTextArea';
+import { OperationState } from '@model';
 import styles from './Editor.module.less';
 import { useResizeDetector } from 'react-resize-detector';
 import { useState } from 'react';
 
 interface Props {
-  compilationError: string | null,
+  collaboration: Collaboration,
+  compilationError: string,
   compilationLogs: string,
+  compilationState: OperationState,
   documentUrl: string,
-  onDocumentSourceChange: (newSource: string) => void
+  onTextChangeCompilationCallback: (text: string) => void
 }
 
 const Editor = (props: Props) => {
@@ -24,13 +28,41 @@ const Editor = (props: Props) => {
     setDelimiterX(x);
   };
 
+  const previewComponent = 
+    (props.compilationState !== OperationState.ERROR) ?
+      <LoadingOverlay
+        show={props.compilationState === OperationState.LOADING}
+        loadingIndicator={
+          <LoadingSpinner 
+            ariaLabel='preview loading spinner' 
+            testId='preview-loading-spinner'/>
+        }>
+        <PdfViewer
+          documentUrl={props.documentUrl}
+          width={pdfViewerWidthValue}
+          height={height}
+          testId='pdf-viewer'/>
+      </LoadingOverlay> : 
+      <div className={styles.errorBox}>
+        <div>
+          { props.compilationError }
+        </div>
+        <div>
+          { props.compilationLogs }
+        </div>
+      </div>;
+
   return (
     <div ref={rootRef} className={styles.root}>
       <div className={styles.editor}
-        style={{ width: latexTextAreaWidth }}>
+        style={{ 
+          height: height,
+          width: latexTextAreaWidth 
+        }}>
         <LatexTextArea
           testId='latex-text-area'
-          onTextChange={props.onDocumentSourceChange}
+          onTextChangeCompilationCallback={props.onTextChangeCompilationCallback}
+          collaboration={props.collaboration}
         />
       </div>
       <Delimiter
@@ -47,18 +79,11 @@ const Editor = (props: Props) => {
         className={styles.viewer}
         style={{ width: pdfViewerWidth }}
       >
-        {
-          !props.compilationError ? 
-            <PdfViewer
-              documentUrl={props.documentUrl}
-              width={pdfViewerWidthValue}
-              height={height}
-              testId='pdf-viewer'/> 
-            : <label>{props.compilationLogs}</label>
-        }
+        { previewComponent }
       </div>
     </div>
   );
 };
 
 export default Editor;
+

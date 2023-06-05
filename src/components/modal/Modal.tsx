@@ -1,9 +1,10 @@
 import { Button, LoadingSpinner } from '@components';
-import { ReactNode, useCallback, useEffect } from 'react';
 import { AiOutlineClose } from 'react-icons/ai';
 import { CSSTransition } from 'react-transition-group';
 import { ModalState } from '@model';
+import { ReactNode } from 'react';
 import styles from './Modal.module.less';
+import { useKeyDown } from 'util/keyboard/keyboard';
 
 interface Props {
   ariaLabel: string,
@@ -22,19 +23,7 @@ const Modal = (props: Props) => {
     props.setState(ModalState.CLOSED);
   };
 
-  const escFunction = useCallback((event: KeyboardEvent) => {
-    if (event.key === 'Escape') {
-      closeModal();
-    }
-  }, []);
-
-  useEffect(() => {
-    document.addEventListener('keydown', escFunction, false);
-
-    return () => {
-      document.removeEventListener('keydown', escFunction, false);
-    };
-  }, [escFunction]);
+  useKeyDown('Escape', closeModal);
 
   const closeButton = 
     <Button
@@ -105,3 +94,4 @@ const Modal = (props: Props) => {
 };
 
 export default Modal;
+
