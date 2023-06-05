@@ -1,8 +1,9 @@
 import { Character, CollabReducerActionType, MessageType } from '../reducer/model';
 import { CollabReducerAction, Message } from '../reducer/model';
-import { useEffect, useRef } from 'react';
+
 import { AGARTEX_COLLABORATION_URL } from '@constants';
 import { ReadyState } from 'react-use-websocket';
+import { useRef } from 'react';
 import { useWebSocket } from 'react-use-websocket/dist/lib/use-websocket';
 
 export interface MessageDto {
@@ -48,8 +49,7 @@ export const useCollabStream = (dispatch: (action: CollabReducerAction) => void)
   };
 
   const { 
-    sendMessage: send, 
-    lastMessage, 
+    sendMessage: send,
     readyState: connectionState 
   } = useWebSocket(AGARTEX_COLLABORATION_URL, 
     {
@@ -58,16 +58,13 @@ export const useCollabStream = (dispatch: (action: CollabReducerAction) => void)
   );
 
   const connectionStateRef = useRef<ReadyState>(connectionState);
+  connectionStateRef.current = connectionState;
 
   const sendMessage = (message: Message) => {
     if (connectionStateRef.current === ReadyState.OPEN) {
       send(JSON.stringify(message));
     }
   };
-
-  useEffect(() => {
-    lastMessage && handleIncomingMessage(lastMessage.data);
-  }, [lastMessage]);
 
   return { connectionState, sendMessage };
 };
