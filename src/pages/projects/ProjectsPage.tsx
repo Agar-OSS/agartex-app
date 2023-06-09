@@ -1,22 +1,48 @@
-import { Button, TextInput } from '@components';
+import { Button, LoadingOverlay, LoadingSpinner, TextInput } from '@components';
 import { ModalState, Project } from '@model';
 
 import CreateProjectModal from './create-project-modal/CreateProjectModal';
 import { ProjectsList } from './projects-list/ProjectsList';
 import { UserBox } from './user-box/UserBox';
 import styles from './ProjectsPage.module.less';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createProject, fetchProjectList } from './service/projects-service';
 
-const ProjectsPage = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [createProjectModalState, setCreateProjectModalState] = useState<ModalState>(ModalState.CLOSED);
+enum ProjectsListStatus {
+  LOADING, SUCCESS, ERROR
+};
 
-  fetchProjectList().then(list => setProjects(list));
+const ProjectsPage = () => {
+  const [ listStatus, setListStatus ] = useState<ProjectsListStatus>(ProjectsListStatus.SUCCESS);
+
+  const [ projects, setProjects ] = useState<Project[]>([]);
+  const [ searchQuery, setSearchQuery ] = useState<string>('');
+  const [ createProjectModalState, setCreateProjectModalState ] = useState<ModalState>(ModalState.CLOSED);
+
+  const updateProjectList = () => {
+    if(listStatus === ProjectsListStatus.LOADING)
+      return;
+
+    setListStatus(ProjectsListStatus.LOADING);
+    fetchProjectList()
+      .then(list => {
+        setProjects(list);
+        setListStatus(ProjectsListStatus.SUCCESS);
+        console.log(ProjectsListStatus[listStatus]);
+      })
+      .catch(error => {
+        // TODO: Actuall error handling
+        console.log(error);
+        setListStatus(ProjectsListStatus.ERROR);
+      });
+  };
+
+  useEffect(() => {
+    updateProjectList();
+  }, []);
 
   const submitProjectCreation = async (newProjectName: string): Promise<void> => {
-    await createProject(newProjectName);
+    await createProject(newProjectName).then(() => updateProjectList());
   };
 
   return (
@@ -46,7 +72,16 @@ const ProjectsPage = () => {
 
       <div className={styles.projectsPageContainerBody}>
         <div className={styles.projectsPageListContainer}>
-          <ProjectsList filter={searchQuery} projects={projects} />
+          <LoadingOverlay
+            show={listStatus === ProjectsListStatus.LOADING}
+            loadingIndicator={
+              <LoadingSpinner 
+                ariaLabel='preview loading spinner' 
+                testId='preview-loading-spinner'/>
+            }
+          >
+            <ProjectsList filter={searchQuery} projects={projects} />
+          </LoadingOverlay>
         </div>
         <div className={styles.projectsPageUserBox}>
           <UserBox/>
