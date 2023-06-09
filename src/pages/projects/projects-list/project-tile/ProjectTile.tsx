@@ -1,6 +1,7 @@
 
 import { Link } from 'react-router-dom';
 import { Project } from '@model';
+import TimeAgo from 'react-timeago';
 import styles from './ProjectTile.module.less';
 
 interface Props {
@@ -14,10 +15,8 @@ const ProjectTile = (props: Props) => {
         { props.project.name }
       </Link>
       <div className={styles.secondaryInfoContainer}>
-        <label> Created date: { props.project.createdDate } </label>
-        <label> Last modified: { props.project.lastModifiedDate } </label>
-        <label> contributors: { props.project.contributorsCount } </label>
-        <label> owner: { props.project.owner } </label>
+        <label>Last modified: <TimeAgo date={props.project.modified}/></label>
+        <label>Owner: { props.project.owner } </label>
       </div>
     </div>
   );
