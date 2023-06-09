@@ -1,4 +1,4 @@
-import { act, fireEvent, render, waitFor } from '@testing-library/react';
+import { act, fireEvent, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { UserContext } from 'context/UserContextProvider';
 import { Project } from '@model';
@@ -69,7 +69,7 @@ describe('<ProjectsPage />', () => {
     act(() => {
       fireEvent.change(getByTestId('create-project-name-text-input'), { target: { value: 'new project name' }});
       getByTestId('create-project-modal-submit-button').click();
-    })
+    });
 
     expect(mockCreateProject).toHaveBeenCalledWith('new project name');
     expect(mockFetchProjectList).toHaveBeenCalled();
@@ -90,7 +90,7 @@ describe('<ProjectsPage />', () => {
     expect(mockLogout).toHaveBeenCalled();
   });
 
-  it('should call logout callback from user context on logout button click', () => {
+  it('should call fetch callback on refresh button click', () => {
     const { getByTestId } = renderInMockContext();
 
     act(() => {
