@@ -53,25 +53,29 @@ const ProjectsPage = () => {
 
   return (
     <div className={styles.projectsPageContainer}>
-      <Button
-        className={styles.createNewProjectButton}
-        value='+ Create new project'
-        ariaLabel='create new project button'
-        testId='create-new-project-button'
-        onClick={() => setCreateProjectModalState(ModalState.INPUT)}
-      />
+      <div className={styles.projectsPageHeader}>
+        <Button
+          className={styles.createNewProjectButton}
+          value='+ Create new project'
+          ariaLabel='create new project button'
+          testId='create-new-project-button'
+          onClick={() => setCreateProjectModalState(ModalState.INPUT)}
+        />
+      </div>
 
-      <ProjectsList projects={projects} />
+      <div className={styles.projectsPageBody}>
+        <ProjectsList projects={projects} />
+      </div>
 
-      <UserBox 
-        onLogoutButtonClick={onLogoutClick}
-      />
+      <div className={styles.projectsPageUser}>
+        <UserBox onLogoutButtonClick={onLogoutClick} />
+      </div>
 
-      <CreateProjectModal
-        state={createProjectModalState}
-        setState={setCreateProjectModalState}
-        onSubmit={submitProjectCreation}
-      />
+     <CreateProjectModal
+       state={createProjectModalState}
+       setState={setCreateProjectModalState}
+       onSubmit={submitProjectCreation}
+     />
     </div>
   );
 };
