@@ -6,7 +6,7 @@ import { useState } from 'react';
 interface Props {
   state: ModalState,
   setState: (state: ModalState) => void,
-  onSubmit: (newProjectName: string) => void
+  onSubmit: (newProjectName: string) => Promise<void>
 }
 
 const CreateProjectModal = (props: Props) => {
@@ -43,8 +43,14 @@ const CreateProjectModal = (props: Props) => {
         testId='create-project-modal-submit-button'
         value='Create project'
         onClick={() => { 
-          props.setState(ModalState.CLOSED);
-          props.onSubmit(newProjectName);
+          props.setState(ModalState.LOADING);
+          
+          props.onSubmit(newProjectName).then(() => {
+            props.setState(ModalState.CLOSED);
+          }).catch(error => {
+            console.log(error);
+            props.setState(ModalState.INPUT);
+          });
         }}
       />
     </div>;

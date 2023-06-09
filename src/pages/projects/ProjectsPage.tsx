@@ -6,6 +6,7 @@ import { ProjectsList } from './projects-list/ProjectsList';
 import { UserBox } from './user-box/UserBox';
 import styles from './ProjectsPage.module.less';
 import { useState } from 'react';
+import { createProject } from './service/projects-service';
 
 const initProjects: Project[] = Array(30).fill(0).map((_, index) => {
   return {
@@ -22,14 +23,8 @@ const ProjectsPage = () => {
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [createProjectModalState, setCreateProjectModalState] = useState<ModalState>(ModalState.CLOSED);
 
-  const submitProjectCreation = (newProjectName: string) => {
-    setProjects([...projects, {
-      projectId: `id_${newProjectName}`,
-      name: newProjectName,
-      created: Date.now(),
-      modified: Date.now(),
-      owner: 'you:)'
-    }]);
+  const submitProjectCreation = async (newProjectName: string): Promise<void> => {
+    await createProject(newProjectName);
   };
 
   return (
