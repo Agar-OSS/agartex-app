@@ -1,16 +1,16 @@
 import { Button, LoadingOverlay, LoadingSpinner, TextInput } from '@components';
 import { ModalState, Project } from '@model';
+import { createProject, fetchProjectList } from './service/projects-service';
+import { useEffect, useState } from 'react';
 
 import CreateProjectModal from './create-project-modal/CreateProjectModal';
 import { ProjectsList } from './projects-list/ProjectsList';
 import { UserBox } from './user-box/UserBox';
 import styles from './ProjectsPage.module.less';
-import { useEffect, useState } from 'react';
-import { createProject, fetchProjectList } from './service/projects-service';
 
 enum ProjectsListStatus {
   LOADING, SUCCESS, ERROR
-};
+}
 
 const ProjectsPage = () => {
   const [ listStatus, setListStatus ] = useState<ProjectsListStatus>(ProjectsListStatus.SUCCESS);

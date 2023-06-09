@@ -8,7 +8,7 @@ let testProjectList: Project[] = Array(30).fill(0).map((_, index) => {
     modified: Date.now() - (index+1)*60*1000,
     owner: 'rybahubert'
   };
-})
+});
 
 /* Create project page of the given name and return ID of new created resource */
 export const createProject = async (projectName: string): Promise<string> => {
