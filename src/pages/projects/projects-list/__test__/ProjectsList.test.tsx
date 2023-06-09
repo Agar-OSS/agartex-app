@@ -1,11 +1,11 @@
-import { render } from '@testing-library/react';
+import { fireEvent, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { ProjectsList } from '../ProjectsList';
 
 const mockProjects = [
   {
     projectId: 'project1',
-    name: 'Project 1',
+    name: 'Project 1A',
     createdDate: '2013-23-54T06:23:12Z',
     lastModifiedDate: '2064-32-13T23:23:31Z',
     contributorsCount: 5,
@@ -21,7 +21,7 @@ const mockProjects = [
   },
   {
     projectId: 'project3',
-    name: 'Project 3',
+    name: 'Project 13a',
     createdDate: '3213-44-23T65:12:54Z',
     lastModifiedDate: '999-32-54T21:32:32Z',
     contributorsCount: 69,
@@ -40,11 +40,20 @@ const renderProjectsList = () => {
 describe('<ProjectsList />', () => {
   it('should display details about projects passed in props', () => {
     const { getByText } = renderProjectsList();
-    getByText('Project 1');
+    getByText('Project 1A');
     getByText('Project 2');
-    getByText('Project 3');
+    getByText('Project 13a');
   });
 
-  /* TODO: Add tests for projects search, when we decide what algorithm we should use for string matching. */
+  it('should filter out not matching projects', () => {
+    const { getByText, getByTestId, queryByText } = renderProjectsList();
+
+    const searchQueryInput = getByTestId('search-project-query-input');
+    fireEvent.change(searchQueryInput, { target: { value: 'project 1a' }});
+
+    getByText('Project 1A');
+    expect(queryByText('Project 2')).toBeNull();
+    getByText('Project 13a');
+  });
 });
 

@@ -1,4 +1,4 @@
-import { render, waitFor } from '@testing-library/react';
+import { act, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import ProjectsPage from '../ProjectsPage';
 import { UserContext } from 'context/UserContextProvider';
@@ -39,10 +39,14 @@ describe('<ProjectsPage />', () => {
     getByTestId('projects-page-user-box');
   });
 
-  it('should display create project modal on create project button click', async () => {
-    const { getByTestId, queryByTestId } = renderInMockContext();
-    getByTestId('create-new-project-button').click();
-    await waitFor(() => expect(queryByTestId('create-project-name-text-input')).not.toBe(null));
+  it('should display create project modal on create project button click', () => {
+    const { getByTestId } = renderInMockContext();
+
+    act(() => {
+      getByTestId('create-new-project-button').click();
+    });
+
+    getByTestId('create-project-name-text-input');
   });
 
   it('should display user email in user box', () => {
@@ -52,7 +56,11 @@ describe('<ProjectsPage />', () => {
   
   it('should call logout callback from user context on logout button click', () => {
     const { getByTestId } = renderInMockContext();
-    getByTestId('user-box-logout-button').click();
+
+    act(() => {
+      getByTestId('user-box-logout-button').click();
+    });
+
     expect(mockLogout).toHaveBeenCalled();
   });
 });
