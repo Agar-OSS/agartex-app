@@ -13,7 +13,15 @@ const ProjectsList = (props: Props) => {
   const [queryResult, setQueryResult] = useState<Project[]>([]);
 
   useEffect(() => {
-    setQueryResult(props.projects.filter((project: Project) => project.name.indexOf(searchQuery) !== -1));
+    setQueryResult(props.projects.filter((project: Project) => {
+      const pattern = searchQuery.toLocaleLowerCase();
+      const text = project.name.toLocaleLowerCase();
+      let it = 0;
+      for(let i=0; i<text.length; i++)
+        if(it < pattern.length && text[i] === pattern[it])
+          it++;
+      return it === pattern.length;
+    }));
   }, [searchQuery, props.projects]);
 
   return (
