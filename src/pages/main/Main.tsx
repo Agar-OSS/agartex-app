@@ -8,8 +8,11 @@ import { compileDocument } from './service/compilation-service';
 import styles from './Main.module.less';
 import { useCollaboration } from './collaboration/collaboration';
 import { useKeyDown } from 'util/keyboard/keyboard';
+import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
+  const navigate = useNavigate();
+
   const { user, logout } = useContext(UserContext);
 
   const [documentUrl, setDocumentUrl] = useState<string>('example.pdf');
@@ -20,6 +23,10 @@ const MainPage = () => {
   const [text, setText] = useState<string>('');
 
   const collaboration = useCollaboration();
+
+  const onCloseClick = () => {
+    navigate('/');
+  };
 
   const onLogoutClick = () => {
     logout();
@@ -54,6 +61,12 @@ const MainPage = () => {
   return (
     <div className={styles.root}>
       <div className={styles.header}>
+        <Button
+          className={styles.closeProjectButton}
+          ariaLabel='close project button'
+          onClick={onCloseClick}
+          testId='close-project-button'
+          value='Close Project'/>
 
         <span>Clients connected: {collaboration.clientsConnectedIds.join(' ')}</span>
 
