@@ -7,22 +7,22 @@ const mockProjects: Project[] = [
   {
     projectId: 'project1',
     name: 'Project 1A',
-    created: 0,
-    modified: 0,
+    created: 1000000000,
+    modified: 1000000000,
     owner: 'maciekspinney'
   },
   {
     projectId: 'project2',
     name: 'Project 2',
-    created: 1,
-    modified: 1,
+    created: 2000000000,
+    modified: 2000000000,
     owner: 'tomasz_z_mazur'
   },
   {
     projectId: 'project3',
     name: 'Project 13a',
-    created: 2,
-    modified: 2,
+    created: 3000000000,
+    modified: 3000000000,
     owner: 'rybahubert'
   }
 ];
