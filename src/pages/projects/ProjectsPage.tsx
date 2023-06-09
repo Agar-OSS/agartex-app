@@ -68,6 +68,16 @@ const ProjectsPage = () => {
             testId='search-project-query-input'
           />
         </div>
+
+        <div className={styles.refreshListButtonWrapper}>
+          <Button
+            className={styles.refreshListButton}
+            value='Refresh'
+            ariaLabel='refresh list button'
+            testId='refresh-list-button'
+            onClick={() => updateProjectList()}
+          />
+        </div>
       </div>
 
       <div className={styles.projectsPageContainerBody}>
