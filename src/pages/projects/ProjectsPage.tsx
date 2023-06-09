@@ -1,12 +1,11 @@
 import { Button, TextInput } from '@components';
 import { ModalState, Project } from '@model';
-import { useContext, useState } from 'react';
 
 import CreateProjectModal from './create-project-modal/CreateProjectModal';
 import { ProjectsList } from './projects-list/ProjectsList';
 import { UserBox } from './user-box/UserBox';
-import { UserContext } from 'context/UserContextProvider';
 import styles from './ProjectsPage.module.less';
+import { useState } from 'react';
 
 const initProjects: Project[] = Array(30).fill(0).map((_, index) => {
   return {
@@ -19,8 +18,6 @@ const initProjects: Project[] = Array(30).fill(0).map((_, index) => {
 });
 
 const ProjectsPage = () => {
-  const { logout } = useContext(UserContext);
-
   const [projects, setProjects] = useState<Project[]>(initProjects);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [createProjectModalState, setCreateProjectModalState] = useState<ModalState>(ModalState.CLOSED);
@@ -33,10 +30,6 @@ const ProjectsPage = () => {
       modified: Date.now(),
       owner: 'you:)'
     }]);
-  };
-
-  const onLogoutClick = () => {
-    logout();
   };
 
   return (
@@ -69,7 +62,7 @@ const ProjectsPage = () => {
           <ProjectsList filter={searchQuery} projects={projects} />
         </div>
         <div className={styles.projectsPageUserBox}>
-          <UserBox onLogoutButtonClick={onLogoutClick} />
+          <UserBox/>
         </div>
       </div>
 

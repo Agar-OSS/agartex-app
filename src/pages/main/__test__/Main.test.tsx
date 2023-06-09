@@ -70,7 +70,7 @@ describe('<MainPage/>', () => {
     expect(mockLogout).toHaveBeenCalled();
   });
 
-  it('should call logout callback from user context on logout button click', () => {
+  it('should navigate to projects page on close project button click', () => {
     const { getByTestId } = renderInMockContext();
     getByTestId('close-project-button').click();
     expect(mockNavigate).toHaveBeenCalledWith('/');
