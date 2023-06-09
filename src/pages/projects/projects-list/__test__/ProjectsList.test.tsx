@@ -1,4 +1,4 @@
-import { fireEvent, render } from '@testing-library/react';
+import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { ProjectsList } from '../ProjectsList';
 import { Project } from '@model';
@@ -27,28 +27,26 @@ const mockProjects: Project[] = [
   }
 ];
 
-const renderProjectsList = () => {
+const renderProjectsList = (
+  filter: string
+) => {
   return render(
     <MemoryRouter>
-      <ProjectsList projects={mockProjects} />
+      <ProjectsList filter={filter} projects={mockProjects} />
     </MemoryRouter>
   );
 };
 
 describe('<ProjectsList />', () => {
   it('should display details about projects passed in props', () => {
-    const { getByText } = renderProjectsList();
+    const { getByText } = renderProjectsList('');
     getByText('Project 1A');
     getByText('Project 2');
     getByText('Project 13a');
   });
 
   it('should filter out not matching projects', () => {
-    const { getByText, getByTestId, queryByText } = renderProjectsList();
-
-    const searchQueryInput = getByTestId('search-project-query-input');
-    fireEvent.change(searchQueryInput, { target: { value: 'project 1a' }});
-
+    const { getByText, queryByText } = renderProjectsList('project 1a');
     getByText('Project 1A');
     expect(queryByText('Project 2')).toBeNull();
     getByText('Project 13a');

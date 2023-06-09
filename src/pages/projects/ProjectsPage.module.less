@@ -2,27 +2,59 @@
 
 .projectsPageContainer {
   display: grid;
-  grid-template-rows: [header] auto [body] auto;
-  grid-template-columns: [start] 20% [list] auto [user-box] 15% 20% [end];
-  column-gap: 30px;
+  grid-template-rows: [header] auto [body] calc(100vh - 100px);
+  grid-template-columns: [start] 20% [list] auto [user-box] 15% 15% [end];
+  column-gap: 20px;
+  row-gap: 10px;
 }
 
 .projectsPageHeader {
   display: grid;
   grid-row: header;
-  grid-column: start / end;
-  align-content: center;
+  grid-column: 1 / 5;
 
+  grid-template-columns: subgrid;
+
+  align-items: center;
   padding: 10px;
   border-bottom: 1px solid @blue2;
 }
 
-.projectsPageBody {
-  grid-row: body;
+.createNewProjectButtonWrapper {
+  justify-self: end;
+  grid-column: start;
+}
+
+.searchQueryInputWrapper {
+  display: grid;
   grid-column: list;
 }
 
-.projectsPageUser {
+.searchQueryInput {
+  width: calc(100% - 22px - 20px);
+  margin: auto;
+}
+
+.projectsPageContainerBody {
+  display: grid;
+  grid-row: body;
+  grid-column: 1 / 5;
+  
+  grid-template-columns: subgrid;
+
+  overflow: auto;
+}
+
+.projectsPageListContainer {
+  grid-row: body;
+  grid-column: list;
+
+  overflow: auto;
+  padding: 10px;
+  padding-top: 0px;
+}
+
+.projectsPageUserBox {
   grid-row: body;
   grid-column: user-box;
 }
