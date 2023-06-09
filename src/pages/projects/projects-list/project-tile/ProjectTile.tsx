@@ -15,8 +15,8 @@ const ProjectTile = (props: Props) => {
         { props.project.name }
       </Link>
       <div className={styles.secondaryInfoContainer}>
+        <label>{props.project.owner}</label>
         <label>Last modified: <TimeAgo date={props.project.modified}/></label>
-        <label>Owner: { props.project.owner } </label>
       </div>
     </div>
   );
