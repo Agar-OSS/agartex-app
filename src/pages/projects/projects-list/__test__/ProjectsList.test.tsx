@@ -1,50 +1,55 @@
 import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { ProjectsList } from '../ProjectsList';
+import { Project } from '@model';
 
-const mockProjects = [
+const mockProjects: Project[] = [
   {
     projectId: 'project1',
-    name: 'Project 1',
-    createdDate: '2013-23-54T06:23:12Z',
-    lastModifiedDate: '2064-32-13T23:23:31Z',
-    contributorsCount: 5,
+    name: 'Project 1A',
+    created: 1000000000,
+    modified: 1000000000,
     owner: 'maciekspinney'
   },
   {
     projectId: 'project2',
     name: 'Project 2',
-    createdDate: '3134-64-12T45:23:54Z',
-    lastModifiedDate: '5433-23-43T54:34:12Z',
-    contributorsCount: 1,
+    created: 2000000000,
+    modified: 2000000000,
     owner: 'tomasz_z_mazur'
   },
   {
     projectId: 'project3',
-    name: 'Project 3',
-    createdDate: '3213-44-23T65:12:54Z',
-    lastModifiedDate: '999-32-54T21:32:32Z',
-    contributorsCount: 69,
+    name: 'Project 13a',
+    created: 3000000000,
+    modified: 3000000000,
     owner: 'rybahubert'
   }
 ];
 
-const renderProjectsList = () => {
+const renderProjectsList = (
+  filter: string
+) => {
   return render(
     <MemoryRouter>
-      <ProjectsList projects={mockProjects} />
+      <ProjectsList filter={filter} projects={mockProjects} />
     </MemoryRouter>
   );
 };
 
 describe('<ProjectsList />', () => {
   it('should display details about projects passed in props', () => {
-    const { getByText } = renderProjectsList();
-    getByText('Project 1');
+    const { getByText } = renderProjectsList('');
+    getByText('Project 1A');
     getByText('Project 2');
-    getByText('Project 3');
+    getByText('Project 13a');
   });
 
-  /* TODO: Add tests for projects search, when we decide what algorithm we should use for string matching. */
+  it('should filter out not matching projects', () => {
+    const { getByText, queryByText } = renderProjectsList('project 1a');
+    getByText('Project 1A');
+    expect(queryByText('Project 2')).toBeNull();
+    getByText('Project 13a');
+  });
 });
 

@@ -5,9 +5,10 @@ import { ReadyState } from 'react-use-websocket';
 import { UserContext } from 'context/UserContextProvider';
 import { render } from '@testing-library/react';
 
+const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
-  useNavigate: () => jest.fn()
+  useNavigate: () => mockNavigate
 }));
 
 jest.mock('../../../components/editor/Editor');
@@ -67,5 +68,11 @@ describe('<MainPage/>', () => {
     const { getByTestId } = renderInMockContext();
     getByTestId('logout-button').click();
     expect(mockLogout).toHaveBeenCalled();
+  });
+
+  it('should navigate to projects page on close project button click', () => {
+    const { getByTestId } = renderInMockContext();
+    getByTestId('close-project-button').click();
+    expect(mockNavigate).toHaveBeenCalledWith('/');
   });
 });

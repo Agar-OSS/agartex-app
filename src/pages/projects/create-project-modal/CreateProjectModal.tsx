@@ -43,7 +43,7 @@ const CreateProjectModal = (props: Props) => {
         testId='create-project-modal-submit-button'
         value='Create project'
         onClick={() => { 
-          props.setState(ModalState.CLOSED);
+          props.setState(ModalState.LOADING);
           props.onSubmit(newProjectName);
         }}
       />

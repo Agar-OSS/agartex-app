@@ -9,9 +9,8 @@ export enum ModalState {
 export interface Project {
   projectId: string,
   name: string,
-  createdDate: string,
-  lastModifiedDate: string,
-  contributorsCount: number,
+  created: number,
+  modified: number,
   owner: string
 }
 

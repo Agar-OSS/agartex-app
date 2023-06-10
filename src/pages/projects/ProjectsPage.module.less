@@ -1,14 +1,66 @@
 @import '@variables';
 
 .projectsPageContainer {
-  display: flex;
-  gap: 40px;
-  align-items: flex-start;
-  width: 80%;
-  max-width: 1300px;
-  margin: 0 auto 0 auto;
-  padding: 30px 0 30px 0;
-};
+  display: grid;
+  grid-template-rows: [header] auto [body] calc(100vh - 100px);
+  grid-template-columns: [start] 25% [list] auto [user-box] 15% 20% [end];
+  align-items: start;
+  column-gap: 20px;
+  row-gap: 10px;
+}
+
+.projectsPageHeader {
+  display: grid;
+  grid-row: header;
+  grid-column: 1 / 5;
+
+  grid-template-columns: inherit;
+  column-gap: 20px;
+
+  align-items: center;
+  padding: 10px 0px;
+  border-bottom: 1px solid @blue2;
+}
+
+.createNewProjectButtonWrapper {
+  justify-self: end;
+  grid-column: start;
+}
+
+.searchQueryInputWrapper {
+  display: grid;
+  grid-column: list;
+}
+
+.searchQueryInput {
+  width: calc(100% - 22px - 20px);
+  margin: auto;
+}
+
+.projectsPageContainerBody {
+  display: grid;
+  grid-row: body;
+  grid-column: 1 / 5;
+  
+  grid-template-columns: inherit;
+  column-gap: 20px;
+
+  overflow: auto;
+}
+
+.projectsPageListContainer {
+  grid-row: body;
+  grid-column: list;
+
+  overflow: auto;
+  padding: 10px;
+  padding-top: 0px;
+}
+
+.projectsPageUserBox {
+  grid-row: body;
+  grid-column: user-box;
+}
 
 .createNewProjectButton {
   min-width: 170px;

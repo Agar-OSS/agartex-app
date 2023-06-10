@@ -33,6 +33,7 @@
     "react-pdf": "^6.2.2",
     "react-resize-detector": "^8.0.4",
     "react-router-dom": "^6.9.0",
+    "react-timeago": "^7.1.0",
     "react-transition-group": "^4.4.5",
     "react-use-websocket": "^4.3.1"
   },

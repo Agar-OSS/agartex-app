@@ -1,75 +1,102 @@
-import { ModalState, Project } from '@model';
-import { useContext, useState } from 'react';
-import { Button } from '@components';
+import { Button, LoadingOverlay, LoadingSpinner, TextInput } from '@components';
+import { ModalState, OperationState, Project } from '@model';
+import { createProject, fetchProjectList } from './service/projects-service';
+import { useEffect, useState } from 'react';
+
 import CreateProjectModal from './create-project-modal/CreateProjectModal';
 import { ProjectsList } from './projects-list/ProjectsList';
 import { UserBox } from './user-box/UserBox';
-import { UserContext } from 'context/UserContextProvider';
 import styles from './ProjectsPage.module.less';
 
-const initProjects = [
-  {
-    projectId: 'project1',
-    name: 'Project 1',
-    createdDate: '2013-23-54T06:23:12Z',
-    lastModifiedDate: '2064-32-13T23:23:31Z',
-    contributorsCount: 5,
-    owner: 'agarcoder'
-  },
-  {
-    projectId: 'project2',
-    name: 'Project 2',
-    createdDate: '3134-64-12T45:23:54Z',
-    lastModifiedDate: '5433-23-43T54:34:12Z',
-    contributorsCount: 1,
-    owner: 'tomasz_z_mazur'
-  },
-  {
-    projectId: 'project3',
-    name: 'Project 3',
-    createdDate: '3213-44-23T65:12:54Z',
-    lastModifiedDate: '999-32-54T21:32:32Z',
-    contributorsCount: 10,
-    owner: 'rybahubert'
-  }
-];
-
 const ProjectsPage = () => {
-  const { logout } = useContext(UserContext);
+  const [ listStatus, setListStatus ] = useState<OperationState>(OperationState.SUCCESS);
 
-  const [projects, setProjects] = useState<Project[]>(initProjects);
-  const [createProjectModalState, setCreateProjectModalState] = useState<ModalState>(ModalState.CLOSED);
+  const [ projects, setProjects ] = useState<Project[]>([]);
+  const [ searchQuery, setSearchQuery ] = useState<string>('');
+  const [ createProjectModalState, setCreateProjectModalState ] = useState<ModalState>(ModalState.CLOSED);
 
-  const submitProjectCreation = (newProjectName: string) => {
-    setProjects([...projects, {
-      projectId: `id_${newProjectName}`,
-      name: newProjectName,
-      createdDate: '1111-11-11T11:11:11Z',
-      lastModifiedDate: '2222-22-22T22:22:22Z',
-      contributorsCount: 1,
-      owner: 'you:)'
-    }]);
+  const updateProjectList = () => {
+    if(listStatus === OperationState.LOADING)
+      return;
+
+    setListStatus(OperationState.LOADING);
+    fetchProjectList()
+      .then(list => {
+        setProjects(list);
+        setListStatus(OperationState.SUCCESS);
+      })
+      .catch(error => {
+        // TODO: Actuall error handling
+        console.log(error);
+        setListStatus(OperationState.ERROR);
+      });
   };
 
-  const onLogoutClick = () => {
-    logout();
+  useEffect(() => {
+    updateProjectList();
+  }, []);
+
+  const submitProjectCreation = (newProjectName: string) => {
+    createProject(newProjectName).then(() => {
+      setCreateProjectModalState(ModalState.CLOSED);
+    }).catch(error => {
+      console.log(error);
+      setCreateProjectModalState(ModalState.INPUT);
+    }).then(() => updateProjectList());
   };
 
   return (
     <div className={styles.projectsPageContainer}>
-      <Button
-        className={styles.createNewProjectButton}
-        value='+ Create new project'
-        ariaLabel='create new project button'
-        testId='create-new-project-button'
-        onClick={() => setCreateProjectModalState(ModalState.INPUT)}
-      />
+      <div className={styles.projectsPageHeader}>
+        <div className={styles.createNewProjectButtonWrapper}>
+          <Button
+            className={styles.createNewProjectButton}
+            value='+ Create new project'
+            ariaLabel='create new project button'
+            testId='create-new-project-button'
+            onClick={() => setCreateProjectModalState(ModalState.INPUT)}
+          />
+        </div>
 
-      <ProjectsList projects={projects} />
+        <div className={styles.searchQueryInputWrapper}>
+          <TextInput
+            className={styles.searchQueryInput}
+            placeholder='Search project'
+            isValid={true}
+            onChange={setSearchQuery}
+            ariaLabel='search project query input'
+            testId='search-project-query-input'
+          />
+        </div>
 
-      <UserBox 
-        onLogoutButtonClick={onLogoutClick}
-      />
+        <div className={styles.refreshListButtonWrapper}>
+          <Button
+            className={styles.refreshListButton}
+            value='Refresh'
+            ariaLabel='refresh list button'
+            testId='refresh-list-button'
+            onClick={() => updateProjectList()}
+          />
+        </div>
+      </div>
+
+      <div className={styles.projectsPageContainerBody}>
+        <div className={styles.projectsPageListContainer}>
+          <LoadingOverlay
+            show={listStatus === OperationState.LOADING}
+            loadingIndicator={
+              <LoadingSpinner 
+                ariaLabel='preview loading spinner' 
+                testId='preview-loading-spinner'/>
+            }
+          >
+            <ProjectsList filter={searchQuery} projects={projects} />
+          </LoadingOverlay>
+        </div>
+        <div className={styles.projectsPageUserBox}>
+          <UserBox/>
+        </div>
+      </div>
 
       <CreateProjectModal
         state={createProjectModalState}

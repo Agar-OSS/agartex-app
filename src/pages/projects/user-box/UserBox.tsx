@@ -4,12 +4,8 @@ import pfp from './pfp.png';
 import styles from './UserBox.module.less';
 import { useContext } from 'react';
 
-interface Props {
-  onLogoutButtonClick: () => void
-}
-
-const UserBox = (props: Props) => {
-  const { user } = useContext(UserContext);
+const UserBox = () => {
+  const { user, logout } = useContext(UserContext);
 
   return (
     <div 
@@ -26,9 +22,10 @@ const UserBox = (props: Props) => {
       </div>
 
       <Button
+        className={styles.userBoxLogoutButton}
         ariaLabel='logout button'
         testId='user-box-logout-button'
-        onClick={props.onLogoutButtonClick}
+        onClick={logout}
         value='Logout' />
     </div>
   );

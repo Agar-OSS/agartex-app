@@ -5,7 +5,7 @@ import CreateProjectModal from '../CreateProjectModal';
 import userEvent from '@testing-library/user-event';
 
 const mockSetState = jest.fn();
-const mockSubmit = jest.fn();
+const mockSubmit = jest.fn(() => new Promise<void>(jest.fn()));
 
 const validProjectName = 'ProjectName1';
 
