@@ -1,5 +1,5 @@
 import { Button, LoadingOverlay, LoadingSpinner, TextInput } from '@components';
-import { ModalState, Project } from '@model';
+import { ModalState, OperationState, Project } from '@model';
 import { createProject, fetchProjectList } from './service/projects-service';
 import { useEffect, useState } from 'react';
 
@@ -8,32 +8,27 @@ import { ProjectsList } from './projects-list/ProjectsList';
 import { UserBox } from './user-box/UserBox';
 import styles from './ProjectsPage.module.less';
 
-enum ProjectsListStatus {
-  LOADING, SUCCESS, ERROR
-}
-
 const ProjectsPage = () => {
-  const [ listStatus, setListStatus ] = useState<ProjectsListStatus>(ProjectsListStatus.SUCCESS);
+  const [ listStatus, setListStatus ] = useState<OperationState>(OperationState.SUCCESS);
 
   const [ projects, setProjects ] = useState<Project[]>([]);
   const [ searchQuery, setSearchQuery ] = useState<string>('');
   const [ createProjectModalState, setCreateProjectModalState ] = useState<ModalState>(ModalState.CLOSED);
 
   const updateProjectList = () => {
-    if(listStatus === ProjectsListStatus.LOADING)
+    if(listStatus === OperationState.LOADING)
       return;
 
-    setListStatus(ProjectsListStatus.LOADING);
+    setListStatus(OperationState.LOADING);
     fetchProjectList()
       .then(list => {
         setProjects(list);
-        setListStatus(ProjectsListStatus.SUCCESS);
-        console.log(ProjectsListStatus[listStatus]);
+        setListStatus(OperationState.SUCCESS);
       })
       .catch(error => {
         // TODO: Actuall error handling
         console.log(error);
-        setListStatus(ProjectsListStatus.ERROR);
+        setListStatus(OperationState.ERROR);
       });
   };
 
@@ -41,8 +36,13 @@ const ProjectsPage = () => {
     updateProjectList();
   }, []);
 
-  const submitProjectCreation = async (newProjectName: string): Promise<void> => {
-    await createProject(newProjectName).then(() => updateProjectList());
+  const submitProjectCreation = (newProjectName: string) => {
+    createProject(newProjectName).then(() => {
+      setCreateProjectModalState(ModalState.CLOSED);
+    }).catch(error => {
+      console.log(error);
+      setCreateProjectModalState(ModalState.INPUT);
+    }).then(() => updateProjectList());
   };
 
   return (
@@ -83,7 +83,7 @@ const ProjectsPage = () => {
       <div className={styles.projectsPageContainerBody}>
         <div className={styles.projectsPageListContainer}>
           <LoadingOverlay
-            show={listStatus === ProjectsListStatus.LOADING}
+            show={listStatus === OperationState.LOADING}
             loadingIndicator={
               <LoadingSpinner 
                 ariaLabel='preview loading spinner' 

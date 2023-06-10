@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Project } from '@model';
 import { ProjectTile } from './project-tile/ProjectTile';
 import styles from './ProjectsList.module.less';
@@ -11,7 +11,7 @@ interface Props {
 const ProjectsList = (props: Props) => {
   const [queryResult, setQueryResult] = useState<Project[]>([]);
 
-  useEffect(() => {
+  useMemo(() => {
     setQueryResult(props.projects.filter((project: Project) => {
       const pattern = props.filter.toLocaleLowerCase();
       const text = project.name.toLocaleLowerCase();
