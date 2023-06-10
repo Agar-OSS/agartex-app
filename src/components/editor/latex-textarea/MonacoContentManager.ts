@@ -27,10 +27,10 @@ export class MonacoContentManager {
   }
 
   public getOffsetForCharId(charId: string | null) {
-    const charIndex = this.document.findIndex((c: Character) => c.id == charId);
+    const charIndex = this.document.findIndex((c: Character) => c.id === charId);
 
-    return this.undeletedDocument
-      .filter((_: Character, idx: number) => idx <= charIndex)
+    return this.document
+      .filter((char: Character, idx: number) => idx <= charIndex && !char.deleted)
       .length - 1;
   }
 
