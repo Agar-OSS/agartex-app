@@ -42,6 +42,11 @@ const LatexTextArea = (props: Props) => {
     });
   }, []);
 
+  useEffect(() => {
+    managerRef.current.setInitDocument(initDocument);
+    props.onTextChangeCompilationCallback(managerRef.current.getText());
+  }, [initDocument]);
+
   const applyDelta = (delta: Delta | undefined) => {
     if (delta) {
       const edit = managerRef.current.applyDelta(delta, monacoRef);
@@ -89,6 +94,7 @@ const LatexTextArea = (props: Props) => {
   const onEditorMount = (editorL: editor.IStandaloneCodeEditor, monaco: Monaco) => {
     editorL.onDidChangeCursorPosition(handleCursorPositionChange);
     editorL.onKeyDown(handleKeyDown);
+    editorL.setValue(managerRef.current.getText());
     editorRef.current = editorL;
     monacoRef.current = monaco;
   };

@@ -17,6 +17,10 @@ export class MonacoContentManager {
   text: string;
   
   public constructor(initDocument: Character[]) {
+    this.setInitDocument(initDocument);
+  }
+
+  public setInitDocument(initDocument: Character[]): void {
     this.document = cloneDeep(initDocument);
     this.undeletedDocument = this.document.filter((c: Character) => !c.deleted);
     this.text = this.undeletedDocument.map((c: Character) => c.value).join('');
