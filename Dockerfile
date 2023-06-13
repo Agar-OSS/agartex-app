@@ -60,4 +60,6 @@ USER user
 
 EXPOSE 5000
 
+ENV ENABLE_TLS=false
+VOLUME /config
 ENTRYPOINT [ "bash", "entrypoint.sh" ]

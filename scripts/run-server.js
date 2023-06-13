@@ -1,5 +1,11 @@
 const path = require('path');
 const express = require('express');
+const fs = require('fs');
+const https = require('https');
+
+const ENABLE_TLS = process.env['ENABLE_TLS']
+const TLS_CERT_PATH = '/config/cert.pem';
+const TLS_KEY_PATH = '/config/key.pem';
 
 const app = express();
 
@@ -18,6 +24,15 @@ app.get('/example.pdf', (_req, res) => {
   res.sendFile(path.join(DIST_DIR, 'example.pdf'));
 });
 
-app.listen(5000, () => {
-  console.log('Production server started on port 5000.');
-});
+if (ENABLE_TLS === 'true') {
+  https.createServer({
+    cert: fs.readFileSync(TLS_CERT_PATH),
+    key: fs.readFileSync(TLS_KEY_PATH)
+  }).listen(5000, () => {
+    console.log('Production server started on port 5000 (SSL enabled).');
+  });
+} else {
+  app.listen(5000, () => {
+    console.log('Production server started on port 5000 (SSL disabled).');
+  });
+}
