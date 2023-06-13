@@ -28,7 +28,7 @@ if (ENABLE_TLS === 'true') {
   https.createServer({
     cert: fs.readFileSync(TLS_CERT_PATH),
     key: fs.readFileSync(TLS_KEY_PATH)
-  }).listen(5000, () => {
+  }, app).listen(5000, () => {
     console.log('Production server started on port 5000 (SSL enabled).');
   });
 } else {
