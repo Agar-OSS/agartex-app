@@ -48,16 +48,6 @@ const ProjectsPage = () => {
   return (
     <div className={styles.projectsPageContainer}>
       <div className={styles.projectsPageHeader}>
-        <div className={styles.createNewProjectButtonWrapper}>
-          <Button
-            className={styles.createNewProjectButton}
-            value='+ Create new project'
-            ariaLabel='create new project button'
-            testId='create-new-project-button'
-            onClick={() => setCreateProjectModalState(ModalState.INPUT)}
-          />
-        </div>
-
         <div className={styles.searchQueryInputWrapper}>
           <TextInput
             className={styles.searchQueryInput}
@@ -69,7 +59,14 @@ const ProjectsPage = () => {
           />
         </div>
 
-        <div className={styles.refreshListButtonWrapper}>
+        <div className={styles.buttonWrapper}>
+          <Button
+            className={styles.createNewProjectButton}
+            value='+ Create'
+            ariaLabel='create new project button'
+            testId='create-new-project-button'
+            onClick={() => setCreateProjectModalState(ModalState.INPUT)}
+          />
           <Button
             className={styles.refreshListButton}
             value='Refresh'
