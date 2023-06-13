@@ -3,7 +3,7 @@
 .projectsPageContainer {
   display: grid;
   grid-template-rows: [header] auto [body] calc(100vh - 100px);
-  grid-template-columns: [start] 25% [list] auto [user-box] 15% 20% [end];
+  grid-template-columns: [start] 0.45fr [list] minmax(380px, 35%) [user-box] minmax(250px, 15%) 0.55fr [end];
   align-items: start;
   column-gap: 20px;
   row-gap: 10px;
@@ -22,9 +22,21 @@
   border-bottom: 1px solid @blue2;
 }
 
-.createNewProjectButtonWrapper {
-  justify-self: end;
-  grid-column: start;
+.buttonWrapper {
+  display: flex;
+  flex-direction: row;
+  column-gap: 10px;
+}
+
+.createNewProjectButton {
+  display: flex;
+  background-color: @green1;
+  width: 50%;
+}
+
+.refreshListButton {
+  display: flex;
+  width: 50%;
 }
 
 .searchQueryInputWrapper {
@@ -61,8 +73,3 @@
   grid-row: body;
   grid-column: user-box;
 }
-
-.createNewProjectButton {
-  min-width: 170px;
-  background-color: @green1;
-};
