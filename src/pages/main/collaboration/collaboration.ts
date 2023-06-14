@@ -16,9 +16,9 @@ export interface Collaboration {
   generateCharacter: (val: string) => Character
 }
 
-export const useCollaboration = (): Collaboration => {
+export const useCollaboration = (projectId: string): Collaboration => {
   const [state, dispatch] = useReducer(collabReducer, INIT_COLLAB_STATE);
-  const { connectionState, sendMessage } = useCollabStream(dispatch);
+  const { connectionState, sendMessage } = useCollabStream(projectId, dispatch);
   const deltaQueue = useDeltaQueue(state, dispatch, sendMessage);
 
   const nextCharacterIdRef = useRef<number>(0);
