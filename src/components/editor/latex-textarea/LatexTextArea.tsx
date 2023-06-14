@@ -1,7 +1,7 @@
 import { CursorPosition, MonacoContentManager } from './MonacoContentManager';
 import Editor, { Monaco, loader } from '@monaco-editor/react';
 import { IKeyboardEvent, editor } from 'monaco-editor';
-import { isCharacterKey, isKeyboardEventToIgnore } from './monaco-content-rules';
+import { getKeyValue, isCharacterKey, isKeyboardEventToIgnore } from './monaco-content-rules';
 import { useEffect, useRef, useState } from 'react';
 import { Collaboration } from 'pages/main/collaboration/collaboration';
 import { Delta } from 'pages/main/collaboration/delta-queue/delta-queue';
@@ -77,16 +77,40 @@ const LatexTextArea = (props: Props) => {
     if (isKeyboardEventToIgnore(e)) {
       return;
     }
-
-    const key: string = e.browserEvent?.key;
-
+    
+    const key = e.browserEvent?.key;
+    
     if (isCharacterKey(key)) {
       if (editorRef.current) {
-        const delta = managerRef.current.createDelta(key, editorRef, generateCharacter);
-        delta && deltaQueue.push(delta);
+        const keyValue: string = getKeyValue(e.browserEvent?.key);
+
+        const deltas = managerRef.current.createDeltas(
+          editorRef.current.getSelection(),
+          keyValue,
+          key === 'Backspace',
+          generateCharacter
+        );
+
+        deltas.forEach((delta: Delta) => delta && deltaQueue.push(delta));
       }
     }
     
+    e.stopPropagation();
+    e.preventDefault();
+  };
+  
+  const handlePasteEvent = (e: ClipboardEvent) => {
+    const insertedText = e.clipboardData.getData('text/plain');
+
+    const deltas = managerRef.current.createDeltas(
+      editorRef.current.getSelection(),
+      insertedText,
+      false,
+      generateCharacter
+    );
+
+    deltas.forEach((delta: Delta) => delta && deltaQueue.push(delta));
+
     e.stopPropagation();
     e.preventDefault();
   };
@@ -95,6 +119,8 @@ const LatexTextArea = (props: Props) => {
     editorL.onDidChangeCursorPosition(handleCursorPositionChange);
     editorL.onKeyDown(handleKeyDown);
     editorL.setValue(managerRef.current.getText());
+    editorL.getDomNode().addEventListener('paste', handlePasteEvent, true);
+
     editorRef.current = editorL;
     monacoRef.current = monaco;
   };
@@ -111,7 +137,8 @@ const LatexTextArea = (props: Props) => {
           minimap: {
             enabled: false
           },
-          quickSuggestions: false
+          quickSuggestions: false,
+          wordWrap: 'on'
         }}
         value={managerRef.current.getText()}
       />

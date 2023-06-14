@@ -2,9 +2,9 @@ import { Character } from 'pages/main/collaboration/reducer/model';
 import { Delta } from 'pages/main/collaboration/delta-queue/delta-queue';
 import { Monaco } from '@monaco-editor/react';
 import { MutableRefObject } from 'react';
+import { Selection } from 'monaco-editor';
+import { arrayRange } from 'util/poly/poly';
 import { cloneDeep } from 'lodash';
-import { editor } from 'monaco-editor';
-import { getKeyValue } from './monaco-content-rules';
 
 export interface CursorPosition {
   row: number,
@@ -93,33 +93,59 @@ export class MonacoContentManager {
       forceMoveMakers: true
     };
   }
-
-  public createDelta(
-    key: string, 
-    editorRef: MutableRefObject<editor.IStandaloneCodeEditor>, 
+  
+  public createDeltas(
+    selection: Selection,
+    insertedText: string,
+    isBackspace: boolean,
     generateCharacter: (val: string) => Character
-  ): Delta | undefined {
-    const { lineNumber: row, column } = editorRef.current.getPosition();
-    const currentOffset = this.positionToOffset({row, column});
-    const prevId = (currentOffset !== -1) ? this.undeletedDocument.at(currentOffset).id : null;
+  ) : Delta[] {
+    // Trim inserted text to prevent Ulysses pasting incident.
+    insertedText = (insertedText.length > 24) ? 
+      insertedText.substring(0, 24) : insertedText;
     
-    if (key === 'Backspace' && !prevId) { 
-      return undefined;
-    }
+    // Create deltas for removing all characters in the selection.
+    const { 
+      startColumn,
+      startLineNumber: startRow,
+      endColumn,
+      endLineNumber: endRow
+    } = selection;
+    
+    const offset = this.positionToOffset({row: startRow, column: startColumn});
+    const deleteEndOffset = this.positionToOffset({row: endRow, column: endColumn});
+    const deleteStartOffset = (offset === deleteEndOffset && isBackspace) ? offset-1 : offset; 
+    
+    const deltas = arrayRange(deleteStartOffset + 1, deleteEndOffset).map(
+      offset => this.createDeltaForRemoval(offset))
+      .reverse();
+    
+    // Create deltas for inserting characters.
+    let prevId = (offset !== -1) ? this.undeletedDocument.at(offset).id : null;
+    
+    insertedText.split('').forEach((c: string) => {
+      const newChar = generateCharacter(c);
 
-    const delta: Delta = 
-      (key == 'Backspace') ? 
-        {
-          position: prevId,
-          isBackspace: true,
-          char: null
-        } : {
-          position: prevId,
-          isBackspace: false,
-          char: generateCharacter(getKeyValue(key))
-        };
+      deltas.push({
+        position: prevId,
+        isBackspace: false,
+        char: newChar
+      });
 
-    return delta;
+      prevId = newChar.id;
+    });
+  
+    return deltas;
+  }
+
+  public createDeltaForRemoval(offset: number): Delta | undefined {
+    const charId = (offset !== -1) ? this.undeletedDocument.at(offset).id : null;
+    
+    return (charId) ? {
+      position: charId,
+      isBackspace: true,
+      char: null
+    } : undefined;
   }
 
   public positionToOffset(position: CursorPosition): number {

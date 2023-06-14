@@ -9,7 +9,10 @@ const legalKeys = [
 ];
 
 const ctrlKeysToIgnore = [
-  's'
+  'a',
+  'c',
+  's',
+  'v'
 ];
 
 const keysToIgnore = [
@@ -24,7 +27,8 @@ const keyToValue = new Map<string, string>([
     .map((code: number): string => String.fromCharCode(code))
     .map((char: string): [string, string] => [ char, char ]),
   [ 'Enter', '\n' ],
-  [ 'Tab', '\t' ]
+  [ 'Tab', '\t' ],
+  [ 'Backspace', '' ]
 ]);
 
 export const isCharacterKey = (key: string | null | undefined): boolean => {
