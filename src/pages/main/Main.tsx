@@ -1,4 +1,4 @@
-import { AiFillFolder, AiFillTool } from 'react-icons/ai';
+import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos } from 'react-icons/md';
 import { Button, Editor } from '@components';
 import { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -9,10 +9,13 @@ import { compileDocument } from './service/compilation-service';
 import styles from './Main.module.less';
 import { useCollaboration } from './collaboration/collaboration';
 import { useKeyDown } from 'util/keyboard/keyboard';
+import ResourceList from './resource-list/ResourceList';
 
 const MainPage = () => {
   const navigate = useNavigate();
   const { projectId } = useParams();
+
+  const [toolbarCollapsed, setToolbarCollapsed] = useState<boolean>(false);
 
   const { user, logout } = useContext(UserContext);
 
@@ -90,9 +93,20 @@ const MainPage = () => {
         <div
           className={styles.toolbar}
           data-testid='toolbar'>
-          <AiFillFolder size={50}/>
-          <AiFillTool size={50}/>
+          <Button
+            className={styles.collapseToolbarButton}
+            ariaLabel='collapse toolbar button'
+            onClick={() => setToolbarCollapsed(!toolbarCollapsed)}
+            testId='collapse-toolbar-button'
+          >
+          { 
+            toolbarCollapsed
+            ? <MdOutlineArrowForwardIos className={styles.openToolbar} size={24}/>
+            : <MdOutlineArrowBackIos className={styles.openToolbar} size={24}/>
+          }
+          </Button>
         </div>
+        <ResourceList collapsed={toolbarCollapsed}/>
         <div
           className={styles.editor}
           data-testid='editor'>
