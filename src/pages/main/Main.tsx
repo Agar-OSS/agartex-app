@@ -2,7 +2,7 @@ import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos } from 'react-icons/md'
 import { Button, Editor } from '@components';
 import { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { OperationState } from '@model';
+import { OperationState, Resource } from '@model';
 import { ReadyState } from 'react-use-websocket';
 import { UserContext } from 'context/UserContextProvider';
 import { compileDocument } from './service/compilation-service';
@@ -11,11 +11,31 @@ import { useCollaboration } from './collaboration/collaboration';
 import { useKeyDown } from 'util/keyboard/keyboard';
 import ResourceList from './resource-list/ResourceList';
 
+const mockResourceList: Resource[] = [
+  {
+    projectId: '0',
+    resourceId: '0',
+    name: 'main.tex'
+  },
+  {
+    projectId: '0',
+    resourceId: '1',
+    name: 'image_1.png'
+  },
+  {
+    projectId: '0',
+    resourceId: '2',
+    name: 'image_2.png'
+  }
+];
+
 const MainPage = () => {
   const navigate = useNavigate();
   const { projectId } = useParams();
 
-  const [toolbarCollapsed, setToolbarCollapsed] = useState<boolean>(false);
+  const [ toolbarCollapsed, setToolbarCollapsed ] = useState<boolean>(false);
+
+  const [ resourceList, setResourceList ] = useState<Resource[]>(mockResourceList);
 
   const { user, logout } = useContext(UserContext);
 
@@ -106,7 +126,10 @@ const MainPage = () => {
           }
           </Button>
         </div>
-        <ResourceList collapsed={toolbarCollapsed}/>
+        <ResourceList
+          resourceList={resourceList}
+          collapsed={toolbarCollapsed}
+        />
         <div
           className={styles.editor}
           data-testid='editor'>
