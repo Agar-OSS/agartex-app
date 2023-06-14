@@ -1,11 +1,11 @@
-import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos } from 'react-icons/md';
-
 import { Button, LoadingOverlay, LoadingSpinner } from '@components';
+import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos, MdRefresh } from 'react-icons/md';
 import { OperationState, Resource } from '@model';
-import ResourceList from './resource-list/ResourceList';
-import styles from './Toolbar.module.less';
 import { useEffect, useState } from 'react';
+
+import ResourceList from './resource-list/ResourceList';
 import { fetchResourceList } from './service/resource-service';
+import styles from './Toolbar.module.less';
 
 const Toolbar = () => {
   const [ listStatus, setListStatus ] = useState<OperationState>(OperationState.SUCCESS);
@@ -41,17 +41,27 @@ const Toolbar = () => {
         className={styles.toolbar}
         data-testid='toolbar'>
         <Button
-          className={styles.collapseToolbarButton}
+          className={styles.toolbarButton}
           ariaLabel='collapse toolbar button'
           onClick={() => setToolbarCollapsed(!toolbarCollapsed)}
           testId='collapse-toolbar-button'
         >
           { 
             toolbarCollapsed
-              ? <MdOutlineArrowForwardIos className={styles.openToolbar} size={24}/>
-              : <MdOutlineArrowBackIos className={styles.openToolbar} size={24}/>
+              ? <MdOutlineArrowForwardIos size={24} />
+              : <MdOutlineArrowBackIos size={24} />
           }
         </Button>
+        { !toolbarCollapsed && 
+          <Button
+            className={styles.toolbarButton}
+            ariaLabel='refresh resource list button'
+            onClick={refreshResourceList}
+            testId='refresh-resource-list-button'
+          >
+            <MdRefresh size={24} />
+          </Button>
+        }
       </div>
       <LoadingOverlay
         show={listStatus === OperationState.LOADING}
