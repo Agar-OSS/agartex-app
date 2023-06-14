@@ -1,41 +1,38 @@
-import { Project } from '@model';
+import { Resource } from '@model';
 
-let testProjectList: Project[] = Array(30).fill(0).map((_, index) => {
+let testResourceList: Resource[] = Array(30).fill(0).map((_, index) => {
   return {
-    projectId: `project_${index+1}`,
-    name: `Project ${index+1}`,
-    created: Date.now() - 24*60*60*1000,
-    modified: Date.now() - (index+1)*60*1000,
-    owner: 'rybahubert'
+    projectId: 'project_xyz',
+    resourceId: `resource_${index+1}`,
+    name: `image_${index+1}.png`
   };
 });
 
-/* Create project page of the given name and return ID of new created resource */
-export const createProject = async (projectName: string): Promise<string> => {
-  // TODO: replace with 
-  // axios.post(AGARTEX_SERVICE_PROJECTS_URL, { projectName })
+/* Upload resource and return ID of new created resource */
+export const uploadResource = async (
+  resourcePath: string,
+  resourceName: string
+): Promise<string> => {
+  // TODO: integrate
   await new Promise(res => {
     setTimeout(res, 1000);
   });
 
-  const newProject: Project = {
-    projectId: `id_${projectName.toLowerCase()}`,
-    name: projectName,
-    created: Date.now(),
-    modified: Date.now(),
-    owner: 'current user'
+  const newResource: Resource = {
+    projectId: 'project_xyz',
+    resourceId: `resource_${resourceName}`,
+    name: `Name: ${resourceName}, path: ${resourcePath}`
   };
 
-  testProjectList = [newProject, ...testProjectList];
-  return newProject.projectId;
+  testResourceList = [...testResourceList, newResource];
+  return newResource.resourceId;
 };
 
-/* Fetch projects list for the current user */
-export const fetchProjectList = async (): Promise<Project[]> => {
+/* Fetch resource list for the current user and project */
+export const fetchResourceList = async (): Promise<Resource[]> => {
   await new Promise(res => {
     setTimeout(res, 1000);
   });
-  // TODO: replace with
-  // axios.get(AGARTEX_SERIVCE_PROJECTS_URL, {});
-  return testProjectList;
+  // TODO: integrate
+  return testResourceList;
 };

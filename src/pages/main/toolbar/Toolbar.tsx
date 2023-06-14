@@ -1,33 +1,40 @@
 import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos } from 'react-icons/md';
 
-import { Button } from '@components';
-import { Resource } from '@model';
+import { Button, LoadingOverlay, LoadingSpinner } from '@components';
+import { OperationState, Resource } from '@model';
 import ResourceList from './resource-list/ResourceList';
 import styles from './Toolbar.module.less';
-import { useState } from 'react';
-
-const mockResourceList: Resource[] = [
-  {
-    projectId: '0',
-    resourceId: '0',
-    name: 'main.tex'
-  },
-  {
-    projectId: '0',
-    resourceId: '1',
-    name: 'image_1.png'
-  },
-  {
-    projectId: '0',
-    resourceId: '2',
-    name: 'image_2.png'
-  }
-];
+import { useEffect, useState } from 'react';
+import { fetchResourceList } from './service/resource-service';
 
 const Toolbar = () => {
-  const [ toolbarCollapsed, setToolbarCollapsed ] = useState<boolean>(false);
-  const [ resourceList, setResourceList ] = useState<Resource[]>(mockResourceList);
+  const [ listStatus, setListStatus ] = useState<OperationState>(OperationState.SUCCESS);
   
+  const [ toolbarCollapsed, setToolbarCollapsed ] = useState<boolean>(false);
+  const [ resourceList, setResourceList ] = useState<Resource[]>([]);
+  
+  const refreshResourceList = () => {
+    if(listStatus === OperationState.LOADING)
+      return;
+
+    setListStatus(OperationState.LOADING);
+    // TODO: fix project id
+    fetchResourceList()
+      .then(list => {
+        setResourceList(list);
+        setListStatus(OperationState.SUCCESS);
+      })
+      .catch(error => {
+        // TODO: Actuall error handling
+        console.log(error);
+        setListStatus(OperationState.ERROR);
+      });
+  };
+
+  useEffect(() => {
+    refreshResourceList();
+  }, []);
+
   return (
     <>
       <div
@@ -46,10 +53,19 @@ const Toolbar = () => {
           }
         </Button>
       </div>
-      <ResourceList
-        resourceList={resourceList}
-        collapsed={toolbarCollapsed}
-      />
+      <LoadingOverlay
+        show={listStatus === OperationState.LOADING}
+        loadingIndicator={
+          <LoadingSpinner 
+            ariaLabel='resource list loading spinner' 
+            testId='resource-list-loading-spinner'/>
+        }
+      >
+        <ResourceList
+          resourceList={resourceList}
+          collapsed={toolbarCollapsed}
+        />
+      </LoadingOverlay>
     </>
   );
 };

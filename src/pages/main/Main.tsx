@@ -88,7 +88,9 @@ const MainPage = () => {
           value='Compile'/>
       </div>
       <div className={styles.body}>
-        <Toolbar />
+        <div className={styles.toolbar}>
+          <Toolbar/>
+        </div>
         <div
           className={styles.editor}
           data-testid='editor'>
