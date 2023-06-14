@@ -1,14 +1,16 @@
 import { Button, LoadingOverlay, LoadingSpinner } from '@components';
-import { MdOutlineArrowBackIos, MdOutlineArrowForwardIos, MdRefresh } from 'react-icons/md';
-import { OperationState, Resource } from '@model';
+import { MdAdd, MdOutlineArrowBackIos, MdOutlineArrowForwardIos, MdRefresh } from 'react-icons/md';
+import { ModalState, OperationState, Resource } from '@model';
+import { createResource, fetchResourceList, uploadResourceFile } from './service/resource-service';
 import { useEffect, useState } from 'react';
 
 import ResourceList from './resource-list/ResourceList';
-import { fetchResourceList } from './service/resource-service';
+import UploadResourceModal from './resource-list/upload-resource-modal/UploadResourceModal';
 import styles from './Toolbar.module.less';
 
 const Toolbar = () => {
   const [ listStatus, setListStatus ] = useState<OperationState>(OperationState.SUCCESS);
+  const [ uploadResourceModalState, setUploadResourceModalState ] = useState<ModalState>(ModalState.INPUT);
   
   const [ toolbarCollapsed, setToolbarCollapsed ] = useState<boolean>(false);
   const [ resourceList, setResourceList ] = useState<Resource[]>([]);
@@ -28,6 +30,28 @@ const Toolbar = () => {
         // TODO: Actuall error handling
         console.log(error);
         setListStatus(OperationState.ERROR);
+      });
+  };
+
+  
+  const uploadResource = (resourceName: string, resourceFile: File) => {
+    if(uploadResourceModalState === ModalState.LOADING)
+      return;
+
+    setUploadResourceModalState(ModalState.LOADING);
+    // TODO: fix project id
+    createResource(resourceName)
+      .then(resourceId => {
+        uploadResourceFile(resourceId, resourceFile);
+      })
+      .then(() => {
+        refreshResourceList();
+        setUploadResourceModalState(ModalState.CLOSED);
+      })
+      .catch(error => {
+        // TODO: Actuall error handling
+        console.log(error);
+        setUploadResourceModalState(ModalState.INPUT);
       });
   };
 
@@ -53,14 +77,24 @@ const Toolbar = () => {
           }
         </Button>
         { !toolbarCollapsed && 
-          <Button
-            className={styles.toolbarButton}
-            ariaLabel='refresh resource list button'
-            onClick={refreshResourceList}
-            testId='refresh-resource-list-button'
-          >
-            <MdRefresh size={24} />
-          </Button>
+          <>
+            <Button
+              className={styles.toolbarButton}
+              ariaLabel='upload resource list button'
+              testId='upload-resource-list-button'
+              onClick={() => setUploadResourceModalState(ModalState.INPUT)}
+            >
+              <MdAdd size={24} />
+            </Button>
+            <Button
+              className={styles.toolbarButton}
+              ariaLabel='refresh resource list button'
+              onClick={refreshResourceList}
+              testId='refresh-resource-list-button'
+            >
+              <MdRefresh size={24} />
+            </Button>
+          </>
         }
       </div>
       <LoadingOverlay
@@ -76,6 +110,12 @@ const Toolbar = () => {
           collapsed={toolbarCollapsed}
         />
       </LoadingOverlay>
+
+      <UploadResourceModal
+        state={uploadResourceModalState}
+        setState={setUploadResourceModalState}
+        onSubmit={uploadResource}
+      />
     </>
   );
 };

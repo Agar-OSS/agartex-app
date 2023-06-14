@@ -1,0 +1,69 @@
+@import '@variables';
+
+.agarFileInputContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: left;
+}
+
+.agarFileInput {
+  border: 1px solid @blue2;
+  border-radius: 4px;
+  background-color: @blue1;
+  color: @blue3;
+  font-size: 18px;
+  width: 300px;
+  padding: 10px;
+
+  &:focus { 
+    outline: 2px solid @blue2;
+  }
+
+  &:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 1000px @blue1 inset !important;
+  }
+}
+
+.agarFileInputError {
+  .agarFileInput;
+
+  border: 1px solid @red1;
+  
+  &:focus {
+    border-color: @blue2;
+    outline: 2px solid @blue2;
+  }
+}
+
+.errorMessage {
+  color: @red1;
+  margin-top: 8px;
+}
+
+.agarFileInput::file-selector-button {
+  transition: box-shadow ease 0.2s;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 4px;
+  background-color: @blue2;
+  color: @blue3;
+  font-size: 16px;
+  margin: auto;
+
+  &:focus {
+    outline: 2px solid @blue3;
+  }
+
+  &:disabled {
+    color: @blue1;
+  }
+
+  &:hover {
+    cursor: pointer;
+  }
+
+  & > *:hover {
+    cursor: pointer;
+  }
+}
