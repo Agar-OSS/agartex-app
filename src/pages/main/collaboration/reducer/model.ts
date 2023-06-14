@@ -5,7 +5,8 @@ export enum MessageType {
   NEW_CLIENT_CONNECTED = 1,
   CLIENT_DISCONNECTED = 2,
   SOURCE_CHANGE = 3,
-  CURSOR_MOVE = 4
+  CURSOR_MOVE = 4,
+  CLIENT_HANDSHAKE = 999
 }
 
 export interface Character {
@@ -40,8 +41,12 @@ export interface CursorMove_Message extends Base_Message {
   cursorPosition: string | null
 }
 
+export interface ClientHandshake_Message extends Base_Message {
+  projectId: string
+}
+
 export type Message = Connected_Message | NewClient_Message | ClientDisconnected_Message 
-  | SourceChange_Message | CursorMove_Message;
+  | SourceChange_Message | CursorMove_Message | ClientHandshake_Message;
 
 export interface CollabState {
   document: Character[],

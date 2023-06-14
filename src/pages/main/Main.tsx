@@ -1,6 +1,7 @@
 import { AiFillFolder, AiFillTool } from 'react-icons/ai';
 import { Button, Editor } from '@components';
 import { useContext, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import { OperationState } from '@model';
 import { ReadyState } from 'react-use-websocket';
 import { UserContext } from 'context/UserContextProvider';
@@ -8,10 +9,10 @@ import { compileDocument } from './service/compilation-service';
 import styles from './Main.module.less';
 import { useCollaboration } from './collaboration/collaboration';
 import { useKeyDown } from 'util/keyboard/keyboard';
-import { useNavigate } from 'react-router-dom';
 
 const MainPage = () => {
   const navigate = useNavigate();
+  const { projectId } = useParams();
 
   const { user, logout } = useContext(UserContext);
 
@@ -22,7 +23,7 @@ const MainPage = () => {
 
   const [text, setText] = useState<string>('');
 
-  const collaboration = useCollaboration();
+  const collaboration = useCollaboration(projectId);
 
   const onCloseClick = () => {
     navigate('/');
