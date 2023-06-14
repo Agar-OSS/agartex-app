@@ -1,11 +1,12 @@
-import styles from './ResourceTile.module.less';
+
 import { Resource } from '@model';
+import styles from './ResourceTile.module.less';
 
 interface Props {
   resource: Resource,
   selected: boolean,
   onClick: () => void
-};
+}
 
 const Resource = (props: Props) => {
   return (
