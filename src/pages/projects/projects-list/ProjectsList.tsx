@@ -26,9 +26,11 @@ const ProjectsList = (props: Props) => {
   return (
     <div className={styles.tilesContainer}>
       {
-        queryResult.map((proj) => (
-          <ProjectTile key={proj.name} project={proj} />
-        ))
+        queryResult.length == 0
+          ? <label className={styles.noProjectMessage}>No projects found</label>
+          : queryResult.map((proj) => (
+            <ProjectTile key={proj.name} project={proj} />
+          ))
       }
     </div>
   );

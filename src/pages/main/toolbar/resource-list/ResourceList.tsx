@@ -18,14 +18,16 @@ const ResourceList = (props: Props) => {
       className={`${styles.resourceListContainer} ${props.collapsed ? styles.resourceListCollapsed : ''}`}
     >
       {
-        props.resourceList.map((resource) => (
-          <ResourceTile
-            key={resource.resourceId}
-            resource={resource}
-            selected={selectedResourceId === resource.resourceId}
-            onClick={() => setSelectedResourceId(resource.resourceId)}
-          />
-        ))
+        props.resourceList.length === 0
+          ? <label className={styles.noResourceMessage}>No resources found</label>
+          : props.resourceList.map((resource) => (
+            <ResourceTile
+              key={resource.resourceId}
+              resource={resource}
+              selected={selectedResourceId === resource.resourceId}
+              onClick={() => setSelectedResourceId(resource.resourceId)}
+            />
+          ))
       }
     </div>
   );
