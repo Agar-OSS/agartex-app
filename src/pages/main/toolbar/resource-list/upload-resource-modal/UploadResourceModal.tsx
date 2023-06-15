@@ -15,7 +15,7 @@ const UploadResourceModal = (props: Props) => {
   
   const modalHeader = 
     <div className={styles.uploadResourceModalHeader}>
-      Upload resource
+      Upload image
     </div>;
 
   const modalBody = 
@@ -24,7 +24,7 @@ const UploadResourceModal = (props: Props) => {
       { /* Should be done when we implement actual service call for this logic */ }
       <FileInput
         ariaLabel='resource file input'
-        testId='resource-file-input'
+        testId='upload-resource-file-input'
         isValid={resourceFile !== null && (resourceFile === undefined || resourceFile.size <= 10*1024*1024)}
         accept='image/*'
         onChange={(val: File) => setResourceFile(val)}
@@ -35,8 +35,8 @@ const UploadResourceModal = (props: Props) => {
   const modalFooter =
     <div className={styles.uploadResourceModalFooter}>
       <Button
-        ariaLabel='close create project modal'
-        testId='create-project-modal-close-button'
+        ariaLabel='upload resource project modal'
+        testId='upload-resource-modal-close-button'
         value='Close'
         onClick={() => props.setState(ModalState.CLOSED)}
       />

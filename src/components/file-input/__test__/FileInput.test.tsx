@@ -3,6 +3,8 @@ import userEvent from '@testing-library/user-event';
 
 import FileInput from '../FileInput';
 
+const validFile = new File([''], 'test.png', { type: 'image/png' });
+
 const renderFileInput = (
   onChange: (File) => void = jest.fn(),
   isValid = true
@@ -38,8 +40,7 @@ describe('<FileInput/>', () => {
     const { getByTestId } = renderFileInput(mockOnChange, true);
     const input = getByTestId('file-input');
 
-    const file = new File([''], 'test.png', { type: 'image/png' });
-    await userEvent.upload(input, file);
-    expect(mockOnChange).toHaveBeenCalled();
+    await userEvent.upload(input, validFile);
+    expect(mockOnChange).toHaveBeenCalledWith(validFile);
   });
 });

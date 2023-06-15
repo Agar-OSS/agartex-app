@@ -5,7 +5,8 @@ import { useState } from 'react';
 
 interface Props {
   resourceList: Resource[],
-  collapsed: boolean
+  collapsed: boolean,
+  testId: string
 }
 
 const ResourceList = (props: Props) => {
@@ -13,6 +14,7 @@ const ResourceList = (props: Props) => {
 
   return (
     <div
+      data-testid={props.testId}
       className={`${styles.resourceListContainer} ${props.collapsed ? styles.resourceListCollapsed : ''}`}
     >
       {

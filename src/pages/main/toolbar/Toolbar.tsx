@@ -10,7 +10,7 @@ import styles from './Toolbar.module.less';
 
 const Toolbar = () => {
   const [ listStatus, setListStatus ] = useState<OperationState>(OperationState.SUCCESS);
-  const [ uploadResourceModalState, setUploadResourceModalState ] = useState<ModalState>(ModalState.INPUT);
+  const [ uploadResourceModalState, setUploadResourceModalState ] = useState<ModalState>(ModalState.CLOSED);
   
   const [ toolbarCollapsed, setToolbarCollapsed ] = useState<boolean>(false);
   const [ resourceList, setResourceList ] = useState<Resource[]>([]);
@@ -80,8 +80,8 @@ const Toolbar = () => {
           <>
             <Button
               className={styles.toolbarButton}
-              ariaLabel='upload resource list button'
-              testId='upload-resource-list-button'
+              ariaLabel='upload resource button'
+              testId='upload-resource-button'
               onClick={() => setUploadResourceModalState(ModalState.INPUT)}
             >
               <MdAdd size={24} />
@@ -106,6 +106,7 @@ const Toolbar = () => {
         }
       >
         <ResourceList
+          testId='resource-list'
           resourceList={resourceList}
           collapsed={toolbarCollapsed}
         />
