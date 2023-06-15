@@ -60,7 +60,6 @@ describe('<MainPage/>', () => {
   it('should render with all children', () => {
     const { getByTestId } = renderInMockContext();
     getByTestId('logout-button');
-    getByTestId('toolbar');
     getByTestId('editor');
   });
 

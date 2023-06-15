@@ -4,7 +4,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import { OperationState } from '@model';
 import { ReadyState } from 'react-use-websocket';
-import Toolbar from './toolbar/Toolbar';
 import { UserContext } from 'context/UserContextProvider';
 import { compileDocument } from './service/compilation-service';
 import styles from './Main.module.less';

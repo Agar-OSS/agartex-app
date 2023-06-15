@@ -1,13 +1,14 @@
 import { EDITOR_DELIMITER_WIDTH, EDITOR_MIN_PERCENTAGE_WORKSPACE_WIDTH } from '@constants';
 import { LoadingOverlay, LoadingSpinner, PdfViewer } from '@components';
+
 import { Collaboration } from 'pages/main/collaboration/collaboration';
 import Delimiter from './delimiter/Delimiter';
 import LatexTextArea from './latex-textarea/LatexTextArea';
 import { OperationState } from '@model';
+import Toolbar from 'pages/main/toolbar/Toolbar';
 import styles from './Editor.module.less';
 import { useResizeDetector } from 'react-resize-detector';
-import { useMemo, useRef, useState } from 'react';
-import Toolbar from 'pages/main/toolbar/Toolbar';
+import { useState } from 'react';
 
 interface Props {
   collaboration: Collaboration,
@@ -24,6 +25,8 @@ const Editor = (props: Props) => {
   const latexTextAreaWidth = `${100*delimiterX}%`;
   const pdfViewerWidth = `calc(${100*(1 - delimiterX)}% - ${EDITOR_DELIMITER_WIDTH}px)`;
   const pdfViewerWidthValue = (width ?? 0) * (1 - delimiterX) - EDITOR_DELIMITER_WIDTH;
+
+  const [ isLightTheme, setIsLightTheme ] = useState<boolean>(true);
 
   const onDrag = (x: number) => {
     setDelimiterX(x);
@@ -60,9 +63,10 @@ const Editor = (props: Props) => {
           height: height,
           width: latexTextAreaWidth 
         }}>
-        <Toolbar/>
+        <Toolbar toogleTheme={() => { setIsLightTheme(isLightTheme => !isLightTheme); }} />
         <LatexTextArea
           testId='latex-text-area'
+          theme={isLightTheme ? 'vs-light' : 'vs-dark'}
           onTextChangeCompilationCallback={props.onTextChangeCompilationCallback}
           collaboration={props.collaboration}
         />

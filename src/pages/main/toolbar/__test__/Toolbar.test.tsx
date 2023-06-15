@@ -15,9 +15,11 @@ jest.mock('../service/resource-service', () => ({
 import Toolbar from '../Toolbar';
 import { act, render, waitFor } from '@testing-library/react';
 
+const mockToogleTheme = jest.fn();
+
 const renderToolbar = () => {
   return render(
-    <Toolbar />
+    <Toolbar toogleTheme={mockToogleTheme} />
   );
 };
 
@@ -48,7 +50,11 @@ describe('<ProjectsPage />', () => {
 
   it('should call refresh callback on refresh list button click', () => {
     const { getByTestId } = renderToolbar();
-    getByTestId('refresh-resource-list-button').click();
+
+    act(() => {
+      getByTestId('refresh-resource-list-button').click();
+    });
+
     expect(mockFetchResourceList).toHaveBeenCalled();
   });
 
@@ -70,5 +76,15 @@ describe('<ProjectsPage />', () => {
       expect(mockUploadResourceFile).toHaveBeenCalled();
       expect(mockFetchResourceList).toHaveBeenCalled();
     });
+  });
+
+  it('should call toogle theme callback on toggle button click', () => {
+    const { getByTestId } = renderToolbar();
+
+    act(() => {
+      getByTestId('change-theme-toolbar-button').click();
+    });
+    
+    expect(mockToogleTheme).toHaveBeenCalled();
   });
 });

@@ -1,5 +1,5 @@
 import { Button, LoadingOverlay, LoadingSpinner } from '@components';
-import { MdAdd, MdOutlineArrowBackIos, MdOutlineArrowForwardIos, MdRefresh } from 'react-icons/md';
+import { MdAdd, MdModeNight, MdOutlineArrowBackIos, MdOutlineArrowForwardIos, MdRefresh } from 'react-icons/md';
 import { ModalState, OperationState, Resource } from '@model';
 import { createResource, fetchResourceList, uploadResourceFile } from './service/resource-service';
 import { useEffect, useState } from 'react';
@@ -8,7 +8,11 @@ import ResourceList from './resource-list/ResourceList';
 import UploadResourceModal from './resource-list/upload-resource-modal/UploadResourceModal';
 import styles from './Toolbar.module.less';
 
-const Toolbar = () => {
+interface Props {
+  toogleTheme: () => void
+}
+
+const Toolbar = (props: Props) => {
   const [ listStatus, setListStatus ] = useState<OperationState>(OperationState.SUCCESS);
   const [ uploadResourceModalState, setUploadResourceModalState ] = useState<ModalState>(ModalState.CLOSED);
   
@@ -67,7 +71,7 @@ const Toolbar = () => {
         <Button
           className={styles.toolbarButton}
           ariaLabel='collapse toolbar button'
-          onClick={() => setToolbarCollapsed(!toolbarCollapsed)}
+          onClick={() => setToolbarCollapsed(toolbarCollapsed => !toolbarCollapsed)}
           testId='collapse-toolbar-button'
         >
           { 
@@ -75,6 +79,14 @@ const Toolbar = () => {
               ? <MdOutlineArrowForwardIos size={24} />
               : <MdOutlineArrowBackIos size={24} />
           }
+        </Button>
+        <Button
+          className={styles.toolbarButton}
+          ariaLabel='change theme toolbar button'
+          onClick={props.toogleTheme}
+          testId='change-theme-toolbar-button'
+        >
+          <MdModeNight size={24} />
         </Button>
         { !toolbarCollapsed && 
           <>
