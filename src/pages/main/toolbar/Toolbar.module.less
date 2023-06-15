@@ -1,0 +1,27 @@
+@import '@variables';
+
+.toolbarContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.toolbar {
+  display: flex;
+  overflow-y: auto;
+
+  flex-direction: column;
+  align-items: center;
+  row-gap: 5px;
+
+  padding: 10px;
+  border-right: 1px solid @blue2;
+}
+
+.toolbarButton {
+  width: auto;
+  background-color: transparent;
+
+  &:focus {
+    outline: none;
+  }
+}

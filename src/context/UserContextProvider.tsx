@@ -41,7 +41,11 @@ const UserProvider = (props: Props) => {
       (response) => response,
       (error) => {
         if (error?.response.status === 401) {
+          // TODO: Info modal
           logout();
+        } else if (error?.response.status == 403) {
+          // TODO: Info modal
+          navigate('/');
         }
         return Promise.reject(error);
       }

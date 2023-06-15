@@ -43,7 +43,8 @@ export interface CursorMove_Message extends Base_Message {
 }
 
 export interface ClientHandshake_Message extends Base_Message {
-  projectId: string
+  projectId: string,
+  userId: string
 }
 
 export type Message = Connected_Message | NewClient_Message | ClientDisconnected_Message 

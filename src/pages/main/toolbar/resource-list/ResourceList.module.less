@@ -1,0 +1,20 @@
+@import '@variables';
+
+@transitionLength: 0.2s;
+
+.resourceListContainer {
+  display: flex;
+  flex-direction: column;
+  row-gap: 0px;
+
+  overflow: auto;
+  width: 250px;
+  border-right: 1px solid @blue2;
+
+  background-color: @blue5;
+  transition: all ease 0.2s;
+}
+
+.resourceListCollapsed {
+  width: 0px;
+}
