@@ -13,6 +13,7 @@ const SERVICE_URL = global.window?.env?.REACT_APP_SERVICE_URL ?? process.env.REA
 const COLLABORATION_URL = global.window?.env?.REACT_APP_COLLABORATION_SERVICE_URL ?? process.env.REACT_APP_COLLABORATION_SERVICE_URL;
 
 export const AGARTEX_SERVICE_COMPILATION_URL = SERVICE_URL + '/compile';
+export const AGARTEX_SERVICE_PROJECTS_URL = SERVICE_URL + '/projects';
 export const AGARTEX_SERVICE_SESSIONS_URL = SERVICE_URL + '/sessions';
 export const AGARTEX_SERVICE_USERS_URL = SERVICE_URL + '/users';
 export const AGARTEX_COLLABORATION_URL = COLLABORATION_URL + '/collaboration';
