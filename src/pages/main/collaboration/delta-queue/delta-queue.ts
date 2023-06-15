@@ -4,9 +4,10 @@ import { useEffect, useRef, useState } from 'react';
 import { cloneDeep } from 'lodash';
 
 export interface Delta {
-  position: string | null,
-  isBackspace: boolean,
-  char?: Character
+  // position: string | null,
+  // isBackspace: boolean,
+  delete?: string[],
+  insert?: Character[]
 }
 
 export interface DeltaQueue {
@@ -26,8 +27,13 @@ export const useDeltaQueue = (
   const deletedIds = useRef<Set<string>>(new Set());
 
   const isDeltaApplied = (delta: Delta): boolean => {
-    return (delta.isBackspace && deletedIds.current.has(delta.position)) 
-      || (!delta.isBackspace && insertedIds.current.has(delta.char.id));
+    const hasUndeleted = delta.delete 
+      && delta.delete.findIndex((charId: string) => !deletedIds.current.has(charId)) !== -1;
+    const hasUninserted = delta.insert 
+      && delta.insert.findIndex((c: Character) => !insertedIds.current.has(c.id)) !== -1;
+      
+    return (delta.delete && delta.delete.length && deletedIds.current.has(delta.delete.at(0))) 
+      || (delta.insert && delta.insert.length && insertedIds.current.has(delta.insert.at(0).id));
   };
 
   useEffect(() => {
@@ -42,6 +48,12 @@ export const useDeltaQueue = (
   }, [state.deltaQueue]);
 
   const push = (delta: Delta) => {
+    if (isDeltaApplied(delta)) {
+      return;
+    }
+
+    console.log(JSON.stringify(delta));
+    
     const message: SourceChange_Message = {
       type: MessageType.SOURCE_CHANGE,
       ...delta
@@ -53,6 +65,8 @@ export const useDeltaQueue = (
     });
     
     sendMessage(message);
+
+    console.log('successfully pushed??')
   };
 
   const pop = (): Delta | undefined => {
@@ -65,11 +79,11 @@ export const useDeltaQueue = (
     if (isDeltaApplied(delta)) { 
       return undefined;
     }
-
-    if (delta.isBackspace) {
-      deletedIds.current.add(delta.position);
-    } else {
-      insertedIds.current.add(delta.char.id);
+    
+    if (delta.delete) {
+      delta.delete.forEach((charId: string) => deletedIds.current.add(charId));
+    } else if (delta.insert){
+      delta.insert.forEach((c: Character) => insertedIds.current.add(c.id));
     }
 
     dispatch({ 

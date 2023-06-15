@@ -43,14 +43,18 @@ const LatexTextArea = (props: Props) => {
   }, []);
 
   useEffect(() => {
-    managerRef.current.setInitDocument(initDocument);
+    managerRef.current.setDocument(initDocument);
     props.onTextChangeCompilationCallback(managerRef.current.getText());
   }, [initDocument]);
 
   const applyDelta = (delta: Delta | undefined) => {
     if (delta) {
-      const edit = managerRef.current.applyDelta(delta, monacoRef);
-      editorRef.current.executeEdits('delta-queue', [edit]);
+      const edits = managerRef.current.applyDelta(delta, monacoRef);
+      edits.forEach((edit) => { 
+        console.log('executing diff');
+        console.log(edit);
+        editorRef.current.executeEdits('delta-queue', [edit]);
+      });
       props.onTextChangeCompilationCallback(managerRef.current.getText());
     }
   };

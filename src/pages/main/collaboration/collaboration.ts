@@ -13,7 +13,7 @@ export interface Collaboration {
   onCursorPositionChange: (charId: string) => void,
   deltaQueue: DeltaQueue,
   connectionState: ReadyState,
-  generateCharacter: (val: string) => Character
+  generateCharacter: (val: string, prevId: string) => Character | undefined
 }
 
 export const useCollaboration = (projectId: string): Collaboration => {
@@ -26,12 +26,13 @@ export const useCollaboration = (projectId: string): Collaboration => {
   const clientIdRef = useRef<string>(null);
   clientIdRef.current = state.clientId;
 
-  const generateCharacter = (value: string): Character | undefined => {
+  const generateCharacter = (value: string, prevId: string): Character | undefined => {
     nextCharacterIdRef.current = nextCharacterIdRef.current + 1;
 
     return {
       deleted: false,
       value,
+      prevId,
       id: [clientIdRef.current, nextCharacterIdRef.current.toString()].join('.')
     };
   };
