@@ -60,7 +60,7 @@ const Toolbar = () => {
   }, []);
 
   return (
-    <>
+    <div className={styles.toolbarContainer}>
       <div
         className={styles.toolbar}
         data-testid='toolbar'>
@@ -117,7 +117,7 @@ const Toolbar = () => {
         setState={setUploadResourceModalState}
         onSubmit={uploadResource}
       />
-    </>
+    </div>
   );
 };
 

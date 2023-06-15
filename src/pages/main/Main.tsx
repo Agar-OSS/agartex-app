@@ -87,22 +87,17 @@ const MainPage = () => {
           testId='compile-button'
           value='Compile'/>
       </div>
-      <div className={styles.body}>
-        <div className={styles.toolbar}>
-          <Toolbar/>
-        </div>
-        <div
-          className={styles.editor}
-          data-testid='editor'>
-          <Editor
-            collaboration={collaboration}
-            compilationState={compilationState}
-            compilationError={compilationError}
-            compilationLogs={compilationLogs}
-            documentUrl={documentUrl}
-            onTextChangeCompilationCallback={setText}
-          />
-        </div>
+      <div
+        className={styles.editor}
+        data-testid='editor'>
+        <Editor
+          collaboration={collaboration}
+          compilationState={compilationState}
+          compilationError={compilationError}
+          compilationLogs={compilationLogs}
+          documentUrl={documentUrl}
+          onTextChangeCompilationCallback={setText}
+        />
       </div>
     </div>
   );  

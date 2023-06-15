@@ -6,7 +6,8 @@ import LatexTextArea from './latex-textarea/LatexTextArea';
 import { OperationState } from '@model';
 import styles from './Editor.module.less';
 import { useResizeDetector } from 'react-resize-detector';
-import { useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
+import Toolbar from 'pages/main/toolbar/Toolbar';
 
 interface Props {
   collaboration: Collaboration,
@@ -59,6 +60,7 @@ const Editor = (props: Props) => {
           height: height,
           width: latexTextAreaWidth 
         }}>
+        <Toolbar/>
         <LatexTextArea
           testId='latex-text-area'
           onTextChangeCompilationCallback={props.onTextChangeCompilationCallback}
