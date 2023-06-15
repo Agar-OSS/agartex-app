@@ -21,8 +21,12 @@ interface Props {
 
 const Editor = (props: Props) => {
   const { width, height, ref: rootRef } = useResizeDetector();
+  const { width: toolbarWidth, ref: toolbarRef } = useResizeDetector();
   const [ delimiterX, setDelimiterX ] = useState(0.5);
-  const latexTextAreaWidth = `${100*delimiterX}%`;
+
+  const leftPaneWidth = `${100*delimiterX}%`;
+  const latexTextAreaWidth = (width ?? 0) * delimiterX - toolbarWidth;
+
   const pdfViewerWidth = `calc(${100*(1 - delimiterX)}% - ${EDITOR_DELIMITER_WIDTH}px)`;
   const pdfViewerWidthValue = (width ?? 0) * (1 - delimiterX) - EDITOR_DELIMITER_WIDTH;
 
@@ -60,16 +64,22 @@ const Editor = (props: Props) => {
     <div ref={rootRef} className={styles.root}>
       <div className={styles.editor}
         style={{ 
-          height: height,
-          width: latexTextAreaWidth 
+          width: leftPaneWidth,
+          height: height
         }}>
-        <Toolbar toogleTheme={() => { setIsLightTheme(isLightTheme => !isLightTheme); }} />
-        <LatexTextArea
-          testId='latex-text-area'
-          theme={isLightTheme ? 'vs-light' : 'vs-dark'}
-          onTextChangeCompilationCallback={props.onTextChangeCompilationCallback}
-          collaboration={props.collaboration}
+        <Toolbar
+          ref={toolbarRef}
+          toogleTheme={() => { setIsLightTheme(isLightTheme => !isLightTheme); }}
         />
+        <div className={styles.latexTextAreaWrapper}>
+          <LatexTextArea
+            testId='latex-text-area'
+            theme={isLightTheme ? 'vs-light' : 'vs-dark'}
+            width={latexTextAreaWidth}
+            onTextChangeCompilationCallback={props.onTextChangeCompilationCallback}
+            collaboration={props.collaboration}
+          />
+        </div>
       </div>
       <Delimiter
         view={{
