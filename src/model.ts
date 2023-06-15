@@ -14,6 +14,12 @@ export interface Project {
   owner: string
 }
 
+export interface Resource {
+  projectId: string,
+  resourceId: string,
+  name: string
+}
+
 export interface User {
   userId: string,
   email: string

@@ -11,6 +11,7 @@ import { useCursorsDecorations } from './cursors-decorations';
 
 interface Props {
   testId: string,
+  theme: string,
   onTextChangeCompilationCallback: (text: string) => void,
   collaboration: Collaboration
 }
@@ -106,7 +107,7 @@ const LatexTextArea = (props: Props) => {
         onMount={onEditorMount}
         language='latex'
         defaultLanguage='latex'
-        theme='vs-dark'
+        theme={props.theme}
         options={{
           minimap: {
             enabled: false
