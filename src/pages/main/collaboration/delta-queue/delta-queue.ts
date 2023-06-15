@@ -4,8 +4,6 @@ import { useEffect, useRef, useState } from 'react';
 import { cloneDeep } from 'lodash';
 
 export interface Delta {
-  // position: string | null,
-  // isBackspace: boolean,
   delete?: string[],
   insert?: Character[]
 }
@@ -31,9 +29,8 @@ export const useDeltaQueue = (
       && delta.delete.findIndex((charId: string) => !deletedIds.current.has(charId)) !== -1;
     const hasUninserted = delta.insert 
       && delta.insert.findIndex((c: Character) => !insertedIds.current.has(c.id)) !== -1;
-      
-    return (delta.delete && delta.delete.length && deletedIds.current.has(delta.delete.at(0))) 
-      || (delta.insert && delta.insert.length && insertedIds.current.has(delta.insert.at(0).id));
+    
+    return !hasUninserted && !hasUndeleted;
   };
 
   useEffect(() => {
@@ -65,8 +62,6 @@ export const useDeltaQueue = (
     });
     
     sendMessage(message);
-
-    console.log('successfully pushed??')
   };
 
   const pop = (): Delta | undefined => {

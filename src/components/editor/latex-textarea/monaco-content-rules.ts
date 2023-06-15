@@ -1,6 +1,8 @@
 import { IKeyboardEvent } from 'monaco-editor';
 import { arrayRange } from 'util/poly/poly';
 
+export const MAX_PASTE_LENGTH = 128;
+
 const legalKeys = [
   'Backspace',
   'Enter',

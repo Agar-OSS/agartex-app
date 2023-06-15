@@ -1,9 +1,9 @@
 import { Character } from 'pages/main/collaboration/reducer/model';
 import { Delta } from 'pages/main/collaboration/delta-queue/delta-queue';
+import { MAX_PASTE_LENGTH } from './monaco-content-rules';
 import { Monaco } from '@monaco-editor/react';
 import { MutableRefObject } from 'react';
 import { Selection } from 'monaco-editor';
-import { arrayRange } from 'util/poly/poly';
 import { cloneDeep } from 'lodash';
 
 export interface CursorPosition {
@@ -39,8 +39,6 @@ export class MonacoContentManager {
   }
 
   public getCharIdForOffset(offset: number): string | null {
-    // console.log('getCharIdForOffset(' + offset + ')');
-    // console.log(JSON.stringify(this.undeletedDocument));
     if (offset < 0 || !this.undeletedDocument.length) { return null; }
     return this.undeletedDocument.at(Math.min(offset, this.undeletedDocument.length - 1)).id;
   }
@@ -125,10 +123,6 @@ export class MonacoContentManager {
   }
     
   public applyDelta(delta: Delta, monacoRef: MutableRefObject<Monaco>) {
-
-    console.log('APPLY DELTA');
-    console.log(delta);
-
     if (delta.insert && delta.insert.length) {
       const prevId = delta.insert.at(0).prevId;
       const insertOffset = this.getOffsetForCharId(prevId);
@@ -179,40 +173,6 @@ export class MonacoContentManager {
 
       return monacoDeltas;
     }
-
-    /*const insertOffset = this.getOffsetForCharId(delta.position);
-    const insertPosition = this.offsetToPosition(insertOffset);
-    let range = null;
-
-    if (delta.isBackspace && delta.position && insertOffset !== -1) {
-      const insertPositionOneBefore = this.offsetToPosition(insertOffset - 1);
-
-      range = new monacoRef.current.Range(
-        insertPositionOneBefore.row,
-        insertPositionOneBefore.column,
-        insertPosition.row,
-        insertPosition.column
-      );
-
-      this.deleteCharacter(delta.position, insertOffset);
-
-    } else if (!delta.isBackspace) {
-      range = new monacoRef.current.Range(
-        insertPosition.row,
-        insertPosition.column,
-        insertPosition.row,
-        insertPosition.column
-      );
-
-      this.insertCharacter(delta.position, insertOffset, delta.char);
-    }
-
-    return {
-      identifier: { major: 1, minor: 1 },
-      range: range,
-      text: (delta.isBackspace) ? '' : delta.char.value,
-      forceMoveMakers: true
-    };*/
   }
   
   public createDeltas(
@@ -222,8 +182,8 @@ export class MonacoContentManager {
     generateCharacter: (val: string, prevId: string) => Character | undefined
   ) : Delta[] {
     // Trim inserted text to prevent Ulysses pasting incident.
-    insertedText = (insertedText.length > 24) ? 
-      insertedText.substring(0, 24) : insertedText;
+    insertedText = (insertedText.length > MAX_PASTE_LENGTH) ? 
+      insertedText.substring(0, MAX_PASTE_LENGTH) : insertedText;
     
     const deltas = [];
 
@@ -245,13 +205,9 @@ export class MonacoContentManager {
           this.undeletedDocument
             .slice(deleteStartOffset + 1, deleteEndOffset + 1)
             .map((c: Character) => c.id)
-      })
+      });
     }
 
-    /* arrayRange(deleteStartOffset + 1, deleteEndOffset).map(
-      offset => this.createDeltaForRemoval(offset))
-      .reverse(); */
-    
     // Create deltas for inserting characters.
     let prevId = (offset !== -1) ? this.undeletedDocument.at(offset).id : null;
     const insert = [];
@@ -265,30 +221,8 @@ export class MonacoContentManager {
       deltas.push({ insert });
     }
 
-    /* insertedText.split('').forEach((c: string) => {
-      const newChar = generateCharacter(c);
-
-      deltas.push({
-        position: prevId,
-        isBackspace: false,
-        char: newChar
-      });
-
-      prevId = newChar.id;
-    }); */
-  
     return deltas;
   }
-
-  /* public createDeltaForRemoval(offset: number): Delta | undefined {
-    const charId = (offset !== -1) ? this.undeletedDocument.at(offset).id : null;
-    
-    return (charId) ? {
-      position: charId,
-      isBackspace: true,
-      char: null
-    } : undefined;
-  }*/
 
   public positionToOffset(position: CursorPosition): number {
     return this.text
