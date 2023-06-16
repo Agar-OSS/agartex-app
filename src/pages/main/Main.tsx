@@ -12,6 +12,8 @@ import { useCollaboration } from './collaboration/collaboration';
 import { useKeyDown } from 'util/keyboard/keyboard';
 
 const MainPage = () => {
+  const { project } = useContext(ProjectContext);
+
   const navigate = useNavigate();
   const { projectId } = useParams();
 
@@ -69,6 +71,8 @@ const MainPage = () => {
           onClick={onCloseClick}
           testId='close-project-button'
           value='Close Project'/>
+
+        <label className={styles.projectName}>{project.name}</label>
 
         <span>Clients connected: {collaboration.clientsConnectedIds.join(' ')}</span>
 
