@@ -6,7 +6,7 @@ const validFile = new File([], 'valid.jpg', { type: 'image/jpg' });
 const mockCreateResource = jest.fn(() => new Promise<string>(jest.fn()));
 const mockUploadResourceFile = jest.fn(() => new Promise<string>(jest.fn()));
 const mockFetchResourceList = jest.fn(() => new Promise<Resource[]>(jest.fn()));
-jest.mock('../service/resource-service', () => ({
+jest.mock('../../service/resource-service', () => ({
   createResource: mockCreateResource,
   uploadResourceFile: mockUploadResourceFile,
   fetchResourceList: mockFetchResourceList

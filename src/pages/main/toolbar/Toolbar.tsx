@@ -1,7 +1,7 @@
 import { Button, LoadingOverlay, LoadingSpinner } from '@components';
 import { MdAdd, MdModeNight, MdOutlineArrowBackIos, MdOutlineArrowForwardIos, MdRefresh } from 'react-icons/md';
 import { ModalState, OperationState, Resource } from '@model';
-import { createResource, fetchResourceList, uploadResourceFile } from './service/resource-service';
+import { createResource, fetchResourceList, uploadResourceFile } from '../service/resource-service';
 import { forwardRef, useEffect, useState } from 'react';
 
 import ResourceList from './resource-list/ResourceList';
