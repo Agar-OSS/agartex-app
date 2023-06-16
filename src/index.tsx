@@ -13,16 +13,16 @@ const root = createRoot(container);
 root.render(
   <BrowserRouter basename={'/'}>
     <UserProvider>
-      <Routes>
-        <Route path='/login' element={<LoginPage />} />
-        <Route path='/create-account' element={<CreateAccountPage />} />
-        <ProjectProvider>
+      <ProjectProvider>
+        <Routes>
+          <Route path='/login' element={<LoginPage />} />
+          <Route path='/create-account' element={<CreateAccountPage />} />
           <Route path='/' element={<App />}>
             <Route path='' element={<ProjectsPage />} />
             <Route path='/:projectId' element={<MainPage />} />
           </Route>
-        </ProjectProvider>
-      </Routes>
+        </Routes>
+      </ProjectProvider>
     </UserProvider>
   </BrowserRouter>
 );
