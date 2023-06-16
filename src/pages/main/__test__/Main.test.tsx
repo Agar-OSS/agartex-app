@@ -4,6 +4,7 @@ import MainPage from '../Main';
 import { ReadyState } from 'react-use-websocket';
 import { UserContext } from 'context/UserContextProvider';
 import { render } from '@testing-library/react';
+import { ProjectContext } from 'context/ProjectContextProvider';
 
 const mockNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -47,7 +48,14 @@ const renderInMockContext = () => {
       setUser: jest.fn(),
       logout: mockLogout
     }}>
-      <MainPage />
+      <ProjectContext.Provider value={{
+        project: null,
+        setProject: jest.fn(),
+        documentUrl: null,
+        setDocumentUrl: jest.fn()
+      }}>
+        <MainPage />
+      </ProjectContext.Provider>
     </UserContext.Provider>
   );
 };

@@ -35,6 +35,6 @@ export interface ProjectContextType {
   project: Project,
   setProject: (project: Project) => void,
   
-  pdfUrl: string,
-  setPdfUrl: (url: string) => void
+  documentUrl: string,
+  setDocumentUrl: (url: string) => void
 }

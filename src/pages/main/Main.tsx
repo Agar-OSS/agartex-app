@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { OperationState } from '@model';
+import { ProjectContext } from 'context/ProjectContextProvider';
 import { ReadyState } from 'react-use-websocket';
 import { UserContext } from 'context/UserContextProvider';
 import { compileDocument } from './service/compilation-service';
@@ -14,9 +15,9 @@ const MainPage = () => {
   const navigate = useNavigate();
   const { projectId } = useParams();
 
+  const { setDocumentUrl } = useContext(ProjectContext);
   const { user, logout } = useContext(UserContext);
 
-  const [documentUrl, setDocumentUrl] = useState<string>('');
   const [compilationError, setCompilationError] = useState<string>('');
   const [compilationLogs, setCompilationLogs] = useState<string>('');
   const [compilationState, setCompilationState] = useState<OperationState>(OperationState.SUCCESS);
@@ -94,7 +95,6 @@ const MainPage = () => {
           compilationState={compilationState}
           compilationError={compilationError}
           compilationLogs={compilationLogs}
-          documentUrl={documentUrl}
           onTextChangeCompilationCallback={setText}
         />
       </div>

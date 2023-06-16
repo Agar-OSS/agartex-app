@@ -11,6 +11,7 @@ import { OperationState } from '@model';
 import { ReadyState } from 'react-use-websocket';
 import { DeltaQueue } from 'pages/main/collaboration/delta-queue/delta-queue';
 import { Collaboration } from 'pages/main/collaboration/collaboration';
+import { ProjectContext } from 'context/ProjectContextProvider';
 
 const mockDeltaQueue: DeltaQueue = {
   version: 0,
@@ -35,14 +36,20 @@ const renderEditor = (
   compilationLogs = ''
 ) => {
   return render(
-    <Editor
-      collaboration={mockCollaboration}
-      compilationLogs={compilationLogs}
-      compilationError={compilationError}
-      compilationState={state}
-      documentUrl='example.pdf'
-      onTextChangeCompilationCallback={jest.fn()}
-    />
+    <ProjectContext.Provider value={{
+      project: null,
+      setProject: jest.fn(),
+      documentUrl: 'example.pdf',
+      setDocumentUrl: jest.fn()
+    }}>
+      <Editor
+        collaboration={mockCollaboration}
+        compilationLogs={compilationLogs}
+        compilationError={compilationError}
+        compilationState={state}
+        onTextChangeCompilationCallback={jest.fn()}
+      />
+    </ProjectContext.Provider>
   );
 };
 

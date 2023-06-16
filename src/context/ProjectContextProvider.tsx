@@ -11,7 +11,7 @@ interface Props {
 export const ProjectContext = createContext<ProjectContextType | null>(null);
 
 const ProjectProvider = (props: Props) => {
-  const [ pdfUrl, setPdfUrl ] = useState<string>('');
+  const [ documentUrl, setDocumentUrl ] = useState<string>('');
 
   const { 
     storedValue: project, 
@@ -20,7 +20,7 @@ const ProjectProvider = (props: Props) => {
 
   return (
     <ProjectContext.Provider
-      value={{ project, setProject, pdfUrl, setPdfUrl }}
+      value={{ project, setProject, documentUrl, setDocumentUrl }}
     >
       { props.children }
     </ProjectContext.Provider>

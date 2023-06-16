@@ -1,25 +1,27 @@
 import { EDITOR_DELIMITER_WIDTH, EDITOR_MIN_PERCENTAGE_WORKSPACE_WIDTH } from '@constants';
 import { LoadingOverlay, LoadingSpinner, PdfViewer } from '@components';
+import { useContext, useState } from 'react';
 
 import { Collaboration } from 'pages/main/collaboration/collaboration';
 import Delimiter from './delimiter/Delimiter';
 import LatexTextArea from './latex-textarea/LatexTextArea';
 import { OperationState } from '@model';
+import { ProjectContext } from 'context/ProjectContextProvider';
 import Toolbar from 'pages/main/toolbar/Toolbar';
 import styles from './Editor.module.less';
 import { useResizeDetector } from 'react-resize-detector';
-import { useState } from 'react';
 
 interface Props {
   collaboration: Collaboration,
   compilationError: string,
   compilationLogs: string,
   compilationState: OperationState,
-  documentUrl: string,
   onTextChangeCompilationCallback: (text: string) => void
 }
 
 const Editor = (props: Props) => {
+  const { documentUrl } = useContext(ProjectContext);
+
   const { width, height, ref: rootRef } = useResizeDetector();
   const { width: toolbarWidth, ref: toolbarRef } = useResizeDetector();
   const [ delimiterX, setDelimiterX ] = useState(0.5);
@@ -46,7 +48,7 @@ const Editor = (props: Props) => {
             testId='preview-loading-spinner'/>
         }>
         <PdfViewer
-          documentUrl={props.documentUrl}
+          documentUrl={documentUrl}
           width={pdfViewerWidthValue}
           height={height}
           testId='pdf-viewer'/>
