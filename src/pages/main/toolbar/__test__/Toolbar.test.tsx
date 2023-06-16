@@ -1,4 +1,7 @@
-import { Resource } from '@model';
+import { Project, Resource } from '@model';
+import { act, render, waitFor } from '@testing-library/react';
+
+import { ProjectContext } from 'context/ProjectContextProvider';
 import userEvent from '@testing-library/user-event';
 
 const validFile = new File([], 'valid.jpg', { type: 'image/jpg' });
@@ -13,13 +16,26 @@ jest.mock('../../service/resource-service', () => ({
 }));
 
 import Toolbar from '../Toolbar';
-import { act, render, waitFor } from '@testing-library/react';
 
+const mockProject: Project = {
+  projectId: '',
+  name: '',
+  created: 0,
+  modified: 0,
+  owner: ''
+};
 const mockToogleTheme = jest.fn();
 
 const renderToolbar = () => {
   return render(
-    <Toolbar toogleTheme={mockToogleTheme} />
+    <ProjectContext.Provider value={{
+      project: mockProject,
+      setProject: jest.fn(),
+      documentUrl: '',
+      setDocumentUrl: jest.fn()
+    }}>
+      <Toolbar toogleTheme={mockToogleTheme} />
+    </ProjectContext.Provider>
   );
 };
 
@@ -31,6 +47,8 @@ describe('<ProjectsPage />', () => {
   it('should render with all its children', () => {
     const { getByTestId } = renderToolbar();
     getByTestId('collapse-toolbar-button');
+    getByTestId('download-pdf-button');
+    getByTestId('change-theme-button');
     getByTestId('upload-resource-button');
     getByTestId('refresh-resource-list-button');
     getByTestId('resource-list');
@@ -82,7 +100,7 @@ describe('<ProjectsPage />', () => {
     const { getByTestId } = renderToolbar();
 
     act(() => {
-      getByTestId('change-theme-toolbar-button').click();
+      getByTestId('change-theme-button').click();
     });
     
     expect(mockToogleTheme).toHaveBeenCalled();

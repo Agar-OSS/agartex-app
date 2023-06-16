@@ -1,9 +1,10 @@
 import { Button, LoadingOverlay, LoadingSpinner } from '@components';
-import { MdAdd, MdModeNight, MdOutlineArrowBackIos, MdOutlineArrowForwardIos, MdRefresh } from 'react-icons/md';
+import { MdAdd, MdDownload, MdModeNight, MdOutlineArrowBackIos, MdOutlineArrowForwardIos, MdRefresh } from 'react-icons/md';
 import { ModalState, OperationState, Resource } from '@model';
 import { createResource, fetchResourceList, uploadResourceFile } from '../service/resource-service';
-import { forwardRef, useEffect, useState } from 'react';
+import { forwardRef, useContext, useEffect, useState } from 'react';
 
+import { ProjectContext } from 'context/ProjectContextProvider';
 import ResourceList from './resource-list/ResourceList';
 import UploadResourceModal from './resource-list/upload-resource-modal/UploadResourceModal';
 import styles from './Toolbar.module.less';
@@ -13,6 +14,8 @@ interface Props {
 }
 
 const Toolbar = forwardRef<HTMLDivElement, Props>(function Toolbar(props, ref?) {
+  const { project, documentUrl } = useContext(ProjectContext);
+
   const [ listStatus, setListStatus ] = useState<OperationState>(OperationState.SUCCESS);
   const [ uploadResourceModalState, setUploadResourceModalState ] = useState<ModalState>(ModalState.CLOSED);
   
@@ -82,9 +85,21 @@ const Toolbar = forwardRef<HTMLDivElement, Props>(function Toolbar(props, ref?) 
         </Button>
         <Button
           className={styles.toolbarButton}
+          ariaLabel='download pdf toolbar button'
+          testId='download-pdf-button'
+        >
+          <a
+            href={documentUrl != '' ? documentUrl : null}
+            download={documentUrl != '' ? project.name+'.pdf' : null}
+          >
+            <MdDownload size={24} />
+          </a>
+        </Button>
+        <Button
+          className={styles.toolbarButton}
           ariaLabel='change theme toolbar button'
           onClick={props.toogleTheme}
-          testId='change-theme-toolbar-button'
+          testId='change-theme-button'
         >
           <MdModeNight size={24} />
         </Button>
