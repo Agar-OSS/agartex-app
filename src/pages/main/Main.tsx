@@ -16,7 +16,7 @@ const MainPage = () => {
 
   const { user, logout } = useContext(UserContext);
 
-  const [documentUrl, setDocumentUrl] = useState<string>('example.pdf');
+  const [documentUrl, setDocumentUrl] = useState<string>('');
   const [compilationError, setCompilationError] = useState<string>('');
   const [compilationLogs, setCompilationLogs] = useState<string>('');
   const [compilationState, setCompilationState] = useState<OperationState>(OperationState.SUCCESS);

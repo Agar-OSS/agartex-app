@@ -2,7 +2,7 @@ import { Button, LoadingOverlay, LoadingSpinner } from '@components';
 import { MdAdd, MdModeNight, MdOutlineArrowBackIos, MdOutlineArrowForwardIos, MdRefresh } from 'react-icons/md';
 import { ModalState, OperationState, Resource } from '@model';
 import { createResource, fetchResourceList, uploadResourceFile } from './service/resource-service';
-import { useEffect, useState } from 'react';
+import { forwardRef, useEffect, useState } from 'react';
 
 import ResourceList from './resource-list/ResourceList';
 import UploadResourceModal from './resource-list/upload-resource-modal/UploadResourceModal';
@@ -12,7 +12,7 @@ interface Props {
   toogleTheme: () => void
 }
 
-const Toolbar = (props: Props) => {
+const Toolbar = forwardRef<HTMLDivElement, Props>(function Toolbar(props, ref?) {
   const [ listStatus, setListStatus ] = useState<OperationState>(OperationState.SUCCESS);
   const [ uploadResourceModalState, setUploadResourceModalState ] = useState<ModalState>(ModalState.CLOSED);
   
@@ -64,7 +64,7 @@ const Toolbar = (props: Props) => {
   }, []);
 
   return (
-    <div className={styles.toolbarContainer}>
+    <div ref={ref} className={styles.toolbarContainer}>
       <div
         className={styles.toolbar}
         data-testid='toolbar'>
@@ -131,6 +131,6 @@ const Toolbar = (props: Props) => {
       />
     </div>
   );
-};
+});
 
 export default Toolbar;
