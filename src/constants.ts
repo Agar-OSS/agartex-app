@@ -22,3 +22,4 @@ export const AGARTEX_COLLABORATION_URL = COLLABORATION_URL + '/collaboration';
 export const BLUE_2 = '#7F98B8';
 
 export const USER_STORAGE_KEY = 'agartex-user';
+export const PROJECT_STORAGE_KEY = 'agartex-project';

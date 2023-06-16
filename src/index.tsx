@@ -2,6 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { CreateAccountPage, LoginPage, MainPage, ProjectsPage } from './pages';
 
 import App from './App';
+import ProjectProvider from 'context/ProjectContextProvider';
 import UserProvider from 'context/UserContextProvider';
 import axios from 'axios';
 import { createRoot } from 'react-dom/client';
@@ -15,10 +16,12 @@ root.render(
       <Routes>
         <Route path='/login' element={<LoginPage />} />
         <Route path='/create-account' element={<CreateAccountPage />} />
-        <Route path='/' element={<App />}>
-          <Route path='' element={<ProjectsPage />} />
-          <Route path='/:projectId' element={<MainPage />} />
-        </Route>
+        <ProjectProvider>
+          <Route path='/' element={<App />}>
+            <Route path='' element={<ProjectsPage />} />
+            <Route path='/:projectId' element={<MainPage />} />
+          </Route>
+        </ProjectProvider>
       </Routes>
     </UserProvider>
   </BrowserRouter>
