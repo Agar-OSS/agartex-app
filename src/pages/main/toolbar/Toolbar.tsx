@@ -28,7 +28,7 @@ const Toolbar = forwardRef<HTMLDivElement, Props>(function Toolbar(props, ref?) 
 
     setListStatus(OperationState.LOADING);
     // TODO: fix project id
-    fetchResourceList()
+    fetchResourceList(project.projectId)
       .then(list => {
         setResourceList(list);
         setListStatus(OperationState.SUCCESS);
@@ -47,9 +47,9 @@ const Toolbar = forwardRef<HTMLDivElement, Props>(function Toolbar(props, ref?) 
 
     setUploadResourceModalState(ModalState.LOADING);
     // TODO: fix project id
-    createResource(resourceName)
+    createResource(project.projectId, resourceName)
       .then(resourceId => {
-        uploadResourceFile(resourceId, resourceFile);
+        uploadResourceFile(project.projectId, resourceId, resourceFile);
       })
       .then(() => {
         refreshResourceList();
