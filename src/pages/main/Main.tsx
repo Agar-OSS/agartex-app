@@ -76,7 +76,18 @@ const MainPage = () => {
 
           <label className={styles.projectName}>{project.name}</label>
 
-          <span>Clients connected: {collaboration.clientsConnectedIds.join(' ')}</span>
+          <span className={styles.clientsConnectedList}>
+            <label>Clients connected:</label>
+            {
+              collaboration.clientsConnectedIds.map((clientId) =>
+                <label
+                  key={clientId}
+                  className={`${collaboration.clientsCmap.get(clientId)} ${styles.clientIdLabel}`}>
+                  {clientId}
+                </label>
+              )
+            }
+          </span>
 
           <span>{ user?.email }</span>
 
