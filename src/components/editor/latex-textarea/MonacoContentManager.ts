@@ -1,10 +1,10 @@
 import { Character } from 'pages/main/collaboration/reducer/model';
 import { Delta } from 'pages/main/collaboration/delta-queue/delta-queue';
+import { MAX_PASTE_LENGTH } from './monaco-content-rules';
 import { Monaco } from '@monaco-editor/react';
 import { MutableRefObject } from 'react';
+import { Selection } from 'monaco-editor';
 import { cloneDeep } from 'lodash';
-import { editor } from 'monaco-editor';
-import { getKeyValue } from './monaco-content-rules';
 
 export interface CursorPosition {
   row: number,
@@ -17,11 +17,11 @@ export class MonacoContentManager {
   text: string;
   
   public constructor(initDocument: Character[]) {
-    this.setInitDocument(initDocument);
+    this.setDocument(initDocument);
   }
 
-  public setInitDocument(initDocument: Character[]): void {
-    this.document = cloneDeep(initDocument);
+  public setDocument(document: Character[]) {
+    this.document = cloneDeep(document);
     this.undeletedDocument = this.document.filter((c: Character) => !c.deleted);
     this.text = this.undeletedDocument.map((c: Character) => c.value).join('');
   }
@@ -39,87 +39,157 @@ export class MonacoContentManager {
   }
 
   public getCharIdForOffset(offset: number): string | null {
-    return (offset === -1) ? null : this.undeletedDocument.at(offset).id;
+    if (offset < 0 || !this.undeletedDocument.length) { return null; }
+    return this.undeletedDocument.at(Math.min(offset, this.undeletedDocument.length - 1)).id;
   }
 
-  public insertCharacter(prevId: string, offset: number, char: Character) {
-    const insertIndex = (prevId) ?
+  public insertCharacters(chars?: Character[]): string {
+    if (!chars || !chars.length) {
+      return '';
+    }
+    
+    const prevId = chars.at(0).prevId;
+    const charValues = chars.map((c: Character) => c.value).join('');
+
+    const documentInsertIndex = (prevId) ?
       this.document.findIndex((c: Character) => c.id === prevId) + 1 : 0;
+    this.document.splice(documentInsertIndex, 0, ...chars);
+    
+    const insertOffset = this.getOffsetForCharId(prevId);
+    this.undeletedDocument.splice(insertOffset + 1, 0, ...chars);
+    this.text = this.text.substring(0, insertOffset + 1) + charValues + this.text.substring(insertOffset + 1);
 
-    this.document.splice(insertIndex, 0, char);
-    this.undeletedDocument.splice(offset + 1, 0, char);
-    this.text = this.text.substring(0, offset + 1) + char.value + this.text.substring(offset + 1);
+    return charValues;
   }
 
-  public deleteCharacter(charId: string, offset: number) {
-    this.document = this.document
-      .map((c: Character) => (c.id === charId) ? { ...c, deleted: true } : c);
-    this.undeletedDocument.splice(offset, 1);
-    this.text = this.text.substring(0, offset) + this.text.substring(offset + 1);
+  public deleteCharacters(charIds?: string[]): [number, number][] {
+    if (!charIds || !charIds.length) {
+      return;
+    }
+
+    const deleteRanges = [];
+    let currentRangeStart = -1;
+    const deletedIdsSet = new Set(charIds);
+
+    this.undeletedDocument.forEach((c: Character, idx: number) => {
+      if (currentRangeStart !== -1 && !deletedIdsSet.has(c.id)) {
+        deleteRanges.push([currentRangeStart, idx-1]);
+        currentRangeStart = -1;
+      } else if (currentRangeStart === -1 && deletedIdsSet.has(c.id)) {
+        currentRangeStart = idx;
+      }
+    });
+
+    if (currentRangeStart !== -1) {
+      deleteRanges.push([currentRangeStart, this.undeletedDocument.length-1]);
+    }
+
+    this.document.forEach((c: Character) => {
+      if (deletedIdsSet.has(c.id)) {
+        c.deleted = true;
+      }
+    });
+    
+    return deleteRanges;
   }
     
-  public applyDelta(delta: Delta, monacoRef: MutableRefObject<Monaco>) { 
-    const insertOffset = this.getOffsetForCharId(delta.position);
-    const insertPosition = this.offsetToPosition(insertOffset);
-    let range = null;
-
-    if (delta.isBackspace && delta.position && insertOffset !== -1) {
-      const insertPositionOneBefore = this.offsetToPosition(insertOffset - 1);
-
-      range = new monacoRef.current.Range(
-        insertPositionOneBefore.row,
-        insertPositionOneBefore.column,
-        insertPosition.row,
-        insertPosition.column
-      );
-
-      this.deleteCharacter(delta.position, insertOffset);
-
-    } else if (!delta.isBackspace) {
-      range = new monacoRef.current.Range(
+  public applyDelta(delta: Delta, monacoRef: MutableRefObject<Monaco>) {
+    if (delta.insert && delta.insert.length) {
+      const prevId = delta.insert.at(0).prevId;
+      const insertOffset = this.getOffsetForCharId(prevId);
+      const insertPosition = this.offsetToPosition(insertOffset);
+      
+      const range = new monacoRef.current.Range(
         insertPosition.row,
         insertPosition.column,
         insertPosition.row,
         insertPosition.column
       );
 
-      this.insertCharacter(delta.position, insertOffset, delta.char);
-    }
+      const insertedString = this.insertCharacters(delta.insert);
 
-    return {
-      identifier: { major: 1, minor: 1 },
-      range: range,
-      text: (delta.isBackspace) ? '' : delta.char.value,
-      forceMoveMakers: true
-    };
+      return [{
+        identifier: { major: 1, minor: 1 },
+        range: range,
+        text: insertedString,
+        forceMoveMakers: true
+      }];
+    } else if (delta.delete && delta.delete.length) {
+      const deleteOffsetRanges = this.deleteCharacters(delta.delete);
+      const monacoDeltas = [];
+
+      deleteOffsetRanges.forEach(([start, end]) => {
+        const positionOneBeforeStart = this.offsetToPosition(start - 1);
+        const endPosition = this.offsetToPosition(end);
+        
+        const range = new monacoRef.current.Range(
+          positionOneBeforeStart.row,
+          positionOneBeforeStart.column,
+          endPosition.row,
+          endPosition.column
+        );
+
+        monacoDeltas.push({
+          identifier: { major: 1, minor: 1 },
+          range: range,
+          text: '',
+          forceMoveMakers: true
+        });
+      });
+
+      this.setDocument(this.document);
+
+      return monacoDeltas;
+    }
   }
-
-  public createDelta(
-    key: string, 
-    editorRef: MutableRefObject<editor.IStandaloneCodeEditor>, 
-    generateCharacter: (val: string) => Character
-  ): Delta | undefined {
-    const { lineNumber: row, column } = editorRef.current.getPosition();
-    const currentOffset = this.positionToOffset({row, column});
-    const prevId = (currentOffset !== -1) ? this.undeletedDocument.at(currentOffset).id : null;
+  
+  public createDeltas(
+    selection: Selection,
+    insertedText: string,
+    isBackspace: boolean,
+    generateCharacter: (val: string, prevId: string) => Character | undefined
+  ) : Delta[] {
+    // Trim inserted text to prevent Ulysses pasting incident.
+    insertedText = (insertedText.length > MAX_PASTE_LENGTH) ? 
+      insertedText.substring(0, MAX_PASTE_LENGTH) : insertedText;
     
-    if (key === 'Backspace' && !prevId) { 
-      return undefined;
+    const deltas = [];
+
+    // Create delta for removing all characters in the selection.
+    const { 
+      startColumn,
+      startLineNumber: startRow,
+      endColumn,
+      endLineNumber: endRow
+    } = selection;
+    
+    const offset = this.positionToOffset({row: startRow, column: startColumn});
+    const deleteEndOffset = this.positionToOffset({row: endRow, column: endColumn});
+    const deleteStartOffset = Math.max(-1, (offset === deleteEndOffset && isBackspace) ? offset-1 : offset);
+
+    if (deleteStartOffset < deleteEndOffset) {
+      deltas.push({
+        delete: 
+          this.undeletedDocument
+            .slice(deleteStartOffset + 1, deleteEndOffset + 1)
+            .map((c: Character) => c.id)
+      });
     }
 
-    const delta: Delta = 
-      (key == 'Backspace') ? 
-        {
-          position: prevId,
-          isBackspace: true,
-          char: null
-        } : {
-          position: prevId,
-          isBackspace: false,
-          char: generateCharacter(getKeyValue(key))
-        };
+    // Create deltas for inserting characters.
+    let prevId = (offset !== -1) ? this.undeletedDocument.at(offset).id : null;
+    const insert = [];
+    insertedText.split('').forEach((c: string) => {
+      const newChar = generateCharacter(c, prevId);
+      insert.push(newChar);
+      prevId = newChar.id;
+    });
 
-    return delta;
+    if (insert.length) {
+      deltas.push({ insert });
+    }
+
+    return deltas;
   }
 
   public positionToOffset(position: CursorPosition): number {
@@ -139,7 +209,7 @@ export class MonacoContentManager {
       _offset -= splittedText.at(row-1).length + 1;
       ++row;
     }
-
+    
     return {
       row,
       column: _offset + 2

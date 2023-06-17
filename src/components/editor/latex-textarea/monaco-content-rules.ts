@@ -1,6 +1,8 @@
 import { IKeyboardEvent } from 'monaco-editor';
 import { arrayRange } from 'util/poly/poly';
 
+export const MAX_PASTE_LENGTH = 128;
+
 const legalKeys = [
   'Backspace',
   'Enter',
@@ -9,7 +11,10 @@ const legalKeys = [
 ];
 
 const ctrlKeysToIgnore = [
-  's'
+  'a',
+  'c',
+  's',
+  'v'
 ];
 
 const keysToIgnore = [
@@ -24,7 +29,8 @@ const keyToValue = new Map<string, string>([
     .map((code: number): string => String.fromCharCode(code))
     .map((char: string): [string, string] => [ char, char ]),
   [ 'Enter', '\n' ],
-  [ 'Tab', '\t' ]
+  [ 'Tab', '\t' ],
+  [ 'Backspace', '' ]
 ]);
 
 export const isCharacterKey = (key: string | null | undefined): boolean => {

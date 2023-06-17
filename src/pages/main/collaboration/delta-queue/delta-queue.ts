@@ -1,12 +1,12 @@
 import { Character, CollabReducerActionType } from '../reducer/model';
 import { CollabReducerAction, CollabState, Message, MessageType, SourceChange_Message } from '../reducer/model';
-import { useEffect, useRef, useState } from 'react';
+import { MutableRefObject, useEffect, useRef, useState } from 'react';
 import { cloneDeep } from 'lodash';
 
 export interface Delta {
-  position: string | null,
-  isBackspace: boolean,
-  char?: Character
+  id: string,
+  delete?: string[],
+  insert?: Character[]
 }
 
 export interface DeltaQueue {
@@ -16,18 +16,23 @@ export interface DeltaQueue {
 }
 
 export const useDeltaQueue = (
+  clientIdRef: MutableRefObject<string>,
   state: CollabState, 
   dispatch: (action: CollabReducerAction) => void,
   sendMessage: (message: Message) => void
 ): DeltaQueue => {
   const [version, setVersion] = useState<number>(0);
-  
-  const insertedIds = useRef<Set<string>>(new Set());
-  const deletedIds = useRef<Set<string>>(new Set());
+
+  const nextDeltaIdRef = useRef<number>(-1);
+  const appliedDeltaIds = useRef<Set<string>>(new Set());
 
   const isDeltaApplied = (delta: Delta): boolean => {
-    return (delta.isBackspace && deletedIds.current.has(delta.position)) 
-      || (!delta.isBackspace && insertedIds.current.has(delta.char.id));
+    return appliedDeltaIds.current.has(delta.id);
+  };
+
+  const generateDeltaId = (): string => {
+    nextDeltaIdRef.current = nextDeltaIdRef.current + 1;
+    return [clientIdRef.current, nextDeltaIdRef.current.toString()].join('.');
   };
 
   useEffect(() => {
@@ -42,12 +47,14 @@ export const useDeltaQueue = (
   }, [state.deltaQueue]);
 
   const push = (delta: Delta) => {
+    delta.id = generateDeltaId();
+
     const message: SourceChange_Message = {
       type: MessageType.SOURCE_CHANGE,
       ...delta
     };
     
-    dispatch({ 
+    dispatch({
       type: CollabReducerActionType.SOURCE_CHANGE,
       message
     });
@@ -65,16 +72,12 @@ export const useDeltaQueue = (
     if (isDeltaApplied(delta)) { 
       return undefined;
     }
-
-    if (delta.isBackspace) {
-      deletedIds.current.add(delta.position);
-    } else {
-      insertedIds.current.add(delta.char.id);
-    }
-
+    
     dispatch({ 
       type: CollabReducerActionType.POP_DELTA_QUEUE,
     });
+
+    appliedDeltaIds.current.add(delta.id);
 
     return delta;
   };

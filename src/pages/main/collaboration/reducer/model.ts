@@ -12,6 +12,7 @@ export enum MessageType {
 export interface Character {
   deleted: boolean,
   value: string,
+  prevId: string | null,
   id: string
 }
 
