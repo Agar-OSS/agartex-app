@@ -14,6 +14,7 @@ const COLLABORATION_URL = global.window?.env?.REACT_APP_COLLABORATION_SERVICE_UR
 
 export const AGARTEX_SERVICE_COMPILATION_URL = SERVICE_URL + '/compile';
 export const AGARTEX_SERVICE_PROJECTS_URL = SERVICE_URL + '/projects';
+export const AGARTEX_SERVICE_RESOURCES_URL = (projectId: string) => `${AGARTEX_SERVICE_PROJECTS_URL}/${projectId}/resources`;
 export const AGARTEX_SERVICE_SESSIONS_URL = SERVICE_URL + '/sessions';
 export const AGARTEX_SERVICE_USERS_URL = SERVICE_URL + '/users';
 export const AGARTEX_COLLABORATION_URL = COLLABORATION_URL + '/collaboration';

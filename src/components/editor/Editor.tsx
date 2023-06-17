@@ -27,7 +27,7 @@ const Editor = (props: Props) => {
   const [ delimiterX, setDelimiterX ] = useState(0.5);
 
   const leftPaneWidth = `${100*delimiterX}%`;
-  const latexTextAreaWidth = (width ?? 0) * delimiterX - toolbarWidth;
+  const latexTextAreaWidth = (width ?? 0) * delimiterX - (toolbarWidth ?? 0);
 
   const pdfViewerWidth = `calc(${100*(1 - delimiterX)}% - ${EDITOR_DELIMITER_WIDTH}px)`;
   const pdfViewerWidthValue = (width ?? 0) * (1 - delimiterX) - EDITOR_DELIMITER_WIDTH;
