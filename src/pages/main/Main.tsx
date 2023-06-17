@@ -1,4 +1,4 @@
-import { Button, Editor } from '@components';
+import { Button, Editor, LoadingSpinner } from '@components';
 import { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -10,6 +10,7 @@ import { compileDocument } from './service/compilation-service';
 import styles from './Main.module.less';
 import { useCollaboration } from './collaboration/collaboration';
 import { useKeyDown } from 'util/keyboard/keyboard';
+import Alert from 'components/alert/Alert';
 
 const MainPage = () => {
   const { project } = useContext(ProjectContext);
@@ -63,46 +64,59 @@ const MainPage = () => {
   useKeyDown('s', compile, true);
   
   return (
-    <div className={styles.root}>
-      <div className={styles.header}>
-        <Button
-          className={styles.closeProjectButton}
-          ariaLabel='close project button'
-          onClick={onCloseClick}
-          testId='close-project-button'
-          value='Close Project'/>
+    <>
+      <div className={styles.root}>
+        <div className={styles.header}>
+          <Button
+            className={styles.closeProjectButton}
+            ariaLabel='close project button'
+            onClick={onCloseClick}
+            testId='close-project-button'
+            value='Close Project'/>
 
-        <label className={styles.projectName}>{project.name}</label>
+          <label className={styles.projectName}>{project.name}</label>
 
-        <span>Clients connected: {collaboration.clientsConnectedIds.join(' ')}</span>
+          <span>Clients connected: {collaboration.clientsConnectedIds.join(' ')}</span>
 
-        <span>WebSocket status: {collaboration.connectionState && ReadyState[collaboration.connectionState]}</span>
+          <span>WebSocket status: {collaboration.connectionState && ReadyState[collaboration.connectionState]}</span>
 
-        <span>{ user?.email }</span>
+          <span>{ user?.email }</span>
 
-        <Button
-          ariaLabel='logout button'
-          onClick={onLogoutClick}
-          testId='logout-button'
-          value='Logout'/>
-        <Button 
-          ariaLabel='compile button'
-          onClick={compile}
-          testId='compile-button'
-          value='Compile'/>
+          <Button
+            ariaLabel='logout button'
+            onClick={onLogoutClick}
+            testId='logout-button'
+            value='Logout'/>
+          <Button 
+            ariaLabel='compile button'
+            onClick={compile}
+            testId='compile-button'
+            value='Compile'/>
+        </div>
+        <div
+          className={styles.editor}
+          data-testid='editor'>
+          <Editor
+            collaboration={collaboration}
+            compilationState={compilationState}
+            compilationError={compilationError}
+            compilationLogs={compilationLogs}
+            onTextChangeCompilationCallback={setText}
+          />
+        </div>
       </div>
-      <div
-        className={styles.editor}
-        data-testid='editor'>
-        <Editor
-          collaboration={collaboration}
-          compilationState={compilationState}
-          compilationError={compilationError}
-          compilationLogs={compilationLogs}
-          onTextChangeCompilationCallback={setText}
-        />
-      </div>
-    </div>
+
+      <Alert visible={collaboration.connectionState === ReadyState.CLOSED}>
+        <label>You are not connected, please refresh the page</label>
+      </Alert>
+
+      <Alert visible={true}>
+        <label>Connecting to server...</label>
+        <LoadingSpinner
+          ariaLabel='connecting spinner'
+          testId='connecting-spinner' />
+      </Alert>
+    </>
   );  
 };
 

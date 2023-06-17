@@ -1,10 +1,9 @@
 import Alert from '../Alert';
-import { AlertState } from '@model';
 import { render } from '@testing-library/react';
 
-const renderModal = (state: AlertState) => {
+const renderModal = (visible: boolean) => {
   return render(
-    <Alert state={state}>
+    <Alert visible={visible}>
       <div data-testid='mock-alert-body' />
     </Alert>
   );
@@ -12,12 +11,12 @@ const renderModal = (state: AlertState) => {
 
 describe('<Modal />', () => {
   it('should render with proper children', () => {
-    const { getByTestId } = renderModal(AlertState.OPEN);
+    const { getByTestId } = renderModal(true);
     getByTestId('mock-alert-body');
   });
 
   it('should hide body and show loading spinner in loading state', () => {
-    const { queryByTestId } = renderModal(AlertState.CLOSED);
+    const { queryByTestId } = renderModal(false);
     expect(queryByTestId('mock-alert-body')).toBe(null);
   });
 });

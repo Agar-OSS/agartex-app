@@ -2,10 +2,6 @@ export enum OperationState {
   ERROR, INPUT, LOADING, SUCCESS
 }
 
-export enum AlertState { 
-  OPEN, CLOSED
-}
-
 export enum ModalState { 
   CLOSED, INPUT, LOADING
 }
