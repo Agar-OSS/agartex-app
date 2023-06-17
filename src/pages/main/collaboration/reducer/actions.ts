@@ -11,6 +11,7 @@ import { cloneDeep } from 'lodash';
 export const connected_action = (state: CollabState, message: Connected_Message): CollabState => {
   return {
     ...state,
+    initClock: message.initClock,
     document: message.document,
     clientId: message.clientId,
     clientsConnectedIds: message.clientsConnectedIds,

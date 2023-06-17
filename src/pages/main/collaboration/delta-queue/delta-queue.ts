@@ -19,6 +19,7 @@ export const useDeltaQueue = (
   clientIdRef: MutableRefObject<string>,
   state: CollabState, 
   dispatch: (action: CollabReducerAction) => void,
+  handleIncomingClock: (incomingClock: number) => void,
   sendMessage: (message: Message) => void
 ): DeltaQueue => {
   const [version, setVersion] = useState<number>(0);
@@ -76,6 +77,12 @@ export const useDeltaQueue = (
     dispatch({ 
       type: CollabReducerActionType.POP_DELTA_QUEUE,
     });
+  
+    if (delta.insert && delta.insert.length) {
+      const maxIncomingClock = Math.max(
+        ...delta.insert.map((c: Character) => c.clock));
+      handleIncomingClock(maxIncomingClock);
+    }
 
     appliedDeltaIds.current.add(delta.id);
 
