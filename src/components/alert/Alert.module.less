@@ -1,0 +1,66 @@
+@import '@variables';
+
+@transitionLength: 0.2s;
+
+.background {
+  background: rgba(0,0,0,0.7);;
+  z-index: 999;
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 100vw;
+  min-height: 100vh;
+};
+
+.backgroundEnter {
+  opacity: 0;
+}
+
+.backgroundEnterActive {
+  opacity: 1;
+  transition: all ease @transitionLength;
+}
+
+.backgroundExitActive {
+  opacity: 0;
+  transition: all ease @transitionLength;
+}
+
+.alert {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+  transform-origin: 0 0;
+  box-shadow: 0 10px 20px rgba(black, 0.2);
+  background-color: @blue4;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-height: 250px;
+  min-width: 500px;
+  z-index: 1000;
+  border-radius: 6px;
+};
+
+.alertEnter {
+  opacity: 0;
+  scale: 0.8;
+}
+
+.alertEnterActive {
+  opacity: 1;
+  scale: 1;
+  transition: all ease @transitionLength;
+}
+
+.alertExitActive {
+  opacity: 0;
+  scale: 0.8;
+  transition: all ease @transitionLength;
+}
+
+.bodyContainer {
+  margin: auto;
+  padding: 12px;
+};
