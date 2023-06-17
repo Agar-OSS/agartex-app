@@ -13,6 +13,7 @@ export interface Character {
   deleted: boolean,
   value: string,
   prevId: string | null,
+  clock: number,
   id: string
 }
 
@@ -21,6 +22,7 @@ interface Base_Message {
 }
 
 export interface Connected_Message extends Base_Message {
+  initClock: number,
   document: Character[],
   clientId: string,
   clientsConnectedIds: string[],
@@ -51,6 +53,7 @@ export type Message = Connected_Message | NewClient_Message | ClientDisconnected
   | SourceChange_Message | CursorMove_Message | ClientHandshake_Message;
 
 export interface CollabState {
+  initClock: number,
   document: Character[],
   clientId: string,
   clientsConnectedIds: string[],
@@ -59,6 +62,7 @@ export interface CollabState {
 }
 
 export const INIT_COLLAB_STATE: CollabState = {
+  initClock: 0,
   document: [],
   clientId: '',
   clientsConnectedIds: [],
