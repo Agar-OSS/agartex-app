@@ -12,6 +12,7 @@ import { useCursorsDecorations } from './cursors-decorations';
 interface Props {
   testId: string,
   theme: string,
+  width?: number,
   onTextChangeCompilationCallback: (text: string) => void,
   collaboration: Collaboration
 }
@@ -134,6 +135,7 @@ const LatexTextArea = (props: Props) => {
         language='latex'
         defaultLanguage='latex'
         theme={props.theme}
+        width={props.width}
         options={{
           minimap: {
             enabled: false

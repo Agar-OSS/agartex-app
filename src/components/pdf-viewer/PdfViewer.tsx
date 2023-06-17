@@ -42,12 +42,34 @@ const PdfViewer = (props: Props) => {
     setNumPages(numPages);
   };
 
+
+  const loadingMessage =
+    <div className={styles.message}
+      style={{ width: props.width }}>
+      Loading...
+    </div>;
+
+  const noDataMessage =
+    <div className={styles.message}
+      style={{ width: props.width }}>
+      Compile to see PDF preview.
+    </div>;
+
+  const errorMessage =
+    <div className={styles.message}
+      style={{ width: props.width }}>
+      Failed to load PDF, please try again.
+    </div>;
+
   return (
     <div className={styles.pdfViewer}
       style={{ height: props.height }}
       data-testid={props.testId}>
       <Document
         file={props.documentUrl}
+        loading={loadingMessage}
+        noData={noDataMessage}
+        error={errorMessage}
         onLoadSuccess={onDocumentLoadSuccess}>
         { pages }
       </Document>

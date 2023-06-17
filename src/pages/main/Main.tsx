@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { OperationState } from '@model';
+import { ProjectContext } from 'context/ProjectContextProvider';
 import { ReadyState } from 'react-use-websocket';
 import { UserContext } from 'context/UserContextProvider';
 import { compileDocument } from './service/compilation-service';
@@ -11,12 +12,14 @@ import { useCollaboration } from './collaboration/collaboration';
 import { useKeyDown } from 'util/keyboard/keyboard';
 
 const MainPage = () => {
+  const { project } = useContext(ProjectContext);
+
   const navigate = useNavigate();
   const { projectId } = useParams();
 
+  const { setDocumentUrl } = useContext(ProjectContext);
   const { user, logout } = useContext(UserContext);
 
-  const [documentUrl, setDocumentUrl] = useState<string>('example.pdf');
   const [compilationError, setCompilationError] = useState<string>('');
   const [compilationLogs, setCompilationLogs] = useState<string>('');
   const [compilationState, setCompilationState] = useState<OperationState>(OperationState.SUCCESS);
@@ -38,7 +41,7 @@ const MainPage = () => {
     setCompilationLogs('');
     setCompilationState(OperationState.LOADING);
 
-    compileDocument(text)
+    compileDocument(project.projectId, text)
       .then((response) => {
         setDocumentUrl(window.URL.createObjectURL(new Blob([response.data])));
         setCompilationState(OperationState.SUCCESS);
@@ -69,6 +72,8 @@ const MainPage = () => {
           testId='close-project-button'
           value='Close Project'/>
 
+        <label className={styles.projectName}>{project.name}</label>
+
         <span>Clients connected: {collaboration.clientsConnectedIds.join(' ')}</span>
 
         <span>WebSocket status: {collaboration.connectionState && ReadyState[collaboration.connectionState]}</span>
@@ -94,7 +99,6 @@ const MainPage = () => {
           compilationState={compilationState}
           compilationError={compilationError}
           compilationLogs={compilationLogs}
-          documentUrl={documentUrl}
           onTextChangeCompilationCallback={setText}
         />
       </div>

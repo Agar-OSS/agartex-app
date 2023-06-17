@@ -17,17 +17,24 @@ const mockResource: Resource[] = [
   }
 ];
 
-const renderResourceList = () => {
+const renderResourceList = (
+  resourceList: Resource[]
+) => {
   return render(
     <MemoryRouter>
-      <ResourceList testId='resource-list' collapsed={false} resourceList={mockResource} />
+      <ResourceList testId='resource-list' collapsed={false} resourceList={resourceList} />
     </MemoryRouter>
   );
 };
 
 describe('<ResourceList />', () => {
+  it('should display empty list message on empty list', () => {
+    const { getByText } = renderResourceList([]);
+    getByText('No resources found');
+  });
+  
   it('should display all resource names passed in props', () => {
-    const { getByText } = renderResourceList();
+    const { getByText } = renderResourceList(mockResource);
     getByText('image1.png');
     getByText('image2.png');
   });

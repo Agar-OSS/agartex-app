@@ -1,9 +1,10 @@
 import { Button, LoadingOverlay, LoadingSpinner } from '@components';
-import { MdAdd, MdModeNight, MdOutlineArrowBackIos, MdOutlineArrowForwardIos, MdRefresh } from 'react-icons/md';
+import { MdAdd, MdDownload, MdModeNight, MdOutlineArrowBackIos, MdOutlineArrowForwardIos, MdRefresh } from 'react-icons/md';
 import { ModalState, OperationState, Resource } from '@model';
-import { createResource, fetchResourceList, uploadResourceFile } from './service/resource-service';
-import { useEffect, useState } from 'react';
+import { createResource, fetchResourceList, uploadResourceFile } from '../service/resource-service';
+import { forwardRef, useContext, useEffect, useState } from 'react';
 
+import { ProjectContext } from 'context/ProjectContextProvider';
 import ResourceList from './resource-list/ResourceList';
 import UploadResourceModal from './resource-list/upload-resource-modal/UploadResourceModal';
 import styles from './Toolbar.module.less';
@@ -12,7 +13,9 @@ interface Props {
   toogleTheme: () => void
 }
 
-const Toolbar = (props: Props) => {
+const Toolbar = forwardRef<HTMLDivElement, Props>(function Toolbar(props, ref?) {
+  const { project, documentUrl } = useContext(ProjectContext);
+
   const [ listStatus, setListStatus ] = useState<OperationState>(OperationState.SUCCESS);
   const [ uploadResourceModalState, setUploadResourceModalState ] = useState<ModalState>(ModalState.CLOSED);
   
@@ -25,7 +28,7 @@ const Toolbar = (props: Props) => {
 
     setListStatus(OperationState.LOADING);
     // TODO: fix project id
-    fetchResourceList()
+    fetchResourceList(project.projectId)
       .then(list => {
         setResourceList(list);
         setListStatus(OperationState.SUCCESS);
@@ -44,9 +47,9 @@ const Toolbar = (props: Props) => {
 
     setUploadResourceModalState(ModalState.LOADING);
     // TODO: fix project id
-    createResource(resourceName)
+    createResource(project.projectId, resourceName)
       .then(resourceId => {
-        uploadResourceFile(resourceId, resourceFile);
+        uploadResourceFile(project.projectId, resourceId, resourceFile);
       })
       .then(() => {
         refreshResourceList();
@@ -64,7 +67,7 @@ const Toolbar = (props: Props) => {
   }, []);
 
   return (
-    <div className={styles.toolbarContainer}>
+    <div ref={ref} className={styles.toolbarContainer}>
       <div
         className={styles.toolbar}
         data-testid='toolbar'>
@@ -82,9 +85,21 @@ const Toolbar = (props: Props) => {
         </Button>
         <Button
           className={styles.toolbarButton}
+          ariaLabel='download pdf toolbar button'
+          testId='download-pdf-button'
+        >
+          <a
+            href={documentUrl != '' ? documentUrl : null}
+            download={documentUrl != '' ? project.name+'.pdf' : null}
+          >
+            <MdDownload size={24} />
+          </a>
+        </Button>
+        <Button
+          className={styles.toolbarButton}
           ariaLabel='change theme toolbar button'
           onClick={props.toogleTheme}
-          testId='change-theme-toolbar-button'
+          testId='change-theme-button'
         >
           <MdModeNight size={24} />
         </Button>
@@ -131,6 +146,6 @@ const Toolbar = (props: Props) => {
       />
     </div>
   );
-};
+});
 
 export default Toolbar;
