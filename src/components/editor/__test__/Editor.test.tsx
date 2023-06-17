@@ -1,4 +1,4 @@
-import { OperationState, Project } from '@model';
+import { OperationState, Project, Resource } from '@model';
 import { act, render } from '@testing-library/react';
 
 import { Collaboration } from 'pages/main/collaboration/collaboration';
@@ -13,6 +13,11 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
   disconnect: jest.fn()
 }));
 
+jest.mock('../../../pages/main/service/resource-service', () => ({
+  createResource: jest.fn(() => new Promise<string>(jest.fn())),
+  uploadResourceFile: jest.fn(() => new Promise<string>(jest.fn())),
+  fetchResourceList: jest.fn(() => new Promise<Resource[]>(jest.fn()))
+}));
 
 const mockDeltaQueue: DeltaQueue = {
   version: 0,
