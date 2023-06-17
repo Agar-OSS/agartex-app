@@ -9,14 +9,17 @@ let testResourceList: Resource[] = Array(30).fill(0).map((_, index) => {
 });
 
 /* Upload resource and return ID of new created resource */
-export const createResource = async (resourceName: string): Promise<string> => {
+export const createResource = async (
+  projectId: string,
+  resourceName: string
+): Promise<string> => {
   // TODO: integrate
   await new Promise(res => {
     setTimeout(res, 1000);
   });
 
   const newResource: Resource = {
-    projectId: 'project_xyz',
+    projectId: `project_${projectId}`,
     resourceId: `resource_${resourceName}`,
     name: `Name: ${resourceName}`
   };
@@ -26,14 +29,18 @@ export const createResource = async (resourceName: string): Promise<string> => {
 };
 
 /* Upload resource and return ID of new created resource */
-export const uploadResourceFile = async (resourceId: string, resourceFile: File): Promise<string> => {
+export const uploadResourceFile = async (
+  projectId: string,
+  resourceId: string,
+  resourceFile: File
+): Promise<string> => {
   // TODO: integrate
   await new Promise(res => {
     setTimeout(res, 1000);
   });
 
   const newResource: Resource = {
-    projectId: resourceId,
+    projectId: `project_${projectId}`,
     resourceId: `resource_${resourceFile.name}`,
     name: `${resourceFile.name}`
   };
