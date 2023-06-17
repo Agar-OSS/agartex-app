@@ -1,7 +1,8 @@
-import { render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { ProjectsList } from '../ProjectsList';
 import { Project } from '@model';
+import { ProjectContext } from 'context/ProjectContextProvider';
+import { ProjectsList } from '../ProjectsList';
+import { render } from '@testing-library/react';
 
 const mockProjects: Project[] = [
   {
@@ -33,7 +34,14 @@ const renderProjectsList = (
 ) => {
   return render(
     <MemoryRouter>
-      <ProjectsList filter={filter} projects={projects} />
+      <ProjectContext.Provider value={{
+        project: null,
+        setProject: jest.fn(),
+        documentUrl: null,
+        setDocumentUrl: jest.fn()
+      }}>
+        <ProjectsList filter={filter} projects={projects} />
+      </ProjectContext.Provider>
     </MemoryRouter>
   );
 };

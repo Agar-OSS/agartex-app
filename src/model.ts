@@ -31,3 +31,10 @@ export interface UserContextType {
   logout: () => void
 }
 
+export interface ProjectContextType {
+  project: Project,
+  setProject: (project: Project) => void,
+  
+  documentUrl: string,
+  setDocumentUrl: (url: string) => void
+}

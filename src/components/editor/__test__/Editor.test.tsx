@@ -1,4 +1,11 @@
+import { OperationState, Project } from '@model';
 import { act, render } from '@testing-library/react';
+
+import { Collaboration } from 'pages/main/collaboration/collaboration';
+import { DeltaQueue } from 'pages/main/collaboration/delta-queue/delta-queue';
+import Editor from '../Editor';
+import { ProjectContext } from 'context/ProjectContextProvider';
+import { ReadyState } from 'react-use-websocket';
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
   observe: jest.fn(),
@@ -6,11 +13,6 @@ global.ResizeObserver = jest.fn().mockImplementation(() => ({
   disconnect: jest.fn()
 }));
 
-import Editor from '../Editor';
-import { OperationState } from '@model';
-import { ReadyState } from 'react-use-websocket';
-import { DeltaQueue } from 'pages/main/collaboration/delta-queue/delta-queue';
-import { Collaboration } from 'pages/main/collaboration/collaboration';
 
 const mockDeltaQueue: DeltaQueue = {
   version: 0,
@@ -29,20 +31,34 @@ const mockCollaboration: Collaboration = {
   generateCharacter: jest.fn()
 };
 
+const mockProject: Project = {
+  projectId: '',
+  name: '',
+  created: 0,
+  modified: 0,
+  owner: ''
+};
+
 const renderEditor = (
   state: OperationState = OperationState.SUCCESS,
   compilationError = '',  
   compilationLogs = ''
 ) => {
   return render(
-    <Editor
-      collaboration={mockCollaboration}
-      compilationLogs={compilationLogs}
-      compilationError={compilationError}
-      compilationState={state}
-      documentUrl='example.pdf'
-      onTextChangeCompilationCallback={jest.fn()}
-    />
+    <ProjectContext.Provider value={{
+      project: mockProject,
+      setProject: jest.fn(),
+      documentUrl: 'example.pdf',
+      setDocumentUrl: jest.fn()
+    }}>
+      <Editor
+        collaboration={mockCollaboration}
+        compilationLogs={compilationLogs}
+        compilationError={compilationError}
+        compilationState={state}
+        onTextChangeCompilationCallback={jest.fn()}
+      />
+    </ProjectContext.Provider>
   );
 };
 
