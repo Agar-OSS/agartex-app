@@ -41,7 +41,7 @@ const MainPage = () => {
     setCompilationLogs('');
     setCompilationState(OperationState.LOADING);
 
-    compileDocument(text)
+    compileDocument(project.projectId, text)
       .then((response) => {
         setDocumentUrl(window.URL.createObjectURL(new Blob([response.data])));
         setCompilationState(OperationState.SUCCESS);
