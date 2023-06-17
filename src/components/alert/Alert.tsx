@@ -34,18 +34,18 @@ const Alert = (props: Props) => {
         <div aria-hidden='true' className={styles.background}/>
       </CSSTransition>
 
-    <CSSTransition
-      in={props.visible}
-      timeout={ALERT_TRANSITION_LENGTH}
-      classNames={alertClassNames}
-      unmountOnExit
-    >
-      <div className={styles.alert}>
-        <div className={styles.bodyContainer}>
-          { props.children }
+      <CSSTransition
+        in={props.visible}
+        timeout={ALERT_TRANSITION_LENGTH}
+        classNames={alertClassNames}
+        unmountOnExit
+      >
+        <div className={styles.alert}>
+          <div className={styles.bodyContainer}>
+            { props.children }
+          </div>
         </div>
-      </div>
-    </CSSTransition>
+      </CSSTransition>
     </>
   );
 };

@@ -1,16 +1,16 @@
-import { Button, Editor, LoadingSpinner } from '@components';
+import { Alert, Button, Editor, LoadingSpinner } from '@components';
 import { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { OperationState } from '@model';
 import { ProjectContext } from 'context/ProjectContextProvider';
 import { ReadyState } from 'react-use-websocket';
+import { RiWifiOffLine } from 'react-icons/ri';
 import { UserContext } from 'context/UserContextProvider';
 import { compileDocument } from './service/compilation-service';
 import styles from './Main.module.less';
 import { useCollaboration } from './collaboration/collaboration';
 import { useKeyDown } from 'util/keyboard/keyboard';
-import Alert from 'components/alert/Alert';
 
 const MainPage = () => {
   const { project } = useContext(ProjectContext);
@@ -78,8 +78,6 @@ const MainPage = () => {
 
           <span>Clients connected: {collaboration.clientsConnectedIds.join(' ')}</span>
 
-          <span>WebSocket status: {collaboration.connectionState && ReadyState[collaboration.connectionState]}</span>
-
           <span>{ user?.email }</span>
 
           <Button
@@ -107,14 +105,19 @@ const MainPage = () => {
       </div>
 
       <Alert visible={collaboration.connectionState === ReadyState.CLOSED}>
-        <label>You are not connected, please refresh the page</label>
+        <RiWifiOffLine size={52} />
+        <label className={styles.alertLabel}>
+          You are offline, please refresh page.
+        </label>
       </Alert>
 
-      <Alert visible={true}>
-        <label>Connecting to server...</label>
+      <Alert visible={collaboration.connectionState === ReadyState.CONNECTING}>
         <LoadingSpinner
           ariaLabel='connecting spinner'
           testId='connecting-spinner' />
+        <label className={styles.alertLabel}>
+          Connecting to server...
+        </label>
       </Alert>
     </>
   );  
