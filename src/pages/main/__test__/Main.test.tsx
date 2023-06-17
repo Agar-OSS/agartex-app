@@ -45,8 +45,8 @@ const mockLogout = jest.fn();
 const mockProject: Project = {
   projectId: '',
   name: '',
-  created: 0,
-  modified: 0,
+  created: '',
+  modified: '',
   owner: ''
 };
 

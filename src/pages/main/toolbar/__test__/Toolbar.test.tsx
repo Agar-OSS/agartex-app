@@ -20,8 +20,8 @@ import Toolbar from '../Toolbar';
 const mockProject: Project = {
   projectId: '',
   name: '',
-  created: 0,
-  modified: 0,
+  created: '',
+  modified: '',
   owner: ''
 };
 const mockToogleTheme = jest.fn();

@@ -34,8 +34,8 @@ const mockCollaboration: Collaboration = {
 const mockProject: Project = {
   projectId: '',
   name: '',
-  created: 0,
-  modified: 0,
+  created: '',
+  modified: '',
   owner: ''
 };
 
