@@ -1,3 +1,5 @@
+import styles from './global-styles.module.less';
+
 export const EDITOR_DELIMITER_WIDTH = 5;
 export const EDITOR_MIN_PERCENTAGE_WORKSPACE_WIDTH = 0.3;
 
@@ -8,6 +10,17 @@ declare global {
     }
   }
 }
+
+export const COLORS = [
+  styles.color1,
+  styles.color2,
+  styles.color3,
+  styles.color4,
+  styles.color5,
+  styles.color6,
+  styles.color7,
+  styles.color7
+];
 
 const SERVICE_URL = global.window?.env?.REACT_APP_SERVICE_URL ?? process.env.REACT_APP_SERVICE_URL;
 const COLLABORATION_URL = global.window?.env?.REACT_APP_COLLABORATION_SERVICE_URL ?? process.env.REACT_APP_COLLABORATION_SERVICE_URL;
