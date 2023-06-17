@@ -19,12 +19,13 @@ export interface Collaboration {
 export const useCollaboration = (projectId: string): Collaboration => {
   const [state, dispatch] = useReducer(collabReducer, INIT_COLLAB_STATE);
   const { connectionState, sendMessage } = useCollabStream(projectId, dispatch);
-  const deltaQueue = useDeltaQueue(state, dispatch, sendMessage);
-
-  const nextCharacterIdRef = useRef<number>(0);
 
   const clientIdRef = useRef<string>(null);
   clientIdRef.current = state.clientId;
+
+  const deltaQueue = useDeltaQueue(clientIdRef, state, dispatch, sendMessage);
+
+  const nextCharacterIdRef = useRef<number>(0);
 
   const generateCharacter = (value: string, prevId: string): Character | undefined => {
     nextCharacterIdRef.current = nextCharacterIdRef.current + 1;

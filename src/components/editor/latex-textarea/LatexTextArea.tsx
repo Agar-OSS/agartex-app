@@ -51,11 +51,7 @@ const LatexTextArea = (props: Props) => {
   const applyDelta = (delta: Delta | undefined) => {
     if (delta) {
       const edits = managerRef.current.applyDelta(delta, monacoRef);
-      edits.forEach((edit) => { 
-        console.log('executing diff');
-        console.log(edit);
-        editorRef.current.executeEdits('delta-queue', [edit]);
-      });
+      edits.forEach((edit) => editorRef.current.executeEdits('delta-queue', [edit]));
       props.onTextChangeCompilationCallback(managerRef.current.getText());
     }
   };

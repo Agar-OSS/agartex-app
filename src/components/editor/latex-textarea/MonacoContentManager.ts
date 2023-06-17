@@ -43,15 +43,6 @@ export class MonacoContentManager {
     return this.undeletedDocument.at(Math.min(offset, this.undeletedDocument.length - 1)).id;
   }
 
-  public insertCharacter(prevId: string, offset: number, char: Character) {
-    const insertIndex = (prevId) ?
-      this.document.findIndex((c: Character) => c.id === prevId) + 1 : 0;
-    
-    this.document.splice(insertIndex, 0, char);
-    this.undeletedDocument.splice(offset + 1, 0, char);
-    this.text = this.text.substring(0, offset + 1) + char.value + this.text.substring(offset + 1);
-  }
-  
   public insertCharacters(chars?: Character[]): string {
     if (!chars || !chars.length) {
       return '';
@@ -71,39 +62,21 @@ export class MonacoContentManager {
     return charValues;
   }
 
-  public deleteCharacter(charId: string, offset: number) {
-    this.document = this.document
-      .map((c: Character) => (c.id === charId) ? { ...c, deleted: true } : c);
-    this.undeletedDocument.splice(offset, 1);
-    this.text = this.text.substring(0, offset) + this.text.substring(offset + 1);
-  }
-
   public deleteCharacters(charIds?: string[]): [number, number][] {
     if (!charIds || !charIds.length) {
       return;
     }
 
-    let charIdsIdx = 0;
     const deleteRanges = [];
     let currentRangeStart = -1;
+    const deletedIdsSet = new Set(charIds);
 
     this.undeletedDocument.forEach((c: Character, idx: number) => {
-
-      const closeCurrentRange = 
-        currentRangeStart !== -1 && (
-          charIdsIdx >= charIds.length 
-          || c.deleted 
-          || (!c.deleted && c.id !== charIds.at(charIdsIdx))
-        );
-
-      if (closeCurrentRange) {
+      if (currentRangeStart !== -1 && !deletedIdsSet.has(c.id)) {
         deleteRanges.push([currentRangeStart, idx-1]);
         currentRangeStart = -1;
-      } else if (charIdsIdx < charIds.length && !c.deleted && c.id === charIds.at(charIdsIdx)) {
-        ++charIdsIdx;
-        if (currentRangeStart === -1) {
-          currentRangeStart = idx;
-        }
+      } else if (currentRangeStart === -1 && deletedIdsSet.has(c.id)) {
+        currentRangeStart = idx;
       }
     });
 
@@ -111,11 +84,9 @@ export class MonacoContentManager {
       deleteRanges.push([currentRangeStart, this.undeletedDocument.length-1]);
     }
 
-    charIdsIdx = 0;
     this.document.forEach((c: Character) => {
-      if (c.id === charIds.at(charIdsIdx)) {
+      if (deletedIdsSet.has(c.id)) {
         c.deleted = true;
-        ++charIdsIdx;
       }
     });
     
@@ -146,9 +117,6 @@ export class MonacoContentManager {
     } else if (delta.delete && delta.delete.length) {
       const deleteOffsetRanges = this.deleteCharacters(delta.delete);
       const monacoDeltas = [];
-      
-      console.log('deleteOffsetRanges');
-      console.log(deleteOffsetRanges);
 
       deleteOffsetRanges.forEach(([start, end]) => {
         const positionOneBeforeStart = this.offsetToPosition(start - 1);
@@ -233,10 +201,6 @@ export class MonacoContentManager {
   }
 
   public offsetToPosition(offset: number): CursorPosition {
-    console.log('OFFSET_TO_POSITION');
-    console.log(this.text);
-    console.log(offset);
-
     const splittedText = this.text.split('\n');
     let row = 1;
     let _offset = offset;
@@ -246,8 +210,6 @@ export class MonacoContentManager {
       ++row;
     }
     
-    console.log(JSON.stringify({ row, column: _offset+2 }));
-
     return {
       row,
       column: _offset + 2
