@@ -8,22 +8,22 @@ const mockProjects: Project[] = [
   {
     projectId: 'project1',
     name: 'Project 1A',
-    created: 1000000000,
-    modified: 1000000000,
+    created: '2020-01-01 14:40:00.000000',
+    modified: '2020-01-01 14:40:00.000000',
     owner: 'maciekspinney'
   },
   {
     projectId: 'project2',
     name: 'Project 2',
-    created: 2000000000,
-    modified: 2000000000,
+    created: '2020-01-02 14:40:00.000000',
+    modified: '2020-01-02 14:40:00.000000',
     owner: 'tomasz_z_mazur'
   },
   {
     projectId: 'project3',
     name: 'Project 13a',
-    created: 3000000000,
-    modified: 3000000000,
+    created: '2020-01-03 14:40:00.000000',
+    modified: '2020-01-03 14:40:00.000000',
     owner: 'rybahubert'
   }
 ];

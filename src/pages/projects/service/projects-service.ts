@@ -4,8 +4,13 @@ import axios from 'axios';
 
 interface RawProject {
   project_id: string,
-  name: string,
-  owner: string
+  project_name: string,
+
+  owner_id: string,
+  owner_email: string,
+
+  created_at: string,
+  last_modified: string
 }
 
 /* Create project page of the given name and return ID of new created resource */
@@ -20,9 +25,9 @@ export const fetchProjectList = async (): Promise<Project[]> => {
   // TODO: populate create and modified from backend
   return res.data.map((raw) => ({
     projectId: raw.project_id,
-    name: raw.name,
-    owner: raw.owner,
-    created: Date.now(),
-    modified: Date.now()
+    name: raw.project_name,
+    owner: raw.owner_email,
+    created: raw.created_at,
+    modified: raw.last_modified
   }));
 };
