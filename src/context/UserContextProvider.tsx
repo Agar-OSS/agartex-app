@@ -36,25 +36,21 @@ const UserProvider = (props: Props) => {
       });
   };
 
-  useEffect(() => {
-    const automaticLogout = axios.interceptors.response.use(
-      (response) => response,
-      (error) => {
-        if (error?.response.status === 401) {
-          // TODO: Info modal
-          logout();
-        } else if (error?.response.status == 403) {
-          // TODO: Info modal
-          navigate('/');
-        }
-        return Promise.reject(error);
+  axios.interceptors.response.use(
+    (response) => response,
+    (error) => {
+      if (error?.response.status === 401) {
+        // TODO: Info modal
+        logout();
+        console.log('User not authenticated, redirecting to login page...');
+      } else if (error?.response.status == 403) {
+        // TODO: Info modal
+        navigate('/');
+        console.log('User are not allowed to perform operation, redirecting to projects page');
       }
-    );
-
-    return () => {
-      axios.interceptors.response.eject(automaticLogout);
-    };
-  }, []);
+      return Promise.reject(error);
+    }
+  );
 
   useEffect(() => {
     if (!user) {
