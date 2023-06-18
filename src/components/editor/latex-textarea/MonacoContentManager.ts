@@ -42,14 +42,20 @@ export class MonacoContentManager {
     if (offset < 0 || !this.undeletedDocument.length) { return null; }
     return this.undeletedDocument.at(Math.min(offset, this.undeletedDocument.length - 1)).id;
   }
+
+  public getClientId(charId: string): number {
+    return Number(charId.split('.')[0]);
+  }
   
-  public getIndexForInsertion(prevId: string, clock: number): number {
+  public getIndexForInsertion(charId: string, prevId: string, clock: number): number {
     // Among characters with the same prevId, we sort them by clock in descending order.
     let insertIndex = (prevId) ?
       this.document.findIndex((c: Character) => c.id === prevId) + 1 : 0;
     while (insertIndex < this.document.length 
       && this.document.at(insertIndex).prevId === prevId 
-      && this.document.at(insertIndex).clock > clock) {
+      && this.document.at(insertIndex).clock >= clock
+      && this.getClientId(this.document.at(insertIndex).id) < this.getClientId(charId)
+    ) {
       insertIndex++;
     }
     return insertIndex;
@@ -60,11 +66,10 @@ export class MonacoContentManager {
       return '';
     }
     
-    const prevId = chars.at(0).prevId;
-    const clock = chars.at(0).clock;
+    const { id: charId, prevId, clock } = chars.at(0);
     const charValues = chars.map((c: Character) => c.value).join('');
     
-    const documentInsertIndex = this.getIndexForInsertion(prevId, clock);
+    const documentInsertIndex = this.getIndexForInsertion(charId, prevId, clock);
     this.document.splice(documentInsertIndex, 0, ...chars);
     
     const insertOffset = this.getOffsetForCharId(prevId);
