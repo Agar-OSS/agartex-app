@@ -6,6 +6,7 @@ import { OperationState } from '@model';
 import { ProjectContext } from 'context/ProjectContextProvider';
 import { ReadyState } from 'react-use-websocket';
 import { RiWifiOffLine } from 'react-icons/ri';
+import { Tooltip } from 'react-tooltip';
 import { UserContext } from 'context/UserContextProvider';
 import { compileDocument } from './service/compilation-service';
 import styles from './Main.module.less';
@@ -77,15 +78,13 @@ const MainPage = () => {
           <label className={styles.projectName}>{project.name}</label>
 
           <span className={styles.clientsConnectedList}>
-            <label>Clients connected:</label>
             {
-              collaboration.clientsConnectedIds.map((clientId) =>
-                <label
-                  key={clientId}
-                  className={`${collaboration.clientsCmap.get(clientId)} ${styles.clientIdLabel}`}>
-                  {clientId}
-                </label>
-              )
+              collaboration.clientsConnectedIds.map((clientId) => (
+                <div key={clientId} className={styles.clientIdLabel}>
+                  <div className={`${collaboration.clientsCmap.get(clientId)} ${styles.clientIdLabelBackground}`} />
+                  <div className={`${collaboration.clientsCmap.get(clientId)} ${styles.clientIdLabelBorder}`} />
+                </div>
+              ))
             }
           </span>
 
@@ -114,6 +113,15 @@ const MainPage = () => {
           />
         </div>
       </div>
+
+      {
+        collaboration.clientsConnectedIds.map((clientId) => (
+          <Tooltip
+            key={'tooltip_'+clientId}
+            anchorSelect={'.'+collaboration.clientsCmap.get(clientId)}
+            content={clientId}/>
+        ))
+      }
 
       <Alert visible={collaboration.connectionState === ReadyState.CLOSED}>
         <RiWifiOffLine size={52} />

@@ -45,17 +45,13 @@ export const newClient_action = (state: CollabState, message: NewClient_Message)
 export const clientDisconnected_action = (state: CollabState, message: ClientDisconnected_Message): CollabState => {
   const cursorsPositions = new Map(state.cursorsPositions);
   cursorsPositions.delete(message.clientId);
-
-  const clientsCmap = new Map(state.clientsCmap);
-  clientsCmap.delete(message.clientId);
   
   return {
     ...state,
     clientsConnectedIds: 
       state.clientsConnectedIds
         .filter((clientId: string) => clientId !== message.clientId),
-    cursorsPositions,
-    clientsCmap
+    cursorsPositions
   };
 };
 
