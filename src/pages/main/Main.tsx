@@ -11,13 +11,14 @@ import ShareModal from './share-modal/ShareModal';
 import { Tooltip } from 'react-tooltip';
 import { UserContext } from 'context/UserContextProvider';
 import { compileDocument } from './service/compilation-service';
+import { getProjectMetadata } from 'pages/projects/service/projects-service';
 import { shareProject } from 'pages/share/service/sharing-service';
 import styles from './Main.module.less';
 import { useCollaboration } from './collaboration/collaboration';
 import { useKeyDown } from 'util/keyboard/keyboard';
 
 const MainPage = () => {
-  const { project } = useContext(ProjectContext);
+  const { project, setProject } = useContext(ProjectContext);
 
   const navigate = useNavigate();
   const { projectId } = useParams();
@@ -65,7 +66,7 @@ const MainPage = () => {
     setCompilationLogs('');
     setCompilationState(OperationState.LOADING);
 
-    compileDocument(project.projectId, text)
+    compileDocument(projectId, text)
       .then((response) => {
         setDocumentUrl(window.URL.createObjectURL(new Blob([response.data])));
         setCompilationState(OperationState.SUCCESS);
@@ -86,6 +87,18 @@ const MainPage = () => {
   /* Register CTRL-S event to compile document. */
   useKeyDown('s', compile, true);
   
+  useEffect(() => {
+    getProjectMetadata(projectId)
+      .then((project) => {
+        setProject(project);
+      })
+      .catch((error) => {
+        // TODO: error handling
+        console.log(error);
+        navigate('');
+      });
+  }, [projectId]);
+
   useEffect(() => {
     document.title = project.name + ' - ' + AGARTEX_TITLE;
   }, []);

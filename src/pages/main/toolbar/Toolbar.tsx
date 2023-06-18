@@ -8,6 +8,7 @@ import { ProjectContext } from 'context/ProjectContextProvider';
 import ResourceList from './resource-list/ResourceList';
 import UploadResourceModal from './resource-list/upload-resource-modal/UploadResourceModal';
 import styles from './Toolbar.module.less';
+import { useParams } from 'react-router-dom';
 
 interface Props {
   toogleTheme: () => void
@@ -15,6 +16,7 @@ interface Props {
 
 const Toolbar = forwardRef<HTMLDivElement, Props>(function Toolbar(props, ref?) {
   const { project, documentUrl } = useContext(ProjectContext);
+  const { projectId } = useParams();
 
   const [ listStatus, setListStatus ] = useState<OperationState>(OperationState.SUCCESS);
   const [ uploadResourceModalState, setUploadResourceModalState ] = useState<ModalState>(ModalState.CLOSED);
@@ -27,7 +29,7 @@ const Toolbar = forwardRef<HTMLDivElement, Props>(function Toolbar(props, ref?) 
       return;
 
     setListStatus(OperationState.LOADING);
-    fetchResourceList(project.projectId)
+    fetchResourceList(projectId)
       .then(list => {
         setResourceList(list);
         setListStatus(OperationState.SUCCESS);
@@ -45,9 +47,9 @@ const Toolbar = forwardRef<HTMLDivElement, Props>(function Toolbar(props, ref?) 
       return;
 
     setUploadResourceModalState(ModalState.LOADING);
-    createResource(project.projectId, resourceName)
+    createResource(projectId, resourceName)
       .then(resourceId => {
-        uploadResourceFile(project.projectId, resourceId, resourceFile);
+        uploadResourceFile(projectId, resourceId, resourceFile);
       })
       .then(() => {
         refreshResourceList();
