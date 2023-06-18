@@ -11,9 +11,9 @@ import { COLORS } from '@constants';
 import { cloneDeep } from 'lodash';
 
 export const connected_action = (state: CollabState, message: Connected_Message): CollabState => {
-  const clientsCmap = new Map();
+  const clientsColormap = new Map();
   message.clientsConnectedIds.forEach((clientId) => {
-    clientsCmap.set(clientId, COLORS[clientsCmap.size % COLORS.length]);
+    clientsColormap.set(clientId, COLORS[clientsColormap.size % COLORS.length]);
   });
 
   return {
@@ -21,7 +21,7 @@ export const connected_action = (state: CollabState, message: Connected_Message)
     initClock: message.initClock,
     document: message.document,
     clientId: message.clientId,
-    clientsCmap,
+    clientsColormap: clientsColormap,
     clientsConnectedIds: message.clientsConnectedIds,
     cursorsPositions: message.cursorsPositions
   };
@@ -31,14 +31,14 @@ export const newClient_action = (state: CollabState, message: NewClient_Message)
   const cursorsPositions = new Map(state.cursorsPositions);
   cursorsPositions.set(message.clientId, null);
 
-  const clientsCmap = new Map(state.clientsCmap);
-  clientsCmap.set(message.clientId, COLORS[state.clientsCmap.size % COLORS.length]);
+  const clientsColormap = new Map(state.clientsColormap);
+  clientsColormap.set(message.clientId, COLORS[state.clientsColormap.size % COLORS.length]);
 
   return {
     ...state,
     clientsConnectedIds: [ ...state.clientsConnectedIds, message.clientId ],
     cursorsPositions,
-    clientsCmap
+    clientsColormap: clientsColormap
   };
 };
 

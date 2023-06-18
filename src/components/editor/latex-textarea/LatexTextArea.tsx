@@ -22,7 +22,7 @@ const LatexTextArea = (props: Props) => {
     initDocument, 
     clientId,
     cursorsPositions,
-    clientsCmap,
+    clientsColormap: clientsColormap,
     onCursorPositionChange, 
     deltaQueue,
     generateCharacter
@@ -35,7 +35,7 @@ const LatexTextArea = (props: Props) => {
   const managerRef = useRef<MonacoContentManager>(new MonacoContentManager(initDocument));
   
   useCursorsDecorations(
-    clientId, clientsCmap, cursorsPositions, editorRef, monacoRef, managerRef
+    clientId, clientsColormap, cursorsPositions, editorRef, monacoRef, managerRef
   );
 
   useEffect(() => {

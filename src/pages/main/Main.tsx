@@ -81,8 +81,8 @@ const MainPage = () => {
             {
               collaboration.clientsConnectedIds.map((clientId) => (
                 <div key={clientId} className={styles.clientIdLabel}>
-                  <div className={`${collaboration.clientsCmap.get(clientId)} ${styles.clientIdLabelBackground}`} />
-                  <div className={`${collaboration.clientsCmap.get(clientId)} ${styles.clientIdLabelBorder}`} />
+                  <div className={`${collaboration.clientsColormap.get(clientId)} ${styles.clientIdLabelBackground}`} />
+                  <div className={`${collaboration.clientsColormap.get(clientId)} ${styles.clientIdLabelBorder}`} />
                 </div>
               ))
             }
@@ -118,7 +118,7 @@ const MainPage = () => {
         collaboration.clientsConnectedIds.map((clientId) => (
           <Tooltip
             key={'tooltip_'+clientId}
-            anchorSelect={'.'+collaboration.clientsCmap.get(clientId)}
+            anchorSelect={'.'+collaboration.clientsColormap.get(clientId)}
             place='bottom'
             content={clientId} />
         ))

@@ -7,7 +7,7 @@ import styles from './LatexTextArea.module.less';
 
 export const useCursorsDecorations = (
   clientId: string,
-  clientsCmap: Map<string, string>,
+  clientsColormap: Map<string, string>,
   cursorsPositions: Map<string, string>,
   editorRef: MutableRefObject<editor.IStandaloneCodeEditor>,
   monacoRef: MutableRefObject<Monaco>,
@@ -20,7 +20,7 @@ export const useCursorsDecorations = (
       const newDecorations = [];
       cursorsPositions.forEach((charId: string | null, oClientId: string) => {
         if (clientId !== oClientId) {
-          const color = clientsCmap.get(oClientId);
+          const color = clientsColormap.get(oClientId);
           const offset = managerRef.current.getOffsetForCharId(charId);
           const position = managerRef.current.offsetToPosition(offset);
           newDecorations.push({
