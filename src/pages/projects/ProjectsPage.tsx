@@ -3,6 +3,7 @@ import { ModalState, OperationState, Project } from '@model';
 import { createProject, fetchProjectList } from './service/projects-service';
 import { useEffect, useState } from 'react';
 
+import { AGARTEX_TITLE } from '@constants';
 import CreateProjectModal from './create-project-modal/CreateProjectModal';
 import { ProjectsList } from './projects-list/ProjectsList';
 import { UserBox } from './user-box/UserBox';
@@ -44,6 +45,10 @@ const ProjectsPage = () => {
       setCreateProjectModalState(ModalState.INPUT);
     }).then(() => updateProjectList());
   };
+
+  useEffect(() => {
+    document.title = 'Your projects - ' + AGARTEX_TITLE;
+  }, []);
 
   return (
     <div className={styles.projectsPageContainer}>

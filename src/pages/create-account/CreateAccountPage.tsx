@@ -1,10 +1,12 @@
 import { AgarLogo, Button } from '@components';
+import { useEffect, useState } from 'react';
+
+import { AGARTEX_TITLE } from '@constants';
 import { CreateAccountForm } from './form/CreateAccountForm';
 import { CreateAccountSuccessBox } from './success-box/CreateAccountSuccessBox';
 import { OperationState } from '@model';
 import styles from './CreateAccountPage.module.less';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
 
 const CreateAccountPage = () => {
   const [errorMessage, setErrorMessage] = useState<string>('');
@@ -14,6 +16,10 @@ const CreateAccountPage = () => {
   const navigateToLoginPage = () => {
     navigate('/login');
   };
+
+  useEffect(() => {
+    document.title = 'Sign up - ' + AGARTEX_TITLE;
+  }, []);
 
   return (
     <div className={styles.createAccountPageContainer}>

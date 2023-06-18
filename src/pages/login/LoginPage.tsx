@@ -1,5 +1,7 @@
 import { AgarLogo, Button } from '@components';
 import { useEffect, useState } from 'react';
+
+import { AGARTEX_TITLE } from '@constants';
 import { LoginForm } from './form/LoginForm';
 import { OperationState } from '@model';
 import styles from './LoginPage.module.less';
@@ -19,6 +21,10 @@ const LoginPage = () => {
   const navigateToCreateAccountPage = () => {
     navigate('/create-account');
   };
+
+  useEffect(() => {
+    document.title = 'Sign in - ' + AGARTEX_TITLE;
+  }, []);
 
   return (
     <div className={styles.loginPageContainer}>
