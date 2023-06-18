@@ -5,7 +5,7 @@ import * as monaco from 'monaco-editor';
 // * https://github.com/textmate/latex.tmbundle
 
 // TODO: lazy import
-const LatexGrammar: monaco.languages.IMonarchLanguage = {
+export const LatexGrammar: monaco.languages.IMonarchLanguage = {
   // defaultToken: 'invalid', // Uncomment for easier development
 
   tokenizer: {
