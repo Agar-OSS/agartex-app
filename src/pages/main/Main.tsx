@@ -119,7 +119,8 @@ const MainPage = () => {
           <Tooltip
             key={'tooltip_'+clientId}
             anchorSelect={'.'+collaboration.clientsCmap.get(clientId)}
-            content={clientId}/>
+            place='bottom'
+            content={clientId} />
         ))
       }
 
