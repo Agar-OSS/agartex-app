@@ -48,17 +48,24 @@ export class MonacoContentManager {
   }
   
   public getIndexForInsertion(charId: string, prevId: string, clock: number): number {
-    // Among characters with the same prevId, we sort them by clock in descending order.
-    let insertIndex = (prevId) ?
-      this.document.findIndex((c: Character) => c.id === prevId) + 1 : 0;
-    while (insertIndex < this.document.length 
-      && this.document.at(insertIndex).prevId === prevId 
-      && this.document.at(insertIndex).clock >= clock
-      && this.getClientId(this.document.at(insertIndex).id) < this.getClientId(charId)
-    ) {
-      insertIndex++;
+    const prevIdPosition = (prevId) ? this.document.findIndex((c: Character) => c.id === prevId) : -1;
+    
+    let idx = prevIdPosition + 1;
+    let lastWinnerIdx = -1;
+    while (idx < this.document.length) {
+      const c = this.document.at(idx);
+      if (c.prevId === prevId && 
+        (c.clock > clock || 
+        (c.clock === clock && this.getClientId(c.id) < this.getClientId(charId)))
+      ) { lastWinnerIdx = idx; } 
+      ++idx;
     }
-    return insertIndex;
+
+    if (lastWinnerIdx === -1) { return prevIdPosition + 1; }
+
+    const idsBeforeLastWinner = new Set(this.document.slice(0, lastWinnerIdx).map((c: Character) => c.id));
+    const insertIndex = this.document.slice(lastWinnerIdx + 1).findIndex((c: Character) => idsBeforeLastWinner.has(c.prevId));
+    return (insertIndex === -1) ? this.document.length : insertIndex + lastWinnerIdx + 1;
   }
 
   public insertCharacters(chars?: Character[]): string {
@@ -70,11 +77,13 @@ export class MonacoContentManager {
     const charValues = chars.map((c: Character) => c.value).join('');
     
     const documentInsertIndex = this.getIndexForInsertion(charId, prevId, clock);
-    this.document.splice(documentInsertIndex, 0, ...chars);
     
-    const insertOffset = this.getOffsetForCharId(prevId);
-    this.undeletedDocument.splice(insertOffset + 1, 0, ...chars);
-    this.text = this.text.substring(0, insertOffset + 1) + charValues + this.text.substring(insertOffset + 1);
+    this.document.splice(documentInsertIndex, 0, ...chars);
+  
+    const insertOffset = this.getOffsetForCharId(charId);
+
+    this.undeletedDocument.splice(insertOffset, 0, ...chars);
+    this.text = this.text.substring(0, insertOffset) + charValues + this.text.substring(insertOffset);
 
     return charValues;
   }
