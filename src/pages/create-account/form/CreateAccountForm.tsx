@@ -57,9 +57,14 @@ const CreateAccountForm = (props: Props) => {
       })
       .catch((error) => {
         props.setFormState(OperationState.INPUT);
-        // TODO: This error message is temporary. For debugging.
-        props.setErrorMessage('message: ' + error.message + ', code: ' + error.code);
-        console.log(error);
+        if (error.code === 409) {
+          props.setErrorMessage('User with given email already exists.');
+        } else if (error.code == 422) {
+          props.setErrorMessage('Given email is not correct or password is too weak.')
+        } else {
+          props.setErrorMessage('Unknown error: ' + error.code);
+          console.log(error);
+        }
       });
   };
 
@@ -96,7 +101,7 @@ const CreateAccountForm = (props: Props) => {
               onChange={(val) => onFieldValueChange('password', val)}
               onFocus={() => onFieldTouch('password')}
               isValid={!isInErrorState('password')}
-              errorMessage='Password does not meet requirements'
+              errorMessage='Password must have from 8 to 32 characters, contain 1 small letter, big letter, digit and special character'
             />
 
             <TextInput

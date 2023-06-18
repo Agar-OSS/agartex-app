@@ -60,9 +60,12 @@ const LoginForm = (props: Props) => {
       })
       .catch((error) => {
         props.setFormState(OperationState.INPUT);
-        // TODO: This error message is temporary. For debugging.
-        props.setErrorMessage('message: ' + error.message + ', code: ' + error.code);
-        console.log(error);
+        if (error.code === 401) {
+          props.setErrorMessage('Email or password is incorrect.');
+        } else {
+          props.setErrorMessage('Unknown error: ' + error.code);
+          console.log(error);
+        }
       });
   };
 
