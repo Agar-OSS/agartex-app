@@ -60,7 +60,7 @@ const CreateAccountForm = (props: Props) => {
         if (error.code === 409) {
           props.setErrorMessage('User with given email already exists.');
         } else if (error.code == 422) {
-          props.setErrorMessage('Given email is not correct or password is too weak.')
+          props.setErrorMessage('Given email is not correct or password is too weak.');
         } else {
           props.setErrorMessage('Unknown error: ' + error.code);
           console.log(error);
