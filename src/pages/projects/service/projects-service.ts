@@ -22,7 +22,6 @@ export const createProject = async (projectName: string): Promise<string> => {
 /* Fetch projects list for the current user */
 export const fetchProjectList = async (): Promise<Project[]> => {
   const res = await axios.get<RawProject[]>(AGARTEX_SERVICE_PROJECTS_URL);
-  // TODO: populate create and modified from backend
   return res.data.map((raw) => ({
     projectId: raw.project_id,
     name: raw.project_name,

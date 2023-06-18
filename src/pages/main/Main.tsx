@@ -1,7 +1,8 @@
 import { Alert, Button, Editor, LoadingSpinner } from '@components';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import { AGARTEX_TITLE } from '@constants';
 import { OperationState } from '@model';
 import { ProjectContext } from 'context/ProjectContextProvider';
 import { ReadyState } from 'react-use-websocket';
@@ -64,6 +65,10 @@ const MainPage = () => {
   /* Register CTRL-S event to compile document. */
   useKeyDown('s', compile, true);
   
+  useEffect(() => {
+    document.title = project.name + ' - ' + AGARTEX_TITLE;
+  }, []);
+
   return (
     <>
       <div className={styles.root}>

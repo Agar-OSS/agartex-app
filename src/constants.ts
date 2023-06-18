@@ -22,6 +22,8 @@ export const COLORS = [
   styles.color7
 ];
 
+export const AGARTEX_TITLE = 'AgarTex';
+
 const SERVICE_URL = global.window?.env?.REACT_APP_SERVICE_URL ?? process.env.REACT_APP_SERVICE_URL;
 const COLLABORATION_URL = global.window?.env?.REACT_APP_COLLABORATION_SERVICE_URL ?? process.env.REACT_APP_COLLABORATION_SERVICE_URL;
 

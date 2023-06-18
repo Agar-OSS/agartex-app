@@ -20,10 +20,6 @@ app.get('/favicon.ico', (_req, res) => {
   res.sendFile(path.join(DIST_DIR, 'favicon.ico'));
 });
 
-app.get('/example.pdf', (_req, res) => {
-  res.sendFile(path.join(DIST_DIR, 'example.pdf'));
-});
-
 if (ENABLE_TLS === 'true') {
   https.createServer({
     cert: fs.readFileSync(TLS_CERT_PATH),
