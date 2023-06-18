@@ -1,4 +1,5 @@
 import AgarLogo from './agar-logo/AgarLogo';
+import Alert from './alert/Alert';
 import Button from './button/Button';
 import Editor from './editor/Editor';
 import FileInput from './file-input/FileInput';
@@ -10,6 +11,7 @@ import TextInput from './text-input/TextInput';
 
 export {
   AgarLogo,
+  Alert,
   Button,
   Editor,
   FileInput,

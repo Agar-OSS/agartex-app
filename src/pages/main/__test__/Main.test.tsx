@@ -25,6 +25,7 @@ const mockCollaboration: Collaboration = {
   initDocument: [],
   clientId: '',
   clientsConnectedIds: [],
+  clientsColormap: new Map(),
   cursorsPositions: new Map(),
   onCursorPositionChange: jest.fn(),
   deltaQueue: mockDeltaQueue,

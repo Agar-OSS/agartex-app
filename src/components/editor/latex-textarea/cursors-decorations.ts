@@ -1,4 +1,5 @@
 import { MutableRefObject, useEffect, useRef } from 'react';
+
 import { Monaco } from '@monaco-editor/react';
 import { MonacoContentManager } from './MonacoContentManager';
 import { editor } from 'monaco-editor';
@@ -6,12 +7,12 @@ import styles from './LatexTextArea.module.less';
 
 export const useCursorsDecorations = (
   clientId: string,
+  clientsColormap: Map<string, string>,
   cursorsPositions: Map<string, string>,
   editorRef: MutableRefObject<editor.IStandaloneCodeEditor>,
   monacoRef: MutableRefObject<Monaco>,
   managerRef: MutableRefObject<MonacoContentManager>
 ) => {
-  
   const oldDecorationsIds = useRef<string[]>([]);
   
   useEffect(() => {
@@ -19,11 +20,12 @@ export const useCursorsDecorations = (
       const newDecorations = [];
       cursorsPositions.forEach((charId: string | null, oClientId: string) => {
         if (clientId !== oClientId) {
+          const color = clientsColormap.get(oClientId);
           const offset = managerRef.current.getOffsetForCharId(charId);
           const position = managerRef.current.offsetToPosition(offset);
           newDecorations.push({
             range: new monacoRef.current.Range(position.row, position.column, position.row, position.column + 1),
-            options: { className: styles.customCursor }
+            options: { className: `${styles.customCursor} ${color}` }
           });
         }
       });

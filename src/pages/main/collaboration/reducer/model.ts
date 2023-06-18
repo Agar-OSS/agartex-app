@@ -57,6 +57,7 @@ export interface CollabState {
   document: Character[],
   clientId: string,
   clientsConnectedIds: string[],
+  clientsColormap: Map<string,string>,
   cursorsPositions: Map<string, string>,
   deltaQueue: Delta[]
 }
@@ -66,6 +67,7 @@ export const INIT_COLLAB_STATE: CollabState = {
   document: [],
   clientId: '',
   clientsConnectedIds: [],
+  clientsColormap: new Map(),
   cursorsPositions: new Map(),
   deltaQueue: []
 };

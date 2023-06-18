@@ -6,14 +6,22 @@ import {
   NewClient_Message,
   SourceChange_Message
 } from './model';
+
+import { COLORS } from '@constants';
 import { cloneDeep } from 'lodash';
 
 export const connected_action = (state: CollabState, message: Connected_Message): CollabState => {
+  const clientsColormap = new Map();
+  message.clientsConnectedIds.forEach((clientId) => {
+    clientsColormap.set(clientId, COLORS[clientsColormap.size % COLORS.length]);
+  });
+
   return {
     ...state,
     initClock: message.initClock,
     document: message.document,
     clientId: message.clientId,
+    clientsColormap: clientsColormap,
     clientsConnectedIds: message.clientsConnectedIds,
     cursorsPositions: message.cursorsPositions
   };
@@ -23,10 +31,14 @@ export const newClient_action = (state: CollabState, message: NewClient_Message)
   const cursorsPositions = new Map(state.cursorsPositions);
   cursorsPositions.set(message.clientId, null);
 
+  const clientsColormap = new Map(state.clientsColormap);
+  clientsColormap.set(message.clientId, COLORS[state.clientsColormap.size % COLORS.length]);
+
   return {
     ...state,
     clientsConnectedIds: [ ...state.clientsConnectedIds, message.clientId ],
-    cursorsPositions
+    cursorsPositions,
+    clientsColormap: clientsColormap
   };
 };
 

@@ -1,10 +1,12 @@
-import { Button, Editor } from '@components';
+import { Alert, Button, Editor, LoadingSpinner } from '@components';
 import { useContext, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { OperationState } from '@model';
 import { ProjectContext } from 'context/ProjectContextProvider';
 import { ReadyState } from 'react-use-websocket';
+import { RiWifiOffLine } from 'react-icons/ri';
+import { Tooltip } from 'react-tooltip';
 import { UserContext } from 'context/UserContextProvider';
 import { compileDocument } from './service/compilation-service';
 import styles from './Main.module.less';
@@ -63,46 +65,81 @@ const MainPage = () => {
   useKeyDown('s', compile, true);
   
   return (
-    <div className={styles.root}>
-      <div className={styles.header}>
-        <Button
-          className={styles.closeProjectButton}
-          ariaLabel='close project button'
-          onClick={onCloseClick}
-          testId='close-project-button'
-          value='Close Project'/>
+    <>
+      <div className={styles.root}>
+        <div className={styles.header}>
+          <Button
+            className={styles.closeProjectButton}
+            ariaLabel='close project button'
+            onClick={onCloseClick}
+            testId='close-project-button'
+            value='Close Project'/>
 
-        <label className={styles.projectName}>{project.name}</label>
+          <label className={styles.projectName}>{project.name}</label>
 
-        <span>Clients connected: {collaboration.clientsConnectedIds.join(' ')}</span>
+          <span className={styles.clientsConnectedList}>
+            {
+              collaboration.clientsConnectedIds.map((clientId) => (
+                <div key={clientId} className={styles.clientIdLabel}>
+                  <div className={`${collaboration.clientsColormap.get(clientId)} ${styles.clientIdLabelBackground}`} />
+                  <div className={`${collaboration.clientsColormap.get(clientId)} ${styles.clientIdLabelBorder}`} />
+                </div>
+              ))
+            }
+          </span>
 
-        <span>WebSocket status: {collaboration.connectionState && ReadyState[collaboration.connectionState]}</span>
+          <span>{ user?.email }</span>
 
-        <span>{ user?.email }</span>
-
-        <Button
-          ariaLabel='logout button'
-          onClick={onLogoutClick}
-          testId='logout-button'
-          value='Logout'/>
-        <Button 
-          ariaLabel='compile button'
-          onClick={compile}
-          testId='compile-button'
-          value='Compile'/>
+          <Button
+            ariaLabel='logout button'
+            onClick={onLogoutClick}
+            testId='logout-button'
+            value='Logout'/>
+          <Button 
+            ariaLabel='compile button'
+            onClick={compile}
+            testId='compile-button'
+            value='Compile'/>
+        </div>
+        <div
+          className={styles.editor}
+          data-testid='editor'>
+          <Editor
+            collaboration={collaboration}
+            compilationState={compilationState}
+            compilationError={compilationError}
+            compilationLogs={compilationLogs}
+            onTextChangeCompilationCallback={setText}
+          />
+        </div>
       </div>
-      <div
-        className={styles.editor}
-        data-testid='editor'>
-        <Editor
-          collaboration={collaboration}
-          compilationState={compilationState}
-          compilationError={compilationError}
-          compilationLogs={compilationLogs}
-          onTextChangeCompilationCallback={setText}
-        />
-      </div>
-    </div>
+
+      {
+        collaboration.clientsConnectedIds.map((clientId) => (
+          <Tooltip
+            key={'tooltip_'+clientId}
+            anchorSelect={'.'+collaboration.clientsColormap.get(clientId)}
+            place='bottom'
+            content={clientId} />
+        ))
+      }
+
+      <Alert visible={collaboration.connectionState === ReadyState.CLOSED}>
+        <RiWifiOffLine size={52} />
+        <label className={styles.alertLabel}>
+          You are offline, please refresh page.
+        </label>
+      </Alert>
+
+      <Alert visible={collaboration.connectionState === ReadyState.CONNECTING}>
+        <LoadingSpinner
+          ariaLabel='connecting spinner'
+          testId='connecting-spinner' />
+        <label className={styles.alertLabel}>
+          Connecting to server...
+        </label>
+      </Alert>
+    </>
   );  
 };
 
