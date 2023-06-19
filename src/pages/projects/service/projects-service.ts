@@ -14,6 +14,17 @@ interface RawProject {
 }
 
 /* Create project page of the given name and return ID of new created resource */
+export const getProjectMetadata = async (projectId: string): Promise<Project> => {
+  const res = await axios.get<RawProject>(`${AGARTEX_SERVICE_PROJECTS_URL}/${projectId}/metadata`);
+  return {
+    projectId: res.data.project_id,
+    name: res.data.project_name,
+    owner: res.data.owner_email,
+    created: res.data.created_at,
+    modified: res.data.last_modified};
+};
+
+/* Create project page of the given name and return ID of new created resource */
 export const createProject = async (projectName: string): Promise<string> => {
   const res = await axios.post<RawProject>(AGARTEX_SERVICE_PROJECTS_URL, { name: projectName });
   return res.data.project_id;

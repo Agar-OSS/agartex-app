@@ -1,6 +1,5 @@
 import { Collaboration } from '../collaboration/collaboration';
 import { DeltaQueue } from '../collaboration/delta-queue/delta-queue';
-import MainPage from '../Main';
 import { ReadyState } from 'react-use-websocket';
 import { UserContext } from 'context/UserContextProvider';
 import { render } from '@testing-library/react';
@@ -50,6 +49,12 @@ const mockProject: Project = {
   modified: '',
   owner: ''
 };
+
+jest.mock('../../projects/service/projects-service', () => ({
+  getProjectMetadata: jest.fn(() => new Promise<Project>(jest.fn())),
+}));
+
+import MainPage from '../Main';
 
 const renderInMockContext = () => {
   return render(
