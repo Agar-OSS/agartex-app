@@ -2,7 +2,7 @@ import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { act } from 'react-dom/test-utils';
 
-const mockLoginPromise = Promise.resolve('');
+const mockLoginPromise = Promise.resolve('mockUserId');
 const mockLogin = jest.fn().mockImplementation(() => mockLoginPromise);
 jest.mock('../service/login-service', () => ({
   ...jest.requireActual('../service/login-service'),
