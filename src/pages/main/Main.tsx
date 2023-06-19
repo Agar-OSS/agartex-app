@@ -1,15 +1,17 @@
 import { Alert, Button, Editor, LoadingSpinner } from '@components';
+import { ModalState, OperationState } from '@model';
 import { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { AGARTEX_TITLE } from '@constants';
-import { OperationState } from '@model';
 import { ProjectContext } from 'context/ProjectContextProvider';
 import { ReadyState } from 'react-use-websocket';
 import { RiWifiOffLine } from 'react-icons/ri';
+import ShareModal from './share-modal/ShareModal';
 import { Tooltip } from 'react-tooltip';
 import { UserContext } from 'context/UserContextProvider';
 import { compileDocument } from './service/compilation-service';
+import { shareProject } from 'pages/share/service/sharing-service';
 import styles from './Main.module.less';
 import { useCollaboration } from './collaboration/collaboration';
 import { useKeyDown } from 'util/keyboard/keyboard';
@@ -37,6 +39,25 @@ const MainPage = () => {
 
   const onLogoutClick = () => {
     logout();
+  };
+
+  const [ shareToken, setShareToken ] = useState<string | null>(null);
+  const [ shareModalState, setShareModalState ] = useState<ModalState>(ModalState.CLOSED); 
+
+  const onShareClick = () => {
+    if (!shareToken) {
+      setShareModalState(ModalState.LOADING);
+      shareProject(projectId).then((token) => {
+        setShareToken(token);
+        setShareModalState(ModalState.INPUT);
+      }).catch((error) => {
+        // TODO: error handling
+        console.log(error);
+        setShareModalState(ModalState.CLOSED);
+      });
+    }
+
+    setShareModalState(ModalState.INPUT);
   };
 
   const compile = () => {
@@ -100,6 +121,11 @@ const MainPage = () => {
             onClick={onLogoutClick}
             testId='logout-button'
             value='Logout'/>
+          <Button
+            ariaLabel='share button'
+            onClick={onShareClick}
+            testId='share-button'
+            value='Share'/>
           <Button 
             ariaLabel='compile button'
             onClick={compile}
@@ -144,6 +170,10 @@ const MainPage = () => {
           Connecting to server...
         </label>
       </Alert>
+
+      <ShareModal token={shareToken}
+        state={shareModalState}
+        setState={setShareModalState} />
     </>
   );  
 };

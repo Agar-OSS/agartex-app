@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import { CreateAccountPage, LoginPage, MainPage, ProjectsPage } from './pages';
+import { CreateAccountPage, LoginPage, MainPage, ProjectsPage, SharePage } from './pages';
 
 import App from './App';
 import ProjectProvider from 'context/ProjectContextProvider';
@@ -17,6 +17,7 @@ root.render(
         <Routes>
           <Route path='/login' element={<LoginPage />} />
           <Route path='/create-account' element={<CreateAccountPage />} />
+          <Route path='/share/:token' element={<SharePage />} />
           <Route path='/' element={<App />}>
             <Route path='' element={<ProjectsPage />} />
             <Route path='/:projectId' element={<MainPage />} />
