@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { AGARTEX_SERVICE_SESSIONS_URL } from '@constants';
+import axios from 'axios';
 
 interface LoginRequestBody {
   email: string,
