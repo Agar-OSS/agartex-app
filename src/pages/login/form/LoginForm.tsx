@@ -51,9 +51,9 @@ const LoginForm = (props: Props) => {
     props.setErrorMessage('');
 
     login(buildRequestBody())
-      .then(() => {
+      .then((userId) => {
         setUser({
-          userId: 'mockUserId', // TODO: well...
+          userId,
           email: formState.get('email').value as string
         });
         props.setFormState(OperationState.SUCCESS);
